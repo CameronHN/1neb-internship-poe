@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Core.Entities
 {
@@ -7,12 +8,14 @@ namespace Portfolio.Core.Entities
         [Key]
         public Guid Id { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string TemplateName { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string TemplateFilePath { get; set; }
 
-        public string TemplateThumbnailPath { get; set; }
+        public string? TemplateThumbnailPath { get; set; }
 
-        public required Resume Resume { get; set; }
+        public Resume Resume { get; set; }
     }
 }

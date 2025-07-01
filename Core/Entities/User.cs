@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Core.Entities
 {
@@ -7,17 +8,23 @@ namespace Portfolio.Core.Entities
         [Key]
         public Guid Id { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string FirstName { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string LastName { get; set; }
 
-        public string Gender { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? Gender { get; set; }
 
+        [Column(TypeName = "varchar(20)")]
         public string PhoneNumber { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string Email { get; set; }
 
-        public List<Education> Educations { get; set; }
+                public List<Certification> Certifications { get; set; }
+public List<Education> Educations { get; set; }
 
         public List<Experience> Experiences { get; set; }
 
@@ -29,6 +36,5 @@ namespace Portfolio.Core.Entities
 
         public List<Resume> Resumes { get; set; }
 
-        public List<Certification> Certifications { get; set; }
     }
 }

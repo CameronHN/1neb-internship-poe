@@ -15,7 +15,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
         }
         public async Task InitialiseAsync()
         {
-            //Randomizer.Seed = new Random(1234); // Seed for reproducibility
+            Randomizer.Seed = new Random(1234); // Seed for reproducibility
 
             _context.Database.Migrate();
             // Seed the database with initial data

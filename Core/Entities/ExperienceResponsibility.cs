@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Core.Entities
 {
@@ -9,8 +10,9 @@ namespace Portfolio.Core.Entities
 
         public Guid ExperienceId { get; set; }
 
-        public string Resonsibility { get; set; }
+        [Column(TypeName = "varchar(255)")]
+        public string Responsibility { get; set; }
 
-        public required Experience Experience { get; set; }
+        public Experience? Experience { get; set; }
     }
 }

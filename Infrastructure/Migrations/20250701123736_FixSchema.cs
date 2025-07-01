@@ -1,39 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Portfolio.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FixSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ResumeTemplates",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TemplateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TemplateFilePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ResumeTemplates", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    LastName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Gender = table.Column<string>(type: "varchar(100)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "varchar(12)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,10 +32,14 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CertificationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IssuingOrganisation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CredentialUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CertificationName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    IssuingOrganisation = table.Column<string>(type: "varchar(100)", nullable: false),
+                    CredentialUrl = table.Column<string>(type: "varchar(100)", nullable: true),
+                    IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,8 +57,8 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LinkedIn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GitHub = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LinkedIn = table.Column<string>(type: "varchar(100)", nullable: false),
+                    GitHub = table.Column<string>(type: "varchar(100)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -86,12 +77,12 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InstitutionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Qualification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InstitutionName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Qualification = table.Column<string>(type: "varchar(100)", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    Major = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Achievement = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Major = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Achievement = table.Column<string>(type: "varchar(100)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -110,12 +101,11 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobTitle = table.Column<string>(type: "varchar(100)", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Responsibilities = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,7 +123,7 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Summary = table.Column<string>(type: "varchar(200)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -152,19 +142,13 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GeneratedPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PdfPath = table.Column<string>(type: "varchar(100)", nullable: false),
                     TemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Resumes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Resumes_ResumeTemplates_TemplateId",
-                        column: x => x.TemplateId,
-                        principalTable: "ResumeTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Resumes_Users_UserId",
                         column: x => x.UserId,
@@ -178,8 +162,8 @@ namespace Portfolio.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SkillName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProficiencyLevel = table.Column<int>(type: "int", nullable: false),
+                    SkillName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    ProficiencyLevel = table.Column<string>(type: "varchar(100)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -189,6 +173,46 @@ namespace Portfolio.Infrastructure.Migrations
                         name: "FK_Skills_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExperienceResponsibility",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExperienceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Responsibility = table.Column<string>(type: "varchar(255)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExperienceResponsibility", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExperienceResponsibility_Experiences_ExperienceId",
+                        column: x => x.ExperienceId,
+                        principalTable: "Experiences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResumeTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TemplateName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    TemplateFilePath = table.Column<string>(type: "varchar(100)", nullable: false),
+                    TemplateThumbnailPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResumeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResumeTemplates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResumeTemplates_Resumes_ResumeId",
+                        column: x => x.ResumeId,
+                        principalTable: "Resumes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -209,6 +233,11 @@ namespace Portfolio.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExperienceResponsibility_ExperienceId",
+                table: "ExperienceResponsibility",
+                column: "ExperienceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Experiences_UserId",
                 table: "Experiences",
                 column: "UserId");
@@ -219,14 +248,14 @@ namespace Portfolio.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resumes_TemplateId",
-                table: "Resumes",
-                column: "TemplateId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Resumes_UserId",
                 table: "Resumes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResumeTemplates_ResumeId",
+                table: "ResumeTemplates",
+                column: "ResumeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Skills_UserId",
@@ -247,19 +276,22 @@ namespace Portfolio.Infrastructure.Migrations
                 name: "Educations");
 
             migrationBuilder.DropTable(
-                name: "Experiences");
+                name: "ExperienceResponsibility");
 
             migrationBuilder.DropTable(
                 name: "ProfessionalSummaries");
 
             migrationBuilder.DropTable(
-                name: "Resumes");
+                name: "ResumeTemplates");
 
             migrationBuilder.DropTable(
                 name: "Skills");
 
             migrationBuilder.DropTable(
-                name: "ResumeTemplates");
+                name: "Experiences");
+
+            migrationBuilder.DropTable(
+                name: "Resumes");
 
             migrationBuilder.DropTable(
                 name: "Users");

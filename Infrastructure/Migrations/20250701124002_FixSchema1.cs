@@ -5,30 +5,30 @@
 namespace Portfolio.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedUserData : Migration
+    public partial class FixSchema1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "ProficiencyLevel",
-                table: "Skills",
-                type: "nvarchar(max)",
+                name: "PhoneNumber",
+                table: "Users",
+                type: "varchar(20)",
                 nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int");
+                oldClrType: typeof(string),
+                oldType: "varchar(12)");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "ProficiencyLevel",
-                table: "Skills",
-                type: "int",
+            migrationBuilder.AlterColumn<string>(
+                name: "PhoneNumber",
+                table: "Users",
+                type: "varchar(12)",
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "varchar(20)");
         }
     }
 }

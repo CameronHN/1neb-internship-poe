@@ -12,8 +12,8 @@ using Portfolio.Infrastructure.Persistence;
 namespace Portfolio.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250624172148_Update_And_Add_Types_To_Certification")]
-    partial class Update_And_Add_Types_To_Certification
+    [Migration("20250701123736_FixSchema")]
+    partial class FixSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,20 +54,12 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Certifications");
                 });
@@ -80,23 +72,18 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("GitHub")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("LinkedIn")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Contacts");
                 });
@@ -109,22 +96,22 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("Achievement")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<string>("InstitutionName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Major")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Qualification")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -132,14 +119,9 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Educations");
                 });
@@ -151,7 +133,6 @@ namespace Portfolio.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("EndDate")
@@ -159,7 +140,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -167,14 +148,9 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Experiences");
                 });
@@ -188,9 +164,9 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<Guid>("ExperienceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Resonsibility")
+                    b.Property<string>("Responsibility")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -206,19 +182,15 @@ namespace Portfolio.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("ProfessionalSummaries");
                 });
@@ -229,9 +201,9 @@ namespace Portfolio.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("GeneratedPath")
+                    b.Property<string>("PdfPath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
@@ -239,16 +211,9 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TemplateId");
-
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Resumes");
                 });
@@ -264,14 +229,13 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("TemplateFilePath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("TemplateName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("TemplateThumbnailPath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -289,23 +253,18 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("ProficiencyLevel")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("SkillName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Skills");
                 });
@@ -318,23 +277,22 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(12)");
 
                     b.HasKey("Id");
 
@@ -343,15 +301,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Certification", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Certifications")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -360,15 +312,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Contact", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Contacts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -377,15 +323,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Education", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Educations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -394,15 +334,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Experience", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Experiences")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -422,15 +356,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.ProfessionalSummary", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("ProfessionalSummaries")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -439,21 +367,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Resume", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.ResumeTemplate", null)
-                        .WithMany()
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Resumes")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -463,7 +379,7 @@ namespace Portfolio.Infrastructure.Migrations
             modelBuilder.Entity("Portfolio.Core.Entities.ResumeTemplate", b =>
                 {
                     b.HasOne("Portfolio.Core.Entities.Resume", "Resume")
-                        .WithMany()
+                        .WithMany("ResumeTemplates")
                         .HasForeignKey("ResumeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -473,15 +389,9 @@ namespace Portfolio.Infrastructure.Migrations
 
             modelBuilder.Entity("Portfolio.Core.Entities.Skill", b =>
                 {
-                    b.HasOne("Portfolio.Core.Entities.User", null)
+                    b.HasOne("Portfolio.Core.Entities.User", "User")
                         .WithMany("Skills")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Portfolio.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -491,6 +401,11 @@ namespace Portfolio.Infrastructure.Migrations
             modelBuilder.Entity("Portfolio.Core.Entities.Experience", b =>
                 {
                     b.Navigation("Responsibilities");
+                });
+
+            modelBuilder.Entity("Portfolio.Core.Entities.Resume", b =>
+                {
+                    b.Navigation("ResumeTemplates");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.User", b =>
