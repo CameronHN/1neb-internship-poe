@@ -24,6 +24,8 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
         }
         private async Task SeedUserData()
         {
+            List<User> users = [];
+
             if (!_context.Users.Any())
             {
                 var faker = new Faker<User>()
@@ -34,10 +36,29 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(u => u.PhoneNumber, f => f.Phone.PhoneNumber())
                     .RuleFor(u => u.Email, f => f.Internet.Email());
 
-                var users = faker.Generate(10); // Generate 10 random users
+                users = faker.Generate(10); // Generate 10 random users
 
-                // Add the generated users to the context
                 await _context.Users.AddRangeAsync(users);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                users = await _context.Users.ToListAsync(); // Load existing users if already seeded
+            }
+
+            if (!_context.Experiences.Any())
+            {
+                var experienceFaker = new Faker<Experience>()
+                    .RuleFor(e => e.Id, _ => Guid.NewGuid())
+                    .RuleFor(e => e.JobTitle, f => f.Name.JobTitle())
+                    .RuleFor(e => e.CompanyName, f => f.Company.CompanyName())
+                    .RuleFor(e => e.StartDate, f => f.Date.PastDateOnly(5))
+                    .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
+                    .RuleFor(e => e.UserId, f => f.PickRandom(users).Id); // Assign a random user
+
+                var experiences = experienceFaker.Generate(20);
+
+                await _context.Experiences.AddRangeAsync(experiences);
                 await _context.SaveChangesAsync();
             }
         }
