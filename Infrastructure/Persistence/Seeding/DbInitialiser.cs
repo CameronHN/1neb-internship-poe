@@ -11,6 +11,14 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
         private static readonly string[] proficiencyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
         private static readonly string[] institutionTypes = ["High School", "University", "University of Technology"];
 
+        public static string CapitalizeEfficiently(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return input;
+            char[] chars = input.ToCharArray();
+            chars[0] = char.ToUpper(chars[0]);
+            return new string(chars);
+        }
+
         public async Task InitialiseAsync()
         {
             Randomizer.Seed = new Random(1234); // Deterministic
@@ -23,6 +31,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
         {
             List<User> users = [];
 
+            // ======== Users ========
             if (!_context.Users.Any())
             {
                 var faker = new Faker<User>()
@@ -43,6 +52,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 users = await _context.Users.ToListAsync();
             }
 
+            // ======== Experiences ========
             if (!_context.Experiences.Any())
             {
                 var experienceFaker = new Faker<Experience>()
@@ -59,6 +69,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 await _context.SaveChangesAsync();
             }
 
+            // ======== Professional Summaries ========
             if (!_context.ProfessionalSummaries.Any())
             {
                 var summaryFaker = new Faker<ProfessionalSummary>()
@@ -72,6 +83,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 await _context.SaveChangesAsync();
             }
 
+            // ======== Skills ========
             if (!_context.Skills.Any())
             {
                 var skillFaker = new Faker<Skill>()
@@ -86,14 +98,15 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 await _context.SaveChangesAsync();
             }
 
+            // ======== Educations ========
             if (!_context.Educations.Any())
             {
                 var educationFaker = new Faker<Education>()
                     .RuleFor(e => e.Id, _ => Guid.NewGuid())
-                    .RuleFor(e => e.InstitutionName, f => f.Lorem.Words() + f.PickRandom(institutionTypes))
-                    .RuleFor(e => e.Qualification, f => f.Lorem.Word())
-                    .RuleFor(e => e.Major, f => f.Lorem.Word())
-                    .RuleFor(e => e.Achievement, f => f.Lorem.Word())
+                    .RuleFor(e => e.InstitutionName, f => $"{CapitalizeEfficiently(f.Random.Word())} {f.PickRandom(institutionTypes)}")
+                    .RuleFor(e => e.Qualification, f => CapitalizeEfficiently(f.Random.Word()))
+                    .RuleFor(e => e.Major, f => CapitalizeEfficiently(f.Random.Word()))
+                    .RuleFor(e => e.Achievement, f => CapitalizeEfficiently(f.Random.Word()))
                     .RuleFor(e => e.StartDate, f => f.Date.PastDateOnly(7))
                     .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
@@ -103,6 +116,8 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 await _context.Educations.AddRangeAsync(educations);
                 await _context.SaveChangesAsync();
             }
+
+
         }
 
     }
