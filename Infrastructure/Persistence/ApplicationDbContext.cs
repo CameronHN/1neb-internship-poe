@@ -10,23 +10,25 @@ namespace Portfolio.Infrastructure.Persistence
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<Certification> Certifications { get; set; }
+        public DbSet<Certification> Certification { get; set; }
 
-        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Contact> Contact { get; set; }
 
-        public DbSet<Education> Educations { get; set; }
+        public DbSet<Education> Education { get; set; }
 
-        public DbSet<Experience> Experiences { get; set; }
+        public DbSet<Experience> Experience { get; set; }
 
-        public DbSet<ProfessionalSummary> ProfessionalSummaries { get; set; }
+        public DbSet<ExperienceResponsibility> ExperienceResponsibility { get; set; }
 
-        public DbSet<Resume> Resumes { get; set; }
+        public DbSet<ProfessionalSummary> ProfessionalSummary { get; set; }
 
-        public DbSet<ResumeTemplate> ResumeTemplates { get; set; }
+        public DbSet<Resume> Resume { get; set; }
 
-        public DbSet<Skill> Skills { get; set; }
+        public DbSet<ResumeTemplate> ResumeTemplate { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Skill> Skill { get; set; }
+
+        public DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

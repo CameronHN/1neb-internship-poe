@@ -30,9 +30,10 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
         private async Task SeedUserData()
         {
             List<User> users = [];
+            List<Experience> experiences = [];
 
             // ======== Users ========
-            if (!_context.Users.Any())
+            if (!_context.User.Any())
             {
                 var faker = new Faker<User>()
                     .RuleFor(u => u.Id, _ => Guid.NewGuid())
@@ -44,16 +45,16 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
                 users = faker.Generate(10);
 
-                await _context.Users.AddRangeAsync(users);
+                await _context.User.AddRangeAsync(users);
                 await _context.SaveChangesAsync();
             }
             else
             {
-                users = await _context.Users.ToListAsync();
+                users = await _context.User.ToListAsync();
             }
 
             // ======== Experiences ========
-            if (!_context.Experiences.Any())
+            if (!_context.Experience.Any())
             {
                 var experienceFaker = new Faker<Experience>()
                     .RuleFor(e => e.Id, _ => Guid.NewGuid())
@@ -63,14 +64,18 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
-                var experiences = experienceFaker.Generate(20);
+                experiences = experienceFaker.Generate(20);
 
-                await _context.Experiences.AddRangeAsync(experiences);
+                await _context.Experience.AddRangeAsync(experiences);
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                experiences = await _context.Experience.ToListAsync();
             }
 
             // ======== Professional Summaries ========
-            if (!_context.ProfessionalSummaries.Any())
+            if (!_context.ProfessionalSummary.Any())
             {
                 var summaryFaker = new Faker<ProfessionalSummary>()
                     .RuleFor(s => s.Id, _ => Guid.NewGuid())
@@ -79,12 +84,12 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
                 var summaries = summaryFaker.Generate(10);
 
-                await _context.ProfessionalSummaries.AddRangeAsync(summaries);
+                await _context.ProfessionalSummary.AddRangeAsync(summaries);
                 await _context.SaveChangesAsync();
             }
 
             // ======== Skills ========
-            if (!_context.Skills.Any())
+            if (!_context.Skill.Any())
             {
                 var skillFaker = new Faker<Skill>()
                     .RuleFor(s => s.Id, _ => Guid.NewGuid())
@@ -94,12 +99,12 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
                 var skills = skillFaker.Generate(40);
 
-                await _context.Skills.AddRangeAsync(skills);
+                await _context.Skill.AddRangeAsync(skills);
                 await _context.SaveChangesAsync();
             }
 
             // ======== Educations ========
-            if (!_context.Educations.Any())
+            if (!_context.Education.Any())
             {
                 var educationFaker = new Faker<Education>()
                     .RuleFor(e => e.Id, _ => Guid.NewGuid())
@@ -113,12 +118,61 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
                 var educations = educationFaker.Generate(40);
 
-                await _context.Educations.AddRangeAsync(educations);
+                await _context.Education.AddRangeAsync(educations);
                 await _context.SaveChangesAsync();
             }
 
+            // ======== Contacts ========
+            if (!_context.Contact.Any())
+            {
+                var contactFaker = new Faker<Contact>()
+                    .RuleFor(c => c.Id, _ => Guid.NewGuid())
+                    .RuleFor(c => c.LinkedIn, f => f.Internet.Url())
+                    .RuleFor(c => c.GitHub, f => f.Internet.Url())
+                    .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
+                var contacts = contactFaker.Generate(20);
+
+                await _context.Contact.AddRangeAsync(contacts);
+                await _context.SaveChangesAsync();
+            }
+
+            // ======== Certifications ========
+            if (!_context.Certification.Any())
+            {
+                var certificationFaker = new Faker<Certification>()
+                    .RuleFor(c => c.Id, _ => Guid.NewGuid())
+                    .RuleFor(c => c.CertificationName, f => f.Name.JobArea())
+                    .RuleFor(c => c.IssuingOrganisation, f => f.Company.CompanyName())
+                    .RuleFor(c => c.IssuedDate, f => f.Date.PastDateOnly())
+                    .RuleFor(c => c.ExpiryDate, (f, c) =>
+                        f.Random.Bool()
+                            ? (c.IssuedDate.HasValue
+                                ? f.Date.BetweenDateOnly(c.IssuedDate.Value, DateOnly.FromDateTime(DateTime.UtcNow))
+                                : DateOnly.FromDateTime(DateTime.UtcNow))
+                            : null)
+                    .RuleFor(c => c.CredentialUrl, f => f.PickRandom(f.Internet.Url(), null))
+                    .RuleFor(c => c.UserId, f => f.PickRandom(users).Id);
+
+                var certifications = certificationFaker.Generate(20);
+
+                await _context.Certification.AddRangeAsync(certifications);
+                await _context.SaveChangesAsync();
+            }
+
+            // ======== Experience Responsibilities ========
+            if (!_context.ExperienceResponsibility.Any())
+            {
+                var responsibilityFaker = new Faker<ExperienceResponsibility>()
+                    .RuleFor(r => r.Id, _ => Guid.NewGuid())
+                    .RuleFor(r => r.Responsibility, f => f.Lorem.Sentence())
+                    .RuleFor(r => r.ExperienceId, f => f.PickRandom(experiences).Id);
+
+                var responsibilities = responsibilityFaker.Generate(40);
+
+                await _context.ExperienceResponsibility.AddRangeAsync(responsibilities);
+                await _context.SaveChangesAsync();
+            }
         }
-
     }
 }
