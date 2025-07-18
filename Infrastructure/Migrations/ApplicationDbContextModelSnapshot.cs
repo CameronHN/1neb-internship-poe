@@ -52,7 +52,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Certification");
+                    b.ToTable("Certification", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Contact", b =>
@@ -76,7 +76,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contact");
+                    b.ToTable("Contact", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Education", b =>
@@ -114,7 +114,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Education");
+                    b.ToTable("Education", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Experience", b =>
@@ -143,7 +143,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Experience");
+                    b.ToTable("Experience", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ExperienceResponsibility", b =>
@@ -163,7 +163,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("ExperienceId");
 
-                    b.ToTable("ExperienceResponsibility");
+                    b.ToTable("ExperienceResponsibility", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ProfessionalSummary", b =>
@@ -183,7 +183,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProfessionalSummary");
+                    b.ToTable("ProfessionalSummary", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Resume", b =>
@@ -206,7 +206,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Resume");
+                    b.ToTable("Resume", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ResumeTemplate", b =>
@@ -233,7 +233,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("ResumeId");
 
-                    b.ToTable("ResumeTemplate");
+                    b.ToTable("ResumeTemplate", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Skill", b =>
@@ -257,7 +257,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Skill");
+                    b.ToTable("Skill", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.User", b =>
@@ -287,7 +287,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Certification", b =>
