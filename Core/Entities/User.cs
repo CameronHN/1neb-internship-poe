@@ -6,22 +6,22 @@ namespace Portfolio.Core.Entities
     public class User
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         [Column(TypeName = "varchar(100)")]
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
 
         [Column(TypeName = "varchar(100)")]
         public string? Gender { get; set; }
 
         [Column(TypeName = "varchar(20)")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Column(TypeName = "varchar(100)")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         public List<Certification> Certifications { get; set; }
         public List<Education> Educations { get; set; }

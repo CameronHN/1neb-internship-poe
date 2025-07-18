@@ -6,10 +6,10 @@ namespace Portfolio.Core.Entities
     public class Resume
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
-        public string PdfPath { get; set; }
+        public required string PdfPath { get; set; }
 
         public Guid TemplateId { get; set; }
 

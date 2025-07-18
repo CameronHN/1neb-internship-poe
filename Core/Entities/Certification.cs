@@ -6,13 +6,13 @@ namespace Portfolio.Core.Entities
     public class Certification
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
         public required string CertificationName { get; set; }
 
         [Column(TypeName = "varchar(100)")]
-        public string IssuingOrganisation { get; set; }
+        public string? IssuingOrganisation { get; set; }
 
         [Column(TypeName = "varchar(100)")]
         public string? CredentialUrl { get; set; }

@@ -6,7 +6,7 @@ namespace Portfolio.Core.Entities
     public class Experience
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
         public required string JobTitle { get; set; }

@@ -6,13 +6,13 @@ namespace Portfolio.Core.Entities
     public class Skill
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
-        public string SkillName { get; set; }
+        public required string SkillName { get; set; }
 
         [Column(TypeName = "varchar(100)")]
-        public string ProficiencyLevel { get; set; }
+        public string? ProficiencyLevel { get; set; }
 
         public Guid UserId { get; set; }
 

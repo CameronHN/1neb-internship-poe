@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portfolio.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Portfolio.Infrastructure.Persistence;
 namespace Portfolio.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718140129_UpdateNullableAndRequiredAttributes")]
+    partial class UpdateNullableAndRequiredAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Certification", (string)null);
+                    b.ToTable("Certification");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Contact", b =>
@@ -73,7 +76,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contact", (string)null);
+                    b.ToTable("Contact");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Education", b =>
@@ -109,7 +112,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Education", (string)null);
+                    b.ToTable("Education");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Experience", b =>
@@ -138,7 +141,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Experience", (string)null);
+                    b.ToTable("Experience");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ExperienceResponsibility", b =>
@@ -158,7 +161,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("ExperienceId");
 
-                    b.ToTable("ExperienceResponsibility", (string)null);
+                    b.ToTable("ExperienceResponsibility");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ProfessionalSummary", b =>
@@ -178,7 +181,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProfessionalSummary", (string)null);
+                    b.ToTable("ProfessionalSummary");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Resume", b =>
@@ -201,7 +204,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Resume", (string)null);
+                    b.ToTable("Resume");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.ResumeTemplate", b =>
@@ -228,7 +231,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("ResumeId");
 
-                    b.ToTable("ResumeTemplate", (string)null);
+                    b.ToTable("ResumeTemplate");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Skill", b =>
@@ -251,7 +254,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Skill", (string)null);
+                    b.ToTable("Skill");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.User", b =>
@@ -280,7 +283,7 @@ namespace Portfolio.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Portfolio.Core.Entities.Certification", b =>
