@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Contracts\Repositories\" />
     <Folder Include="Contracts\Services\" />
+    <Folder Include="DTOs\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
 
