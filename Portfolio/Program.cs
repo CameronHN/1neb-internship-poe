@@ -1,10 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using Portfolio.Application.Services;
+using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Services;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
+using Portfolio.Infrastructure.Repositories;
+using Portfolio.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddControllers();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,8 +35,10 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dbInitialiser = services.GetRequiredService<DbInitialiser>();
-    await dbInitialiser.InitialiseAsync(); // <- call your seeding logic
+    await dbInitialiser.InitialiseAsync(); // Seeding logic
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
