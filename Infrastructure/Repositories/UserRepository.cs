@@ -1,34 +1,24 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Entities;
-using Portfolio.Core.Exceptions;
+using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task<User> CreateUser(User user)
+        private readonly ApplicationDbContext _dbContext;
+        private readonly ILogger<User> _logger;
+
+        public UserRepository(ApplicationDbContext dbContext, ILogger<User> logger)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
-        public Task<bool> DeleteUserById(int Id)
+        public async Task<User?> GetUserById(Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<User>> GetAllUsers()
-        {
-            throw new NotFoundException("No users found");
-        }
-
-        public Task<User> GetUserById(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> UpdateUser(User user)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.User.FindAsync(id);
         }
     }
 }
