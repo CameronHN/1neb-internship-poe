@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
+    <ProjectReference Include="..\Infrastructure\Portfolio.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
