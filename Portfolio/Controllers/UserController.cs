@@ -15,10 +15,10 @@ namespace Portfolio.WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet()]
         [ProducesResponseType(typeof(GetUserDetailsDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserById(Guid id)
+        public async Task<IActionResult> GetUserById([FromQuery] Guid id)
         {
             var user = await _userService.GetUserDetails(id);
 
