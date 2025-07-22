@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -19,7 +20,7 @@ namespace Portfolio.Infrastructure.Repositories
 
             if (user == null)
             {
-                throw new NullReferenceException("User does not exist.");
+                throw new NotFoundException("User does not exist.");
             }
 
             return user;

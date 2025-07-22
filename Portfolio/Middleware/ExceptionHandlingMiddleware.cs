@@ -59,7 +59,7 @@ namespace Portfolio.WebApi.Middleware
                 detail = message
             };
 
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = "application/json; charset-utf-8";
             context.Response.StatusCode = (int)status;
 
             var result = JsonSerializer.Serialize(problemDetails);

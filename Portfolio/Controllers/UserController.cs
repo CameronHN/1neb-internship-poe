@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
+using Portfolio.Core.DTOs;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -15,22 +16,13 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(GetUserDetailsDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            try
-            {
-                var user = await _userService.GetUserDetails(id);
+            var user = await _userService.GetUserDetails(id);
 
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                if (ex is NullReferenceException)
-                {
-                    return NotFound(ex.Message);
-                }
-                return StatusCode(500, "Internal server error. Please try again later.");
-            }
+            return Ok(user);
         }
     }
 }
