@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.Entities;
 
 namespace Portfolio.Application.Services
 {
@@ -34,7 +35,30 @@ namespace Portfolio.Application.Services
             {
                 throw;
             }
+        }
 
+        public async Task AddUser(AddUserDTO userDto)
+        {
+            var user = new User
+            {
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                Email = userDto.Email,
+                Gender = userDto.Gender,
+                PhoneNumber = userDto.PhoneNumber
+            };
+
+            await _userRepository.AddUser(user);
+        }
+
+        public async Task UpdateUser(UpdateUserDTO updateUserDTO)
+        {
+            await _userRepository.UpdateUser(updateUserDTO);
+        }
+
+        public async Task DeleteUser(Guid id)
+        {
+            await _userRepository.DeleteUser(id);
         }
     }
 }
