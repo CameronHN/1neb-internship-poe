@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
@@ -57,6 +58,45 @@ namespace Portfolio.Infrastructure.Repositories
 
             _dbContext.User.Remove(user);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<ResumeDto?> GetResumeDtoByUserId(Guid userId)
+        {
+            var resume = await _dbContext.User.Where(u => u.Id == userId)
+                .Select(u => new ResumeDto
+                {
+                    Name = u.FirstName + " " + u.LastName,
+                    Title = u.ProfessionalSummaries.FirstOrDefault().Summary,
+                    Contact = new ContactInfo
+                    {
+                        Email = u.Email,
+                        Phone = u.PhoneNumber,
+                        LinkedIn = u.Contacts.FirstOrDefault().LinkedIn,
+                        Github = u.Contacts.FirstOrDefault().GitHub
+                    },
+                    Summary = u.ProfessionalSummaries.FirstOrDefault().Summary,
+                    Skills = u.Skills.Select(s => s.SkillName).ToList(),
+                    Experience = u.Experiences.Select(e => new ExperienceItem
+                    {
+                        Company = e.CompanyName,
+                        Role = e.JobTitle,
+                        Start = e.StartDate.ToString("yyyy-MM"),
+                        End = e.EndDate.ToString("yyyy-MM"),
+                        Location = "",
+                        Bullets = e.Responsibilities.Select(r => r.Responsibility).ToList()
+                    }).ToList(),
+                    Education = u.Educations.Select(ed => new EducationItem
+                    {
+                        Institution = ed.InstitutionName,
+                        Degree = ed.Qualification,
+                        Start = ed.StartDate.ToString("yyyy"),
+                        End = ed.EndDate.ToString("yyyy"),
+                        Additional = ed.Achievement
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            return resume;
         }
     }
 }

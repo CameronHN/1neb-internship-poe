@@ -12,5 +12,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task UpdateUser(UpdateUserDTO updateUserDTO);
 
         Task DeleteUser(Guid id);
+
+        Task<ResumeDto?> GetResumeDtoByUserId(Guid userId);
     }
 }
