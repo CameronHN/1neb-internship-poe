@@ -24,5 +24,12 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(user);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUser(AddUserDTO dto)
+        {
+            await _userService.AddUser(dto);
+            return Ok();
+        }
     }
 }
