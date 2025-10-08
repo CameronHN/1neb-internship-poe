@@ -6,12 +6,18 @@ using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
 using Portfolio.Infrastructure.Repositories;
 using Portfolio.WebApi.Middleware;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IResumeService, ResumeService>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddControllers();
@@ -54,3 +60,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
