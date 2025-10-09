@@ -79,7 +79,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             {
                 var summaryFaker = new Faker<ProfessionalSummary>()
                     .RuleFor(s => s.Id, _ => Guid.NewGuid())
-                    .RuleFor(s => s.Summary, f => f.Lorem.Sentence(10))
+                    .RuleFor(s => s.Summary, f => f.Lorem.Sentence(15))
                     .RuleFor(s => s.UserId, f => f.PickRandom(users).Id);
 
                 var summaries = summaryFaker.Generate(10);
