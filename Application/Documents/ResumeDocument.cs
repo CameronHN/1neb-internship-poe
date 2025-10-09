@@ -54,9 +54,7 @@ namespace Portfolio.Application.Documents
                         var institutionName = ed.Institution ?? "";
                         var qualification = ed.Degree ?? "";
                         var datesStudied = string.Join(" - ", new[] { ed.Start, ed.End }.Where(s => !string.IsNullOrWhiteSpace(s)));
-                        var eduLocation = ""; // Not present in DTO
-                        var eduDescription = ed.Additional ?? "";
-                        var coursework = new string[0]; // Not present in DTO
+                        var eduDescription = ed.Major ?? "";
 
                         column.Item().Table(table =>
                         {
@@ -69,15 +67,9 @@ namespace Portfolio.Application.Documents
                             table.Cell().Row(1).Column(1).Text(institutionName).Bold().AlignLeft();
                             table.Cell().Row(1).Column(2).Text(datesStudied).Bold().AlignRight();
                             table.Cell().Row(2).Column(1).Text(qualification).AlignLeft();
-                            table.Cell().Row(2).Column(2).Text(eduLocation).AlignRight();
                         });
                         if (!string.IsNullOrWhiteSpace(eduDescription))
                             column.Item().Text($"- {eduDescription}");
-                        if (coursework.Any())
-                        {
-                            string courseworkText = string.Join(", ", coursework);
-                            column.Item().Text($"- Coursework: {courseworkText}");
-                        }
                     }
 
                     column.Item().Padding(5);
@@ -96,8 +88,7 @@ namespace Portfolio.Application.Documents
                         var jobCompanyName = exp.Company ?? "";
                         var jobTitle = exp.Role ?? "";
                         var jobDates = string.Join(" - ", new[] { exp.Start, exp.End }.Where(s => !string.IsNullOrWhiteSpace(s)));
-                        var jobLocation = exp.Location ?? "";
-                        var jobResponsibilities = exp.Bullets ?? new List<string>();
+                        var jobResponsibilities = exp.Responsibilities ?? new List<string>();
 
                         column.Item().Table(table =>
                         {
@@ -110,7 +101,6 @@ namespace Portfolio.Application.Documents
                             table.Cell().Row(1).Column(1).Text(jobCompanyName).Bold().AlignLeft();
                             table.Cell().Row(1).Column(2).Text(jobDates).Bold().AlignRight();
                             table.Cell().Row(2).Column(1).Text(jobTitle).AlignLeft();
-                            table.Cell().Row(2).Column(2).Text(jobLocation).AlignRight();
                         });
 
                         foreach (string res in jobResponsibilities)
