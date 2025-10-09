@@ -82,8 +82,7 @@ namespace Portfolio.Infrastructure.Repositories
                         Role = e.JobTitle,
                         Start = e.StartDate.ToString("yyyy-MM"),
                         End = e.EndDate.ToString("yyyy-MM"),
-                        Location = "",
-                        Bullets = e.Responsibilities.Select(r => r.Responsibility).ToList()
+                        Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
                     }).ToList(),
                     Education = u.Educations.Select(ed => new EducationItem
                     {
@@ -91,7 +90,15 @@ namespace Portfolio.Infrastructure.Repositories
                         Degree = ed.Qualification,
                         Start = ed.StartDate.ToString("yyyy"),
                         End = ed.EndDate.ToString("yyyy"),
-                        Additional = ed.Achievement
+                        Major = ed.Major
+                    }).ToList(),
+                    Certification = u.Certifications.Select(ce => new CertificationItem
+                    {
+                        Name = ce.CertificationName,
+                        Organisation = ce.IssuingOrganisation,
+                        CredentialUrl = ce.CredentialUrl,
+                        IssuedDate = ce.IssuedDate.HasValue ? ce.IssuedDate.Value.ToString("yyyy-MM") : null,
+                        ExpirationDate = ce.ExpiryDate.HasValue ? ce.ExpiryDate.Value.ToString("yyyy-MM") : null
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();

@@ -9,6 +9,7 @@
         public List<string>? Skills { get; set; }
         public List<ExperienceItem>? Experience { get; set; }
         public List<EducationItem>? Education { get; set; }
+        public List<CertificationItem>? Certification { get; set; }
     }
 
     public class ContactInfo
@@ -27,8 +28,7 @@
         public string? Role { get; set; }
         public string? Start { get; set; }
         public string? End { get; set; }
-        public string? Location { get; set; }
-        public List<string>? Bullets { get; set; }
+        public List<string>? Responsibilities { get; set; }
     }
 
     public class EducationItem
@@ -37,16 +37,16 @@
         public string? Degree { get; set; }
         public string? Start { get; set; }
         public string? End { get; set; }
-        public string? Additional { get; set; }
+        public string? Major { get; set; }
     }
 
-    public class AwardItem
+    public class CertificationItem
     {
-        public string? Name;
-        public string? Organisation;
-        public string? CredentialUrl;
-        public string? IssuedDate;
-        public string? ExpirationDate;
+        public string? Name { get; set; }
+        public string? Organisation { get; set; }
+        public string? CredentialUrl { get; set; }
+        public string? IssuedDate { get; set; }
+        public string? ExpirationDate { get; set; }
     }
 
 
