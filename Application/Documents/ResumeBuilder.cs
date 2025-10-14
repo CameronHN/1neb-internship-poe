@@ -5,10 +5,10 @@ using QuestPDF.Infrastructure;
 
 namespace Portfolio.Application.Documents
 {
-    public class ResumeDocument : IDocument
+    public class ResumeBuilder : IDocument
     {
         private readonly ResumeDto _m;
-        public ResumeDocument(ResumeDto model) => _m = model ?? new();
+        public ResumeBuilder(ResumeDto model) => _m = model ?? new();
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
 

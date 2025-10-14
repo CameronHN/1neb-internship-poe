@@ -22,7 +22,7 @@ namespace Portfolio.Application.Services
 
         public Task<byte[]> RenderPdfAsync(ResumeDto dto)
         {
-            var pdf = new ResumeDocument(dto ?? new()).GeneratePdf();
+            var pdf = new ResumeBuilder(dto ?? new()).GeneratePdf();
             return Task.FromResult(pdf);
         }
     }
