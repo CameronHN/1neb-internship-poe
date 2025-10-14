@@ -113,5 +113,21 @@ namespace Portfolio.Infrastructure.Repositories
                 .Select(s => s.SkillName)
                 .ToListAsync();
         }
+
+        public async Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId)
+        {
+            return await _dbContext.Education
+                .Where(e => e.UserId == userId)
+                .OrderBy(e => e.EndDate)
+                .Select(e => new EducationItem
+                {
+                    Institution = e.InstitutionName,
+                    Degree = e.Qualification,
+                    Start = e.StartDate.ToString("MMMM yyyy"),
+                    End = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
+                    Major = e.Major
+                })
+                .ToListAsync();
+        }
     }
 }

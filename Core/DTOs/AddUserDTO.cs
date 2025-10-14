@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.DTOs
 {
+    // TODO: Add validation on DTO
     public class AddUserDTO
     {
         public string FirstName { get; set; }

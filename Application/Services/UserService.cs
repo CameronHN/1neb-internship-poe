@@ -65,5 +65,10 @@ namespace Portfolio.Application.Services
         {
             return await _userRepository.GetAllSkillsByUserId(userId);
         }
+
+        public async Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId)
+        {
+            return await _userRepository.GetAllEducationItemsByUserId(userId);
+        }
     }
 }

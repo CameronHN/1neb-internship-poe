@@ -16,5 +16,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<ResumeDto?> GetResumeDtoByUserId(Guid userId);
 
         Task<List<string>> GetAllSkillsByUserId(Guid userId);
+
+        Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId);
     }
 }

@@ -8,5 +8,7 @@ namespace Portfolio.Core.Contracts.Services
         Task AddUser(AddUserDTO dto);
 
         Task<List<string>> GetAllSkillsByUserId(Guid userId);
+
+        Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId);
     }
 }
