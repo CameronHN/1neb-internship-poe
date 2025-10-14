@@ -75,30 +75,34 @@ namespace Portfolio.Infrastructure.Repositories
                         Github = u.Contacts.FirstOrDefault().GitHub
                     },
                     Summary = u.ProfessionalSummaries.FirstOrDefault().Summary,
-                    Skills = u.Skills.Select(s => s.SkillName).ToList(),
-                    Experience = u.Experiences.Select(e => new ExperienceItem
+                    Skills = u.Skills.OrderBy(s=>s.SkillName).Select(s => new SkillsItem
+                    {
+                        Skill = s.SkillName,
+                        SkillLevel = s.ProficiencyLevel
+                    }).ToList(),
+                    Experience = u.Experiences.OrderByDescending(e => e.EndDate).Select(e => new ExperienceItem
                     {
                         Company = e.CompanyName,
                         Role = e.JobTitle,
-                        Start = e.StartDate.ToString("yyyy-MM"),
-                        End = e.EndDate.ToString("yyyy-MM"),
+                        Start = e.StartDate.ToString("MMMM yyyy"),
+                        End = e.EndDate.ToString("MMMM yyyy"),
                         Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
                     }).ToList(),
-                    Education = u.Educations.Select(ed => new EducationItem
+                    Education = u.Educations.OrderByDescending(ed => ed.EndDate).Select(ed => new EducationItem
                     {
                         Institution = ed.InstitutionName,
                         Degree = ed.Qualification,
-                        Start = ed.StartDate.ToString("yyyy"),
-                        End = ed.EndDate.ToString("yyyy"),
+                        Start = ed.StartDate.ToString("MMMM yyyy"),
+                        End = ed.EndDate.ToString("MMMM yyyy"),
                         Major = ed.Major
                     }).ToList(),
-                    Certification = u.Certifications.Select(ce => new CertificationItem
+                    Certification = u.Certifications.OrderByDescending(ce => ce.IssuedDate).Select(ce => new CertificationItem
                     {
                         Name = ce.CertificationName,
                         Organisation = ce.IssuingOrganisation,
                         CredentialUrl = ce.CredentialUrl,
-                        IssuedDate = ce.IssuedDate.HasValue ? ce.IssuedDate.Value.ToString("yyyy-MM") : null,
-                        ExpirationDate = ce.ExpiryDate.HasValue ? ce.ExpiryDate.Value.ToString("yyyy-MM") : null
+                        IssuedDate = ce.IssuedDate.HasValue ? ce.IssuedDate.Value.ToString("MMMM yyyy") : null,
+                        ExpirationDate = ce.ExpiryDate.HasValue ? ce.ExpiryDate.Value.ToString("MMMM yyyy") : null
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
