@@ -82,7 +82,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(s => s.Summary, f => f.Lorem.Sentence(15))
                     .RuleFor(s => s.UserId, f => f.PickRandom(users).Id);
 
-                var summaries = summaryFaker.Generate(10);
+                var summaries = summaryFaker.Generate(30);
 
                 await _context.ProfessionalSummary.AddRangeAsync(summaries);
                 await _context.SaveChangesAsync();
@@ -168,7 +168,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(r => r.Responsibility, f => f.Lorem.Sentence())
                     .RuleFor(r => r.ExperienceId, f => f.PickRandom(experiences).Id);
 
-                var responsibilities = responsibilityFaker.Generate(40);
+                var responsibilities = responsibilityFaker.Generate(80);
 
                 await _context.ExperienceResponsibility.AddRangeAsync(responsibilities);
                 await _context.SaveChangesAsync();
