@@ -6,7 +6,7 @@
         public string? Title { get; set; }
         public ContactInfo? Contact { get; set; }
         public string? Summary { get; set; }
-        public List<string>? Skills { get; set; }
+        public List<SkillsItem>? Skills { get; set; }
         public List<ExperienceItem>? Experience { get; set; }
         public List<EducationItem>? Education { get; set; }
         public List<CertificationItem>? Certification { get; set; }
@@ -20,6 +20,13 @@
         public string? Website { get; set; }
         public string? LinkedIn { get; set; }
         public string? Github { get; set; }
+    }
+
+    public class SkillsItem
+    {
+        public string? Skill { get; set; }
+
+        public string? SkillLevel { get; set; }
     }
 
     public class ExperienceItem
