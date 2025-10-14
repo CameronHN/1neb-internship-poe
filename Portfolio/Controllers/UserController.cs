@@ -31,5 +31,13 @@ namespace Portfolio.WebApi.Controllers
             await _userService.AddUser(dto);
             return Ok();
         }
+
+        [HttpGet("skills/{userId:guid}")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetSkillsByUserId(Guid userId)
+        {
+            var skills = await _userService.GetAllSkillsByUserId(userId);
+            return Ok(skills);
+        }
     }
 }

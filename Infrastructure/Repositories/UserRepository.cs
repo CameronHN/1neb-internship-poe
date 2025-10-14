@@ -105,5 +105,13 @@ namespace Portfolio.Infrastructure.Repositories
 
             return resume;
         }
+
+        public async Task<List<string>> GetAllSkillsByUserId(Guid userId)
+        {
+            return await _dbContext.Skill
+                .Where(s => s.UserId == userId)
+                .Select(s => s.SkillName)
+                .ToListAsync();
+        }
     }
 }

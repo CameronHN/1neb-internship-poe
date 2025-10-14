@@ -60,5 +60,10 @@ namespace Portfolio.Application.Services
         {
             await _userRepository.DeleteUser(id);
         }
+
+        public async Task<List<string>> GetAllSkillsByUserId(Guid userId)
+        {
+            return await _userRepository.GetAllSkillsByUserId(userId);
+        }
     }
 }
