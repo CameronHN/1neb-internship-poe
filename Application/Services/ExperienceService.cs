@@ -25,5 +25,10 @@ namespace Portfolio.Application.Services
                 throw new ArgumentException($"Experience with id {id} not found.");
             return experience;
         }
+
+        public Task<List<ExperienceItem>> GetExperienceItemsByUserId(Guid id)
+        {
+            return _experienceRepository.GetAllExperiencesByUserId(id);
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
-                experiences = experienceFaker.Generate(20);
+                experiences = experienceFaker.Generate(40);
 
                 await _context.Experience.AddRangeAsync(experiences);
                 await _context.SaveChangesAsync();
