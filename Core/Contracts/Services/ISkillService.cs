@@ -4,6 +4,6 @@ namespace Portfolio.Core.Contracts.Services
 {
     public interface ISkillService
     {
-        Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest certificationRequest);
+        Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
     }
 }
