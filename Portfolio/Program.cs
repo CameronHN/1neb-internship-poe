@@ -22,6 +22,9 @@ builder.Services.AddScoped<IExperienceService, ExperienceService>();
 builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
 builder.Services.AddScoped<ICertificationService, CertificationService>();
 
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<ISkillService, SkillService>();
+
 builder.Services.AddScoped<IResumeService, ResumeService>();
 
 builder.Services.AddControllers();
