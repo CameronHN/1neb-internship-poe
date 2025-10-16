@@ -28,7 +28,7 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpGet("{userId:guid}")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
-        public async Task<IActionResult> GetResume(Guid userId)
+        public async Task<IActionResult> GetResumeDtoByUserId(Guid userId)
         {
             var resume = await _resumeService.GetResumeByUserId(userId);
             if (resume == null)
@@ -57,18 +57,24 @@ namespace Portfolio.WebApi.Controllers
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
-            var userInfo = await _resumeService.GetResume(resumeRequest);
+            try
+            {
+                var userInfo = await _resumeService.GetResume(resumeRequest);
+                var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
-            var pdf = _resumeService.RenderPdf(userInfo ?? new());
+                if (pdf == null || pdf.Length == 0)
+                    return BadRequest("PDF generation failed.");
 
-            if (pdf == null || pdf.Length == 0)
-                return BadRequest("PDF generation failed.");
+                string? name = !string.IsNullOrEmpty(userInfo?.Name)
+                    ? userInfo.Name.Replace(' ', '_') + "_"
+                    : "";
 
-            string? name = !string.IsNullOrEmpty(userInfo?.Name)
-                ? userInfo.Name.Replace(' ', '_') + "_"
-                : "";
-
-            return File(pdf, "application/pdf", $"{name}resume.pdf");
+                return File(pdf, "application/pdf", $"{name}resume.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while generating the PDF.");
+            }
         }
 
     }

@@ -83,9 +83,15 @@ namespace Portfolio.Application.Services
 
         public byte[] RenderPdf(ResumeDto dto)
         {
-            using var stream = new MemoryStream();
-            new ResumeBuilder(dto ?? new()).GeneratePdf(stream);
-            return stream.ToArray();
+            try
+            {
+                var document = new ResumeBuilder(dto ?? new());
+                return document.GeneratePdf();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"PDF generation failed: {ex.Message}", ex);
+            }
         }
     }
 }

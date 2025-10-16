@@ -7,20 +7,23 @@ namespace Portfolio.WebApi.Middleware
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _next(context); // Continue down the pipeline
+                await _next(context);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -59,12 +62,11 @@ namespace Portfolio.WebApi.Middleware
                 detail = message
             };
 
-            context.Response.ContentType = "application/json; charset-utf-8";
+            context.Response.ContentType = "application/json; charset=utf-8";
             context.Response.StatusCode = (int)status;
 
             var result = JsonSerializer.Serialize(problemDetails);
             return context.Response.WriteAsync(result);
         }
     }
-
 }
