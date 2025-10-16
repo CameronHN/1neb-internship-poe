@@ -18,7 +18,7 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpPost("certifications")]
         [ProducesResponseType(typeof(List<CertificationItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllCertsByIds([FromBody] CertificationRequest request)
+        public async Task<IActionResult> GetAllCertsByIds([FromBody] ItemListRequest request)
         {
             var experiences = await _certificationService.GetAllCertsByIds(request);
             return Ok(experiences);

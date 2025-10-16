@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Services;
+using Portfolio.Core.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Portfolio.Core.Contracts.Repositories;
-using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.DTOs;
 
 namespace Portfolio.Application.Services
 {

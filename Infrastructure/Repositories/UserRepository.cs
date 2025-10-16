@@ -75,7 +75,7 @@ namespace Portfolio.Infrastructure.Repositories
                         Github = u.Contacts.FirstOrDefault().GitHub
                     },
                     Summary = u.ProfessionalSummaries.FirstOrDefault().Summary,
-                    Skills = u.Skills.OrderBy(s=>s.SkillName).Select(s => new SkillsItem
+                    Skills = u.Skills.OrderBy(s => s.SkillName).Select(s => new SkillsItem
                     {
                         Skill = s.SkillName,
                         SkillLevel = s.ProficiencyLevel

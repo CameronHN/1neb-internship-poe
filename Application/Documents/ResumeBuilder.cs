@@ -117,7 +117,7 @@ namespace Portfolio.Application.Documents
                     column.Item().Padding(5);
 
                     // Education
-                    if (_m.Education?.Any()==true)
+                    if (_m.Education?.Any() == true)
                     {
                         column.Item().Row(row =>
                         {
@@ -183,7 +183,7 @@ namespace Portfolio.Application.Documents
                                         text.Hyperlink("Link", certLink).FontColor(Colors.Blue.Medium).Bold();
                                         text.Span(")").Bold();
                                     }
-                                    
+
                                     if (!string.IsNullOrWhiteSpace(org))
                                         text.Span($", {org}");
                                 });
