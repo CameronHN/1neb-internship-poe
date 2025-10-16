@@ -55,6 +55,4 @@
         public string? IssuedDate { get; set; }
         public string? ExpirationDate { get; set; }
     }
-
-
 }
