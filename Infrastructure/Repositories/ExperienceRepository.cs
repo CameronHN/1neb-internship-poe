@@ -3,11 +3,6 @@ using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Portfolio.Infrastructure.Repositories
 {

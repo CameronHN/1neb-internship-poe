@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
 using Portfolio.Infrastructure.Repositories;
