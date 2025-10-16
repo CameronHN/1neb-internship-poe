@@ -1,8 +1,8 @@
 ﻿using Portfolio.Core.DTOs;
 
-namespace Portfolio.Core.Contracts.Repositories
+namespace Portfolio.Core.Contracts.Services
 {
-    public interface IEducationRepository
+    public interface IEducationService
     {
         Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
     }
