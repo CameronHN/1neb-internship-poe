@@ -15,16 +15,16 @@ namespace Portfolio.WebApi.Controllers
             _resumeService = resumeService;
         }
 
-        [HttpPost]
-        [Produces("application/pdf")]
-        public async Task<IActionResult> Generate([FromBody] ResumeDto dto)
-        {
-            var pdf = await _resumeService.RenderPdfAsync(dto ?? new());
+        //[HttpPost]
+        //[Produces("application/pdf")]
+        //public async Task<IActionResult> Generate([FromBody] ResumeDto dto)
+        //{
+        //    var pdf = await _resumeService.RenderPdfAsync(dto ?? new());
 
-            string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
+        //    string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
 
-            return File(pdf, "application/pdf", $"{name}resume.pdf");
-        }
+        //    return File(pdf, "application/pdf", $"{name}resume.pdf");
+        //}
 
         [HttpGet("{userId:guid}")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
@@ -46,9 +46,27 @@ namespace Portfolio.WebApi.Controllers
         {
             var userInfo = await _resumeService.GetResumeByUserId(userId);
 
-            var pdf = await _resumeService.RenderPdfAsync(userInfo ?? new());
+            var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
             string? name = !string.IsNullOrEmpty(userInfo?.Name) ? userInfo.Name.Replace(' ', '_') + "_" : "";
+
+            return File(pdf, "application/pdf", $"{name}resume.pdf");
+        }
+
+        [HttpPost("/get-resume")]
+        [Produces("application/pdf")]
+        public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
+        {
+            var userInfo = await _resumeService.GetResume(resumeRequest);
+
+            var pdf = _resumeService.RenderPdf(userInfo ?? new());
+
+            if (pdf == null || pdf.Length == 0)
+                return BadRequest("PDF generation failed.");
+
+            string? name = !string.IsNullOrEmpty(userInfo?.Name)
+                ? userInfo.Name.Replace(' ', '_') + "_"
+                : "";
 
             return File(pdf, "application/pdf", $"{name}resume.pdf");
         }

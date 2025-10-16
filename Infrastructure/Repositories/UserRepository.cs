@@ -133,5 +133,25 @@ namespace Portfolio.Infrastructure.Repositories
                 })
                 .ToListAsync();
         }
+
+        public async Task<UserEntityDetailsDto> GetUserEntityDetailsByUserId(Guid id)
+        {
+            UserEntityDetailsDto? user = await _dbContext.User.Where(u => u.Id == id)
+                .Select(u => new UserEntityDetailsDto
+                {
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    Gender = u.Gender
+                }).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new NotFoundException("User does not exist.");
+            }
+
+            return user;
+        }
     }
 }

@@ -29,9 +29,9 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpPost("experiences")]
         [ProducesResponseType(typeof(List<ExperienceItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllExperiencesByIds([FromBody] List<Guid> ids)
+        public async Task<IActionResult> GetAllExperiencesByIds([FromBody] ItemListRequest request)
         {
-            var experiences = await _experienceService.GetAllExperiencesByIds(ids);
+            var experiences = await _experienceService.GetAllExperiencesByIds(request);
             return Ok(experiences);
         }
     }

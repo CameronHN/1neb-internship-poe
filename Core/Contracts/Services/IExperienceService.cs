@@ -8,6 +8,8 @@ namespace Portfolio.Core.Contracts.Services
 
         Task<List<ExperienceItem>> GetExperienceItemsByUserId(Guid id);
 
-        Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
+        //Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
+
+        Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);
     }
 }

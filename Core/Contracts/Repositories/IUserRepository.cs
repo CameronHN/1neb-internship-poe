@@ -18,5 +18,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<string>> GetAllSkillsByUserId(Guid userId);
 
         Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId);
+
+        Task<UserEntityDetailsDto> GetUserEntityDetailsByUserId(Guid id);
     }
 }

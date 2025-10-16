@@ -13,10 +13,10 @@ namespace Portfolio.Application.Services
             _experienceRepository = experienceRepository;
         }
 
-        public Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids)
-        {
-            return _experienceRepository.GetAllExperiencesByIds(ids);
-        }
+        //public Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids)
+        //{
+        //    return _experienceRepository.GetAllExperiencesByIds(ids);
+        //}
 
         public async Task<ExperienceItem> GetExperienceById(Guid id)
         {
@@ -29,6 +29,11 @@ namespace Portfolio.Application.Services
         public Task<List<ExperienceItem>> GetExperienceItemsByUserId(Guid id)
         {
             return _experienceRepository.GetAllExperiencesByUserId(id);
+        }
+
+        public Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
+        {
+            return _experienceRepository.GetAllExperiencesByIds(request);
         }
     }
 }
