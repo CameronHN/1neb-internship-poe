@@ -1,19 +1,21 @@
-﻿using Portfolio.Core.Contracts.Services;
+﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 
 namespace Portfolio.Application.Services
 {
     public class EducationService : IEducationService
     {
-        private readonly IEducationService _educationService;
+        private readonly IEducationRepository _educationRepository;
 
-        public EducationService(IEducationService educationService)
+        public EducationService(IEducationRepository educationRepository)
         {
-            _educationService = educationService;
+            _educationRepository = educationRepository;
         }
+
         public Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
         {
-            return _educationService.GetAllEducationsByIds(request);
+            return _educationRepository.GetAllEducationsByIds(request);
         }
     }
 }
