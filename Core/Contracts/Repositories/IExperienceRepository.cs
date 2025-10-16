@@ -13,5 +13,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<ExperienceItem?> GetExperienceById(Guid id);
 
         Task<List<ExperienceItem>> GetAllExperiencesByUserId(Guid id);
+
+        Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
     }
 }
