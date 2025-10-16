@@ -9,6 +9,6 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface ICertificationRepository
     {
-        Task<List<CertificationItem>> GetAllCertsByIds(List<Guid> ids);
+        Task<List<CertificationItem>> GetAllCertsByIds(CertificationRequest request );
     }
 }
