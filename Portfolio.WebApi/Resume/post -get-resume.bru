@@ -1,0 +1,39 @@
+meta {
+  name: post -get-resume
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/get-resume
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": "4E169C95-D013-4C29-8883-34EDB6323FE7",
+    "experienceIds": {
+      "ids": [
+        "DE2A4F22-6A21-4CDF-BC02-6FC017619B01",
+        "C6677559-B7B3-4097-8EF8-1A4153D99E83"
+      ]
+    },
+    "educationIds": {
+      "ids": [
+        "C401C625-BEB4-4C2F-B2CA-173918F7964B", "32B35145-20DF-43B0-8232-63C2877A5382"
+      ]
+    },
+    "certificationIds": {
+      "ids": [
+        "86C08D5C-8C25-463D-B412-5B1FEE7E4F05", "35B2A213-3C2D-4852-B56B-98533B7A71D8"
+      ]
+    },
+    "skillsIds": {
+      "ids": [
+        "9896C55B-1DD5-4D1C-8D7F-15D6B5E9898E", "1CC2366F-010D-4BF6-B662-68489F0E90AB", "9075B7B7-8525-471D-953E-711F097BE7EC", "3C9D67A9-A8E8-4B8E-80FF-78061FBF1FEB", "27292DAD-4CE9-4C04-AB10-8207BB4C6753"
+      ],
+      "isDescending": true
+    }
+  }
+}

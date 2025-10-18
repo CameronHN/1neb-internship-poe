@@ -1,0 +1,15 @@
+meta {
+  name: get -api-User-skills--userId
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/User/skills/:userId
+  body: none
+  auth: none
+}
+
+params:path {
+  userId: 
+}

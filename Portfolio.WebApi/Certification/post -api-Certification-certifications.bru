@@ -1,0 +1,18 @@
+meta {
+  name: post -api-Certification-certifications
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Certification/certifications
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ids": [],
+    "isDescending": ""
+  }
+}

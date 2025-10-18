@@ -1,0 +1,15 @@
+meta {
+  name: post -api-Resume-user--userId
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/Resume/user/:userId
+  body: none
+  auth: none
+}
+
+params:path {
+  userId: 
+}

@@ -1,0 +1,18 @@
+meta {
+  name: post -api-Skill-skills
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Skill/skills
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ids": [],
+    "isDescending": ""
+  }
+}

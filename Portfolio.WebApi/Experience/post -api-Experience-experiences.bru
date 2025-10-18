@@ -1,0 +1,18 @@
+meta {
+  name: post -api-Experience-experiences
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/Experience/experiences
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ids": [],
+    "isDescending": ""
+  }
+}

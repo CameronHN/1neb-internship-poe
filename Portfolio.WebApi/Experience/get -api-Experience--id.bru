@@ -1,0 +1,15 @@
+meta {
+  name: get -api-Experience--id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/Experience/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

@@ -1,0 +1,15 @@
+meta {
+  name: get -api-User-education--userId
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/User/education/:userId
+  body: none
+  auth: none
+}
+
+params:path {
+  userId: 
+}
