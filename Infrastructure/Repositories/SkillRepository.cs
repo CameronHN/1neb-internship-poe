@@ -18,7 +18,6 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
         {
             var ids = request.Ids;
-
             if (ids.Count == 0) return [];
 
             var skills = await _dbContext.Skill
@@ -28,33 +27,29 @@ namespace Portfolio.Infrastructure.Repositories
                     sk.Id,
                     sk.SkillName,
                     sk.ProficiencyLevel
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
-            if (request.IsDescending)
+            switch (request.Order)
             {
-                // Order by Name descending
-                skills = skills
-                    .OrderByDescending(c => c.SkillName)
-                    .ToList();
-            }
-            else
-            {
-                // Preserve the exact order of the incoming Ids
-                var order = ids
-                    .Select((id, index) => new { id, index })
-                    .ToDictionary(x => x.id, x => x.index);
-
-                skills = skills
-                    .OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue)
-                    .ToList();
+                case SortOrder.Descending:
+                    skills = skills.OrderByDescending(s => s.SkillName).ToList();
+                    break;
+                case SortOrder.Ascending:
+                    skills = skills.OrderBy(s => s.SkillName).ToList();
+                    break;
+                case SortOrder.None:
+                default:
+                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
+                    skills = skills.OrderBy(s => order.TryGetValue(s.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    break;
             }
 
-            return skills.Select(ce => new SkillsItem
+            return skills.Select(sk => new SkillsItem
             {
-                Skill = ce.SkillName,
-                SkillLevel = ce.ProficiencyLevel
+                Skill = sk.SkillName,
+                SkillLevel = sk.ProficiencyLevel
             }).ToList();
-
         }
     }
 }

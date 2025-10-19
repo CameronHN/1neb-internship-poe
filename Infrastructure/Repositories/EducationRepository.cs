@@ -33,22 +33,19 @@ namespace Portfolio.Infrastructure.Repositories
                 })
                 .ToListAsync();
 
-            if (request.IsDescending)
+            switch (request.Order)
             {
-                educations = educations
-                    .OrderByDescending(e => e.EndDate)
-                    .ToList();
-            }
-            else
-            {
-                // Preserve the exact order of the incoming Ids
-                var order = ids
-                    .Select((id, index) => new { id, index })
-                    .ToDictionary(x => x.id, x => x.index);
-
-                educations = educations
-                    .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
-                    .ToList();
+                case SortOrder.Descending:
+                    educations = educations.OrderByDescending(e => e.EndDate).ToList();
+                    break;
+                case SortOrder.Ascending:
+                    educations = educations.OrderBy(e => e.EndDate).ToList();
+                    break;
+                case SortOrder.None:
+                default:
+                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
+                    educations = educations.OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    break;
             }
 
             return educations.Select(ed => new EducationItem

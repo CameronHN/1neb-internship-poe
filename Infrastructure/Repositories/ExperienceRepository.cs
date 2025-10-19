@@ -73,47 +73,43 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
         {
             var ids = request.Ids;
-            if (ids == null || ids.Count == 0) return [];
+            if (ids.Count == 0) return [];
 
             var experiences = await _dbContext.Experience
-                .Where(e => ids.Contains(e.Id))
-                .Include(e => e.Responsibilities)
-                .Select(e => new
+                .Where(exp => ids.Contains(exp.Id))
+                .Select(ex => new
                 {
-                    e.Id,
-                    e.CompanyName,
-                    e.JobTitle,
-                    e.StartDate,
-                    e.EndDate,
-                    Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
+                    ex.Id,
+                    ex.CompanyName,
+                    ex.JobTitle,
+                    ex.StartDate,
+                    ex.EndDate,
+                    ex.Responsibilities
                 })
                 .ToListAsync();
 
-            if (request.IsDescending)
+            switch (request.Order)
             {
-                experiences = experiences
-                    .OrderByDescending(e => e.EndDate)
-                    .ToList();
-            }
-            else
-            {
-                // Preserve the exact order of the incoming Ids
-                var order = ids
-                    .Select((id, index) => new { id, index })
-                    .ToDictionary(x => x.id, x => x.index);
-
-                experiences = experiences
-                    .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
-                    .ToList();
+                case SortOrder.Descending:
+                    experiences = experiences.OrderByDescending(e => e.EndDate).ToList();
+                    break;
+                case SortOrder.Ascending:
+                    experiences = experiences.OrderBy(e => e.EndDate).ToList();
+                    break;
+                case SortOrder.None:
+                default:
+                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
+                    experiences = experiences.OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    break;
             }
 
-            return experiences.Select(e => new ExperienceItem
+            return experiences.Select(ex => new ExperienceItem
             {
-                Company = e.CompanyName,
-                Role = e.JobTitle,
-                Start = e.StartDate.ToString("MMMM yyyy"),
-                End = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
-                Responsibilities = e.Responsibilities
+                Company = ex.CompanyName,
+                Role = ex.JobTitle,
+                Start = ex.StartDate.ToString("MMMM yyyy"),
+                End = ex.EndDate.ToString("MMMM yyyy"),
+                Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList()
             }).ToList();
         }
     }

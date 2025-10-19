@@ -32,23 +32,20 @@ namespace Portfolio.Infrastructure.Repositories
                 })
                 .ToListAsync();
 
-            if (request.IsDescending)
+            switch (request.Order)
             {
-                // Order by IssuedDate descending
-                certs = certs
-                    .OrderByDescending(c => c.IssuedDate)
-                    .ToList();
-            }
-            else
-            {
-                // Preserve the exact order of the incoming Ids
-                var order = ids
-                    .Select((id, index) => new { id, index })
-                    .ToDictionary(x => x.id, x => x.index);
-
-                certs = certs
-                    .OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue)
-                    .ToList();
+                case SortOrder.Descending:
+                    certs = certs.OrderByDescending(c => c.IssuedDate).ToList();
+                    break;
+                case SortOrder.Ascending:
+                    certs = certs.OrderBy(c => c.IssuedDate).ToList();
+                    break;
+                case SortOrder.None:
+                default:
+                    // Preserve the order of IDs
+                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
+                    certs = certs.OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    break;
             }
 
             return certs.Select(ce => new CertificationItem
