@@ -67,7 +67,7 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.CertificationIds != null)
             {
-                var certificationItems = await _certificationRepository.GetAllCertsByIds(
+                var certificationItems = await _certificationRepository.GetAllCertificationsByTheirIdsAsync(
                     resumeRequest.CertificationIds
                 );
                 resumeDto.Certification = certificationItems;

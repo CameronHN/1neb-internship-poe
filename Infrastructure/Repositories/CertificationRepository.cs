@@ -14,7 +14,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
+        public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(ItemListRequest request)
         {
             var ids = request.Ids;
             if (ids.Count == 0) return [];

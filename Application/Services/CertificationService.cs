@@ -15,7 +15,7 @@ namespace Portfolio.Application.Services
 
         public Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
         {
-            return _certificationRepository.GetAllCertsByIds(request);
+            return _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
         }
     }
 }
