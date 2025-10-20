@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Certification;
 
 namespace Portfolio.Application.Services
 {
@@ -13,9 +14,29 @@ namespace Portfolio.Application.Services
             _certificationRepository = certificationRepository;
         }
 
+        public async Task AddCertificationAsync(List<AddCertification> certification)
+        {
+            await _certificationRepository.AddCertificationAsync(certification);
+        }
+
+        public Task DeleteCertificationAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
         {
             return _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
+        }
+
+        public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateCertificationAsync(Guid userId, UpdateCertification certification)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Certification;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -13,6 +14,13 @@ namespace Portfolio.WebApi.Controllers
         public CertificationController(ICertificationService certificationService)
         {
             _certificationService = certificationService;
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddCertification([FromBody] List<AddCertification> certification)
+        {
+            await _certificationService.AddCertificationAsync(certification);
+            return Created(string.Empty, null);
         }
 
         [HttpPost("certifications")]

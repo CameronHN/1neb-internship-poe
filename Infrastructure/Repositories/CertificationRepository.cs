@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Certification;
+using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -12,6 +14,32 @@ namespace Portfolio.Infrastructure.Repositories
         public CertificationRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task AddCertificationAsync(List<AddCertification> certifications)
+        {
+            var entities = certifications.Select(cert => new Certification
+            {
+                Id = Guid.NewGuid(),
+                CertificationName = cert.CertificationName,
+                IssuingOrganisation = cert.IssuingOrganisation,
+                CredentialUrl = cert.CredentialUrl,
+                IssuedDate = !string.IsNullOrWhiteSpace(cert.IssuedDate)
+                    ? DateOnly.Parse(cert.IssuedDate)
+                    : null,
+                ExpiryDate = !string.IsNullOrWhiteSpace(cert.ExpiryDate)
+                    ? DateOnly.Parse(cert.ExpiryDate)
+                    : null,
+                UserId = cert.UserId
+            }).ToList();
+
+            await _dbContext.Certification.AddRangeAsync(entities);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public Task DeleteCertificationAsync(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(ItemListRequest request)
@@ -56,6 +84,16 @@ namespace Portfolio.Infrastructure.Repositories
                 IssuedDate = ce.IssuedDate.HasValue ? ce.IssuedDate.Value.ToString("MMMM yyyy") : null,
                 ExpirationDate = ce.ExpiryDate.HasValue ? ce.ExpiryDate.Value.ToString("MMMM yyyy") : null
             }).ToList();
+        }
+
+        public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateCertificationAsync(Guid userId, UpdateCertification certification)
+        {
+            throw new NotImplementedException();
         }
     }
 }

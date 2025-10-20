@@ -4,6 +4,9 @@ namespace Portfolio.Core.DTOs.Certification
 {
     public class AddCertification
     {
+        [Required]
+        public Guid UserId { get; set; }
+
         [Required(ErrorMessage = "Certification name is required.")]
         [MaxLength(
             100,
