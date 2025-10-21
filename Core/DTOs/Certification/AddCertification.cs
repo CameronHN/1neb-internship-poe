@@ -13,7 +13,7 @@ namespace Portfolio.Core.DTOs.Certification
             ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage
         )]
         [RegularExpression(@"\S.*", ErrorMessage = "Certification name cannot be whitespace.")]
-        public string CertificationName { get; set; }
+        public required string CertificationName { get; set; }
 
         [MaxLength(
             100,
