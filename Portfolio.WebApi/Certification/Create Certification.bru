@@ -6,6 +6,14 @@ meta {
 
 post {
   url: {{baseUrl}}/api/Certification/add
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "userId": "4E169C95-D013-4C29-8883-34EDB6323FE7",
+    "certificationName": "Azure Data Fundamentals",
+    "credentialUrl": "https://google.com"
+  }
 }
