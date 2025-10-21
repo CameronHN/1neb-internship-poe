@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Entities;
 
 namespace Portfolio.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext() { }
 
@@ -40,7 +42,9 @@ namespace Portfolio.Infrastructure.Persistence
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data source=(localdb)\\MSSQLLocalDb;Initial catalog=ProjectDb;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(
+                    "Data source=(localdb)\\MSSQLLocalDb;Initial catalog=ProjectDb;Trusted_Connection=True;TrustServerCertificate=True;"
+                );
             }
         }
     }
