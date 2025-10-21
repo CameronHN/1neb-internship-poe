@@ -16,7 +16,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddCertificationAsync(List<AddCertification> certifications)
+        public async Task AddCertificationsAsync(List<AddCertification> certifications)
         {
             var entities = certifications.Select(cert => new Certification
             {
