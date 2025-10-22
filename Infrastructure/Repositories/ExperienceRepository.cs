@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Experience;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 
@@ -111,6 +113,33 @@ namespace Portfolio.Infrastructure.Repositories
                 EndDate = ex.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList()
             }).ToList();
+        }
+
+        public async Task AddExperiencesAsync(List<AddExperience> experiences)
+        {
+            var entities = experiences.Select(exp =>
+            {
+                Guid id = Guid.NewGuid();
+                var experience = new Experience
+                {
+                    Id = id,
+                    JobTitle = exp.JobTitle,
+                    CompanyName = exp.CompanyName,
+                    StartDate = DateOnly.Parse(exp.StartDate),
+                    EndDate = DateOnly.Parse(exp.EndDate),
+                    UserId = exp.UserId,
+                    Responsibilities = exp.Responsibilities.Select(r => new ExperienceResponsibility
+                    {
+                        Id = Guid.NewGuid(),
+                        ExperienceId = id,
+                        Responsibility = r.Responsibility
+                    }).ToList()
+                };
+                return experience;
+            }).ToList();
+
+            await _dbContext.Experience.AddRangeAsync(entities);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

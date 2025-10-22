@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.Core.DTOs.Experience
 {
@@ -23,6 +24,9 @@ namespace Portfolio.Core.DTOs.Experience
 
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         public string? Achievement { get; set; }
+
+        [MinLength(1, ErrorMessage = "At least one responsibility is required.")]
+        public required List<AddResponsibility> Responsibilities { get; set; }
 
         [Required]
         public Guid UserId { get; set; }

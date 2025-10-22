@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Skill;
+using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -13,6 +15,20 @@ namespace Portfolio.Infrastructure.Repositories
         public SkillRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task AddSkillsAsync(List<AddSkill> skills)
+        {
+            var entities = skills.Select(skill => new Skill
+            {
+                Id = Guid.NewGuid(),
+                SkillName = skill.Skill,
+                ProficiencyLevel = skill.ProficiencyLevel,
+                UserId = skill.UserId
+            }).ToList();
+
+            await _dbContext.Skill.AddRangeAsync(entities);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)

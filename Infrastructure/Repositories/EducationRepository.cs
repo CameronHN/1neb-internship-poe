@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -13,6 +15,24 @@ namespace Portfolio.Infrastructure.Repositories
         public EducationRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task AddEducationsAsync(List<AddEducation> educations)
+        {
+            var entities = educations.Select(edu => new Education
+            {
+                Id = Guid.NewGuid(),
+                InstitutionName = edu.InstitutionName,
+                Qualification = edu.Qualification,
+                StartDate = DateOnly.Parse(edu.StartDate),
+                EndDate = DateOnly.Parse(edu.EndDate),
+                Major = edu.Major,
+                Achievement = edu.Achievement,
+                UserId = edu.UserId
+            }).ToList();
+
+            await _dbContext.Education.AddRangeAsync(entities);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)

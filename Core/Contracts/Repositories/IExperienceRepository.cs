@@ -1,9 +1,12 @@
 ﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Experience;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IExperienceRepository
     {
+        Task AddExperiencesAsync(List<AddExperience> experiences);
+
         Task<ExperienceItem?> GetExperienceById(Guid id);
 
         Task<List<ExperienceItem>> GetAllExperiencesByUserId(Guid id);
