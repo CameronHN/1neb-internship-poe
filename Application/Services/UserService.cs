@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.User;
 using Portfolio.Core.Entities;
 
 namespace Portfolio.Application.Services

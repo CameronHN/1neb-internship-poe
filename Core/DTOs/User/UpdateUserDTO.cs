@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Core.DTOs
+﻿namespace Portfolio.Core.DTOs.User
 {
     public class UpdateUserDTO
     {

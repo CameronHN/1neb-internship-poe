@@ -1,4 +1,5 @@
 ﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.User;
 using Portfolio.Core.Entities;
 
 namespace Portfolio.Core.Contracts.Repositories
