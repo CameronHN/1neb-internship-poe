@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Core.DTOs
+﻿namespace Portfolio.Core.DTOs.User
 {
     // TODO: Add validation on DTO
     public class AddUserDTO
