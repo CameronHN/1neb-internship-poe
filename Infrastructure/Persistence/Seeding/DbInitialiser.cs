@@ -8,12 +8,24 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
     {
         private readonly ApplicationDbContext _context = context;
         private static readonly string[] genders = ["Male", "Female", "Prefer not to say"];
-        private static readonly string[] proficiencyLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
-        private static readonly string[] institutionTypes = ["High School", "University", "University of Technology"];
+        private static readonly string[] proficiencyLevels =
+        [
+            "Beginner",
+            "Intermediate",
+            "Advanced",
+            "Expert",
+        ];
+        private static readonly string[] institutionTypes =
+        [
+            "High School",
+            "University",
+            "University of Technology",
+        ];
 
         public static string CapitalizeEfficiently(string input)
         {
-            if (string.IsNullOrEmpty(input)) return input;
+            if (string.IsNullOrEmpty(input))
+                return input;
             char[] chars = input.ToCharArray();
             chars[0] = char.ToUpper(chars[0]);
             return new string(chars);
@@ -27,6 +39,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
             await SeedUserData();
         }
+
         private async Task SeedUserData()
         {
             List<User> users = [];
@@ -61,7 +74,14 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(e => e.JobTitle, f => f.Name.JobTitle())
                     .RuleFor(e => e.CompanyName, f => f.PickRandom(f.Company.CompanyName(), null))
                     .RuleFor(e => e.StartDate, f => f.Date.PastDateOnly(5))
-                    .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
+                    .RuleFor(
+                        e => e.EndDate,
+                        (f, e) =>
+                            f.Date.BetweenDateOnly(
+                                e.StartDate,
+                                DateOnly.FromDateTime(DateTime.UtcNow)
+                            )
+                    )
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
                 experiences = experienceFaker.Generate(40);
@@ -108,12 +128,23 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             {
                 var educationFaker = new Faker<Education>()
                     .RuleFor(e => e.Id, _ => Guid.NewGuid())
-                    .RuleFor(e => e.InstitutionName, f => $"{CapitalizeEfficiently(f.Random.Word())} {f.PickRandom(institutionTypes)}")
+                    .RuleFor(
+                        e => e.InstitutionName,
+                        f =>
+                            $"{CapitalizeEfficiently(f.Random.Word())} {f.PickRandom(institutionTypes)}"
+                    )
                     .RuleFor(e => e.Qualification, f => CapitalizeEfficiently(f.Random.Word()))
                     .RuleFor(e => e.Major, f => CapitalizeEfficiently(f.Random.Word()))
                     .RuleFor(e => e.Achievement, f => CapitalizeEfficiently(f.Random.Word()))
                     .RuleFor(e => e.StartDate, f => f.Date.PastDateOnly(7))
-                    .RuleFor(e => e.EndDate, (f, e) => f.Date.BetweenDateOnly(e.StartDate, DateOnly.FromDateTime(DateTime.UtcNow)))
+                    .RuleFor(
+                        e => e.EndDate,
+                        (f, e) =>
+                            f.Date.BetweenDateOnly(
+                                e.StartDate,
+                                DateOnly.FromDateTime(DateTime.UtcNow)
+                            )
+                    )
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
                 var educations = educationFaker.Generate(40);
@@ -144,12 +175,20 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(c => c.CertificationName, f => f.Name.JobArea())
                     .RuleFor(c => c.IssuingOrganisation, f => f.Company.CompanyName())
                     .RuleFor(c => c.IssuedDate, f => f.Date.PastDateOnly())
-                    .RuleFor(c => c.ExpiryDate, (f, c) =>
-                        f.Random.Bool()
-                            ? (c.IssuedDate.HasValue
-                                ? f.Date.BetweenDateOnly(c.IssuedDate.Value, DateOnly.FromDateTime(DateTime.UtcNow))
-                                : DateOnly.FromDateTime(DateTime.UtcNow))
-                            : null)
+                    .RuleFor(
+                        c => c.ExpiryDate,
+                        (f, c) =>
+                            f.Random.Bool()
+                                ? (
+                                    c.IssuedDate.HasValue
+                                        ? f.Date.BetweenDateOnly(
+                                            c.IssuedDate.Value,
+                                            DateOnly.FromDateTime(DateTime.UtcNow)
+                                        )
+                                        : DateOnly.FromDateTime(DateTime.UtcNow)
+                                )
+                                : null
+                    )
                     .RuleFor(c => c.CredentialUrl, f => f.PickRandom(f.Internet.Url(), null))
                     .RuleFor(c => c.UserId, f => f.PickRandom(users).Id);
 
