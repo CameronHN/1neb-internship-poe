@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -37,18 +39,24 @@ namespace Portfolio.WebApi.Controllers
             return Ok(resume);
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPost("user/pdf")]
         [Produces("application/pdf")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("user/{userId:guid}")]
-        public async Task<IActionResult> GeneratePdfByUserID(Guid userId)
+        public async Task<IActionResult> GeneratePdfByUserID()
         {
-            var userInfo = await _resumeService.GetResumeByUserId(userId);
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var userInfo = await _resumeService.GetResumeByUserId(userId.Value);
 
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
-            string? name = !string.IsNullOrEmpty(userInfo?.Name) ? userInfo.Name.Replace(' ', '_') + "_" : "";
+            string? name = !string.IsNullOrEmpty(userInfo?.Name)
+                ? userInfo.Name.Replace(' ', '_') + "_"
+                : "";
 
             return File(pdf, "application/pdf", $"{name}resume.pdf");
         }
@@ -76,6 +84,5 @@ namespace Portfolio.WebApi.Controllers
                 return StatusCode(500, "An error occurred while generating the PDF.");
             }
         }
-
     }
 }
