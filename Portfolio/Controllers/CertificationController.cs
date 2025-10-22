@@ -17,7 +17,9 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddCertification([FromBody] List<AddCertification> certification)
+        public async Task<IActionResult> AddCertification(
+            [FromBody] List<AddCertification> certification
+        )
         {
             await _certificationService.AddCertificationAsync(certification);
             return Created(string.Empty, null);

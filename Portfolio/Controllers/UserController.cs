@@ -8,7 +8,8 @@ namespace Portfolio.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IUserService userService, IUserRepository userRepository) : ControllerBase
+    public class UserController(IUserService userService, IUserRepository userRepository)
+        : ControllerBase
     {
         private readonly IUserService _userService = userService;
         private readonly IUserRepository _userRepository = userRepository;
