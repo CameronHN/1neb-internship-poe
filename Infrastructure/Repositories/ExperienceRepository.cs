@@ -42,8 +42,8 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     Company = e.CompanyName,
                     JobTitle = e.JobTitle,
-                    Start = e.StartDate.ToString("MMMM yyyy"),
-                    End = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
+                    StartDate = e.StartDate.ToString("MMMM yyyy"),
+                    EndDate = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
                     Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
                 })
                 .ToListAsync();
@@ -64,8 +64,8 @@ namespace Portfolio.Infrastructure.Repositories
             {
                 Company = experience.CompanyName,
                 JobTitle = experience.JobTitle,
-                Start = experience.StartDate.ToString("MMMM yyyy"),
-                End = experience.EndDate == default ? "Present" : experience.EndDate.ToString("MMMM yyyy"),
+                StartDate = experience.StartDate.ToString("MMMM yyyy"),
+                EndDate = experience.EndDate == default ? "Present" : experience.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = experience.Responsibilities.Select(r => r.Responsibility).ToList()
             };
         }
@@ -107,8 +107,8 @@ namespace Portfolio.Infrastructure.Repositories
             {
                 Company = ex.CompanyName,
                 JobTitle = ex.JobTitle,
-                Start = ex.StartDate.ToString("MMMM yyyy"),
-                End = ex.EndDate.ToString("MMMM yyyy"),
+                StartDate = ex.StartDate.ToString("MMMM yyyy"),
+                EndDate = ex.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList()
             }).ToList();
         }

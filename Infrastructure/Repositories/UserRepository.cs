@@ -85,8 +85,8 @@ namespace Portfolio.Infrastructure.Repositories
                     {
                         Company = e.CompanyName,
                         JobTitle = e.JobTitle,
-                        Start = e.StartDate.ToString("MMMM yyyy"),
-                        End = e.EndDate.ToString("MMMM yyyy"),
+                        StartDate = e.StartDate.ToString("MMMM yyyy"),
+                        EndDate = e.EndDate.ToString("MMMM yyyy"),
                         Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
                     }).ToList(),
                     Education = u.Educations.OrderByDescending(ed => ed.EndDate).Select(ed => new EducationItem

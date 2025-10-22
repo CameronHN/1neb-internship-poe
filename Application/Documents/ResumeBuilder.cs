@@ -57,7 +57,7 @@ namespace Portfolio.Application.Documents
                         {
                             var jobCompanyName = exp.Company ?? "Unknown";
                             var jobTitle = exp.JobTitle ?? "Unknown";
-                            var jobDates = string.Join(" - ", new[] { exp.Start, exp.End }.Where(s => !string.IsNullOrWhiteSpace(s)));
+                            var jobDates = string.Join(" - ", new[] { exp.StartDate, exp.EndDate }.Where(s => !string.IsNullOrWhiteSpace(s)));
                             var jobResponsibilities = exp.Responsibilities ?? new List<string>();
 
                             column.Item().Table(table =>
