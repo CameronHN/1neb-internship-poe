@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio.Core.DTOs.Education
+namespace Portfolio.Core.DTOs.Experience
 {
-    public class AddEducation
+    public class AddExperience
     {
-        [Required(ErrorMessage = "Institution name is required.")]
+        [Required(ErrorMessage = "Job title is required.")]
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
-        [RegularExpression(@"\S.*", ErrorMessage = "Institution name cannot be whitespace.")]
-        public required string InstitutionName { get; set; }
+        [RegularExpression(@"\S.*", ErrorMessage = "Job title cannot be whitespace.")]
+        public required string JobTitle { get; set; }
 
-        [Required(ErrorMessage = "Qualification is required.")]
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
-        [RegularExpression(@"\S.*", ErrorMessage = "Qualification cannot be whitespace.")]
-        public required string Qualification { get; set; }
+        public string? CompanyName { get; set; }
 
         [Required(ErrorMessage = "Start date is required.")]
         public required string StartDate { get; set; }
