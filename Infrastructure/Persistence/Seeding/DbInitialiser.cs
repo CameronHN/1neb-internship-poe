@@ -127,8 +127,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             {
                 var contactFaker = new Faker<Contact>()
                     .RuleFor(c => c.Id, _ => Guid.NewGuid())
-                    .RuleFor(c => c.LinkedIn, f => f.Internet.Url())
-                    .RuleFor(c => c.GitHub, f => f.Internet.Url())
+                    .RuleFor(c => c.ContactUrl, f => f.Internet.Url())
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
                 var contacts = contactFaker.Generate(20);

@@ -9,10 +9,8 @@ namespace Portfolio.Core.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
-        public string? LinkedIn { get; set; }
+        public string? ContactUrl { get; set; }
 
-        [Column(TypeName = "varchar(100)")]
-        public string? GitHub { get; set; }
         public User User { get; set; }
 
         public Guid UserId { get; set; }
