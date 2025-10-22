@@ -56,7 +56,7 @@ namespace Portfolio.Application.Documents
                         foreach (var exp in _m.Experience)
                         {
                             var jobCompanyName = exp.Company ?? "Unknown";
-                            var jobTitle = exp.Role ?? "Unknown";
+                            var jobTitle = exp.JobTitle ?? "Unknown";
                             var jobDates = string.Join(" - ", new[] { exp.Start, exp.End }.Where(s => !string.IsNullOrWhiteSpace(s)));
                             var jobResponsibilities = exp.Responsibilities ?? new List<string>();
 
@@ -130,8 +130,8 @@ namespace Portfolio.Application.Documents
                         foreach (var ed in _m.Education)
                         {
                             var institutionName = ed.Institution ?? "";
-                            var qualification = ed.Degree ?? "";
-                            var datesStudied = string.Join(" - ", new[] { ed.Start, ed.End }.Where(s => !string.IsNullOrWhiteSpace(s)));
+                            var qualification = ed.Qualification ?? "";
+                            var datesStudied = string.Join(" - ", new[] { ed.StartDate, ed.EndDate }.Where(s => !string.IsNullOrWhiteSpace(s)));
                             var major = ed.Major ?? "";
 
                             column.Item().Table(table =>

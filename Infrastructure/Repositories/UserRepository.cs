@@ -84,7 +84,7 @@ namespace Portfolio.Infrastructure.Repositories
                     Experience = u.Experiences.OrderByDescending(e => e.EndDate).Select(e => new ExperienceItem
                     {
                         Company = e.CompanyName,
-                        Role = e.JobTitle,
+                        JobTitle = e.JobTitle,
                         Start = e.StartDate.ToString("MMMM yyyy"),
                         End = e.EndDate.ToString("MMMM yyyy"),
                         Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
@@ -92,9 +92,9 @@ namespace Portfolio.Infrastructure.Repositories
                     Education = u.Educations.OrderByDescending(ed => ed.EndDate).Select(ed => new EducationItem
                     {
                         Institution = ed.InstitutionName,
-                        Degree = ed.Qualification,
-                        Start = ed.StartDate.ToString("MMMM yyyy"),
-                        End = ed.EndDate.ToString("MMMM yyyy"),
+                        Qualification = ed.Qualification,
+                        StartDate = ed.StartDate.ToString("MMMM yyyy"),
+                        EndDate = ed.EndDate.ToString("MMMM yyyy"),
                         Major = ed.Major
                     }).ToList(),
                     Certification = u.Certifications.OrderByDescending(ce => ce.IssuedDate).Select(ce => new CertificationItem
@@ -127,9 +127,9 @@ namespace Portfolio.Infrastructure.Repositories
                 .Select(e => new EducationItem
                 {
                     Institution = e.InstitutionName,
-                    Degree = e.Qualification,
-                    Start = e.StartDate.ToString("MMMM yyyy"),
-                    End = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
+                    Qualification = e.Qualification,
+                    StartDate = e.StartDate.ToString("MMMM yyyy"),
+                    EndDate = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
                     Major = e.Major
                 })
                 .ToListAsync();

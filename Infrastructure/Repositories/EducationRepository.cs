@@ -51,10 +51,10 @@ namespace Portfolio.Infrastructure.Repositories
             return educations.Select(ed => new EducationItem
             {
                 Institution = ed.InstitutionName,
-                Degree = ed.Qualification,
+                Qualification = ed.Qualification,
                 Major = ed.Major,
-                Start = ed.StartDate.ToString("MMMM yyyy"),
-                End = ed.EndDate.ToString("MMMM yyyy")
+                StartDate = ed.StartDate.ToString("MMMM yyyy"),
+                EndDate = ed.EndDate.ToString("MMMM yyyy")
             }).ToList();
         }
     }

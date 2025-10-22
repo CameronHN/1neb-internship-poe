@@ -41,7 +41,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .Select(e => new ExperienceItem
                 {
                     Company = e.CompanyName,
-                    Role = e.JobTitle,
+                    JobTitle = e.JobTitle,
                     Start = e.StartDate.ToString("MMMM yyyy"),
                     End = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
                     Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
@@ -63,7 +63,7 @@ namespace Portfolio.Infrastructure.Repositories
             return new ExperienceItem
             {
                 Company = experience.CompanyName,
-                Role = experience.JobTitle,
+                JobTitle = experience.JobTitle,
                 Start = experience.StartDate.ToString("MMMM yyyy"),
                 End = experience.EndDate == default ? "Present" : experience.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = experience.Responsibilities.Select(r => r.Responsibility).ToList()
@@ -106,7 +106,7 @@ namespace Portfolio.Infrastructure.Repositories
             return experiences.Select(ex => new ExperienceItem
             {
                 Company = ex.CompanyName,
-                Role = ex.JobTitle,
+                JobTitle = ex.JobTitle,
                 Start = ex.StartDate.ToString("MMMM yyyy"),
                 End = ex.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList()

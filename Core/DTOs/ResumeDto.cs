@@ -16,7 +16,7 @@
     {
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public string? Location { get; set; }
+        public string? Location { get; set; } // TODO: Add location to entity
         public string? Website { get; set; }
         public string? LinkedIn { get; set; }
         public string? Github { get; set; }
@@ -25,26 +25,27 @@
     public class SkillsItem
     {
         public string? Skill { get; set; }
-
         public string? SkillLevel { get; set; }
     }
 
     public class ExperienceItem
     {
         public string? Company { get; set; }
-        public string? Role { get; set; }
-        public string? Start { get; set; }
-        public string? End { get; set; }
+        public string? JobTitle { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
         public List<string>? Responsibilities { get; set; }
     }
 
     public class EducationItem
     {
         public string? Institution { get; set; }
-        public string? Degree { get; set; }
-        public string? Start { get; set; }
-        public string? End { get; set; }
+        public string? Qualification { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
         public string? Major { get; set; }
+        public string? Achievement { get; set; }
+
     }
 
     public class CertificationItem
