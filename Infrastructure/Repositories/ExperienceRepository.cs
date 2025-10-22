@@ -115,7 +115,7 @@ namespace Portfolio.Infrastructure.Repositories
             }).ToList();
         }
 
-        public async Task AddExperiencesAsync(List<AddExperience> experiences)
+        public async Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
         {
             var entities = experiences.Select(exp =>
             {
@@ -140,6 +140,8 @@ namespace Portfolio.Infrastructure.Repositories
 
             await _dbContext.Experience.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
+
+            return entities.Select(e => e.Id).ToList();
         }
     }
 }

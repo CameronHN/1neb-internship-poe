@@ -5,7 +5,7 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IExperienceRepository
     {
-        Task AddExperiencesAsync(List<AddExperience> experiences);
+        Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences);
 
         Task<ExperienceItem?> GetExperienceById(Guid id);
 

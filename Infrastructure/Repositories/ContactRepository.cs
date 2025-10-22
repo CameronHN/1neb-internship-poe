@@ -14,18 +14,19 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddContactsAsync(List<AddContact> contacts)
+        public async Task<List<Guid>> AddContactsAsync(List<AddContact> contacts)
         {
             var entities = contacts.Select(contact => new Contact
             {
                 Id = Guid.NewGuid(),
-                LinkedIn = contact.LinkedIn,
-                GitHub = contact.GitHub,
+                ContactUrl = contact.SocialMediaUrl,
                 UserId = contact.UserId
             }).ToList();
 
             await _dbContext.Contact.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
+
+            return entities.Select(e => e.Id).ToList();
         }
     }
 }

@@ -14,17 +14,19 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddSummariesAsync(List<AddSummary> summaries)
+        public async Task<Guid> AddSummariesAsync(AddSummary summary)
         {
-            var entities = summaries.Select(summary => new ProfessionalSummary
+            var entity = new ProfessionalSummary
             {
                 Id = Guid.NewGuid(),
                 Summary = summary.Summary,
                 UserId = summary.UserId
-            }).ToList();
+            };
 
-            await _dbContext.ProfessionalSummary.AddRangeAsync(entities);
+            await _dbContext.ProfessionalSummary.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
+
+            return entity.Id;
         }
     }
 }

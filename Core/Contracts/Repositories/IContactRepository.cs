@@ -4,6 +4,6 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IContactRepository
     {
-        Task AddContactsAsync(List<AddContact> contacts);
+        Task<List<Guid>> AddContactsAsync(List<AddContact> contacts);
     }
 }

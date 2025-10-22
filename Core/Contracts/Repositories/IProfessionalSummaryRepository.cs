@@ -4,6 +4,6 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IProfessionalSummaryRepository
     {
-        Task AddSummariesAsync(List<AddSummary> summaries);
+        Task<Guid> AddSummariesAsync(AddSummary summary);
     }
 }

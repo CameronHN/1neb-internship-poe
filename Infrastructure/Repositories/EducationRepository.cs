@@ -17,7 +17,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddEducationsAsync(List<AddEducation> educations)
+        public async Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
         {
             var entities = educations.Select(edu => new Education
             {
@@ -33,6 +33,8 @@ namespace Portfolio.Infrastructure.Repositories
 
             await _dbContext.Education.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
+
+            return entities.Select(e => e.Id).ToList();
         }
 
         public async Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)

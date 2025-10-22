@@ -17,7 +17,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddSkillsAsync(List<AddSkill> skills)
+        public async Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills)
         {
             var entities = skills.Select(skill => new Skill
             {
@@ -29,6 +29,8 @@ namespace Portfolio.Infrastructure.Repositories
 
             await _dbContext.Skill.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
+
+            return entities.Select(e => e.Id).ToList();
         }
 
         public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
