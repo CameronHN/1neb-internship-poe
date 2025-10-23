@@ -17,9 +17,9 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<User?> GetUserById(Guid id)
+        public async Task<ApplicationUser?> GetUserById(Guid id)
         {
-            User? user = await _dbContext.User.FindAsync(id);
+            ApplicationUser? user = await _dbContext.User.FindAsync(id);
 
             if (user == null)
             {
@@ -29,7 +29,7 @@ namespace Portfolio.Infrastructure.Repositories
             return user;
         }
 
-        public async Task AddUser(User user)
+        public async Task AddUser(ApplicationUser user)
         {
             await _dbContext.User.AddAsync(user);
             await _dbContext.SaveChangesAsync();
@@ -43,7 +43,6 @@ namespace Portfolio.Infrastructure.Repositories
                 throw new NotFoundException("User does not exist.");
             }
 
-            existingUser.Gender = updateUserDTO.Gender;
             existingUser.PhoneNumber = updateUserDTO.PhoneNumber;
 
             await _dbContext.SaveChangesAsync();
@@ -163,7 +162,6 @@ namespace Portfolio.Infrastructure.Repositories
                     LastName = u.LastName,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
-                    Gender = u.Gender,
                 })
                 .FirstOrDefaultAsync();
 

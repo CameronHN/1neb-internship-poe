@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
+using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
 using Portfolio.Infrastructure.Repositories;
@@ -28,7 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add Identity services
 builder
-    .Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    .Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     {
         // Password settings
         options.Password.RequiredLength = 8;

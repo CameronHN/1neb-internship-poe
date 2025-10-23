@@ -25,6 +25,7 @@ namespace Portfolio.Core.Entities
         public string? Achievement { get; set; }
 
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        
+        public ApplicationUser User { get; set; }
     }
 }

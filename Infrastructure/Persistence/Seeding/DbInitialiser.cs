@@ -7,7 +7,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
     public class DbInitialiser(ApplicationDbContext context)
     {
         private readonly ApplicationDbContext _context = context;
-        private static readonly string[] genders = ["Male", "Female", "Prefer not to say"];
+
         private static readonly string[] proficiencyLevels =
         [
             "Beginner",
@@ -15,6 +15,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             "Advanced",
             "Expert",
         ];
+
         private static readonly string[] institutionTypes =
         [
             "High School",
@@ -42,17 +43,16 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
 
         private async Task SeedUserData()
         {
-            List<User> users = [];
+            List<ApplicationUser> users = [];
             List<Experience> experiences = [];
 
             // ======== Users ========
             if (!_context.User.Any())
             {
-                var faker = new Faker<User>()
+                var faker = new Faker<ApplicationUser>()
                     .RuleFor(u => u.Id, _ => Guid.NewGuid())
                     .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                     .RuleFor(u => u.LastName, f => f.Name.LastName())
-                    .RuleFor(u => u.Gender, f => f.PickRandom(genders))
                     .RuleFor(u => u.PhoneNumber, f => f.Phone.PhoneNumber(format: "0#########"))
                     .RuleFor(u => u.Email, f => f.Internet.Email());
 

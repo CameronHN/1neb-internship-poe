@@ -5,7 +5,7 @@ using Portfolio.Core.Entities;
 
 namespace Portfolio.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext() { }
 
@@ -30,7 +30,7 @@ namespace Portfolio.Infrastructure.Persistence
 
         public DbSet<Skill> Skill { get; set; }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<ApplicationUser> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

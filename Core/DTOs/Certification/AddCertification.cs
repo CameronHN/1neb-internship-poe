@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Portfolio.Core.DTOs.Certification
 {
@@ -20,7 +21,7 @@ namespace Portfolio.Core.DTOs.Certification
 
         public string? ExpiryDate { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public Guid UserId { get; set; }
     }
 }

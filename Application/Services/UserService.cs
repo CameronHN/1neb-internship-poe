@@ -27,7 +27,6 @@ namespace Portfolio.Application.Services
                     LastName = userDetails.LastName,
                     Email = userDetails.Email,
                     PhoneNumber = userDetails.PhoneNumber,
-                    Gender = userDetails.Gender
                 };
 
                 return user;
@@ -40,12 +39,11 @@ namespace Portfolio.Application.Services
 
         public async Task AddUser(AddUserDTO userDto)
         {
-            var user = new User
+            var user = new ApplicationUser
             {
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
                 Email = userDto.Email,
-                Gender = userDto.Gender,
                 PhoneNumber = userDto.PhoneNumber
             };
 

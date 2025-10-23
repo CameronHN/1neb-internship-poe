@@ -12,6 +12,7 @@ namespace Portfolio.Core.Entities
         public required string Summary { get; set; }
 
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        
+        public ApplicationUser User { get; set; }
     }
 }

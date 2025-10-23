@@ -21,7 +21,7 @@ namespace Portfolio.Core.Entities
 
         public DateOnly? ExpiryDate { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
         public Guid UserId { get; set; }
 

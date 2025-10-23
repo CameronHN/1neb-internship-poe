@@ -11,7 +11,7 @@ namespace Portfolio.Core.Entities
         [Column(TypeName = "varchar(100)")]
         public string? ContactUrl { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
         public Guid UserId { get; set; }
     }
