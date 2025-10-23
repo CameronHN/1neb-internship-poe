@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.WebApi.Extensions;
+using Portfolio.WebApi.Helper;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -54,14 +55,10 @@ namespace Portfolio.WebApi.Controllers
 
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
-            string? name = !string.IsNullOrEmpty(userInfo?.Name)
-                ? userInfo.Name.Replace(' ', '_') + "_"
-                : "";
-
-            return File(pdf, "application/pdf", $"{name}resume.pdf");
+            return File(pdf, "application/pdf", FileNameHelper.FileNameFormatter(userInfo?.Name));
         }
 
-        [HttpPost("/get-resume")]
+        [HttpPost("get-resume")]
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
@@ -73,11 +70,10 @@ namespace Portfolio.WebApi.Controllers
                 if (pdf == null || pdf.Length == 0)
                     return BadRequest("PDF generation failed.");
 
-                string? name = !string.IsNullOrEmpty(userInfo?.Name)
-                    ? userInfo.Name.Replace(' ', '_') + "_"
-                    : "";
-
-                return File(pdf, "application/pdf", $"{name}resume.pdf");
+                return File(
+                    pdf,
+                    "application/pdf",
+                    FileNameHelper.FileNameFormatter(userInfo?.Name));
             }
             catch (Exception ex)
             {
