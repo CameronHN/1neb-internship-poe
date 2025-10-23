@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Experience;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -33,6 +35,24 @@ namespace Portfolio.WebApi.Controllers
         {
             var experiences = await _experienceService.GetAllExperiencesByIds(request);
             return Ok(experiences);
+        }
+
+        [HttpPost("add")]
+        [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> AddExperiences([FromBody] List<AddExperience> experiences)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            foreach (var experience in experiences)
+            {
+                experience.UserId = userId.Value;
+            }
+
+            var experienceIds = await _experienceService.AddExperiencesAsync(experiences);
+            return Created(string.Empty, experienceIds);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Skill;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -21,6 +23,24 @@ namespace Portfolio.WebApi.Controllers
         {
             var skills = await _skillService.GetAllSkillsByIds(request);
             return Ok(skills);
+        }
+
+        [HttpPost("add")]
+        [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> AddSkills([FromBody] List<AddSkill> skills)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            foreach (var skill in skills)
+            {
+                skill.UserId = userId.Value;
+            }
+
+            var skillIds = await _skillService.AddSkillsAsync(skills);
+            return Created(string.Empty, skillIds);
         }
     }
 }
