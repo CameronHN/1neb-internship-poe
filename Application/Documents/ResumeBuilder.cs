@@ -8,6 +8,7 @@ namespace Portfolio.Application.Documents
     public class ResumeBuilder : IDocument
     {
         private readonly ResumeDto _m;
+
         public ResumeBuilder(ResumeDto model) => _m = model ?? new();
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -24,174 +25,295 @@ namespace Portfolio.Application.Documents
                 page.DefaultTextStyle(x => x.FontSize(12));
                 page.Margin(30);
 
-                page.Header().Column(column =>
-                {
-                    column.Item().Text(_m.Name ?? "Your Name").Bold().FontSize(30).FontColor(Colors.Blue.Medium).AlignCenter();
-
-                    var contactParts = new[]
+                page.Header()
+                    .Column(column =>
                     {
-                        _m.Contact?.Website,
-                        _m.Contact?.Phone,
-                        _m.Contact?.Email,
-                        _m.Contact?.LinkedIn,
-                        _m.Contact?.Github
-                    }.Where(s => !string.IsNullOrWhiteSpace(s));
-                    column.Item().Text(string.Join(" | ", contactParts)).AlignCenter();
-                    column.Item().Padding(5);
-                });
+                        column
+                            .Item()
+                            .Text(_m.Name ?? "Your Name")
+                            .Bold()
+                            .FontSize(30)
+                            .FontColor(Colors.Blue.Medium)
+                            .AlignCenter();
 
-                page.Content().Column(column =>
-                {
-                    // Experience
-                    if (_m.Experience?.Any() == true)
+                        var contactParts = new[]
+                        {
+                            _m.Contact?.Website,
+                            _m.Contact?.Phone,
+                            _m.Contact?.Email,
+                            _m.Contact?.LinkedIn,
+                            _m.Contact?.Github,
+                        }.Where(s => !string.IsNullOrWhiteSpace(s));
+                        column.Item().Text(string.Join(" | ", contactParts)).AlignCenter();
+                        column.Item().Padding(5);
+                    });
+
+                page.Content()
+                    .Column(column =>
                     {
-                        column.Item().Row(row =>
+                        // Summary
+                        string? summary = _m.Summary;
+                        if (summary?.Any() == true)
                         {
-                            row.AutoItem().Text("EXPERIENCE").Bold().FontSize(14);
-                            row.AutoItem().PaddingHorizontal(10);
-                            row.RelativeItem().AlignMiddle().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                            row.AutoItem().Padding(3);
-                        });
-
-                        foreach (var exp in _m.Experience)
-                        {
-                            var jobCompanyName = exp.Company ?? "Unknown";
-                            var jobTitle = exp.JobTitle ?? "Unknown";
-                            var jobDates = string.Join(" - ", new[] { exp.StartDate, exp.EndDate }.Where(s => !string.IsNullOrWhiteSpace(s)));
-                            var jobResponsibilities = exp.Responsibilities ?? new List<string>();
-
-                            column.Item().Table(table =>
-                            {
-                                table.ColumnsDefinition(columns =>
+                            column
+                                .Item()
+                                .Row(row =>
                                 {
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
+                                    row.AutoItem().Text("SUMMARY").Bold().FontSize(14);
+                                    row.AutoItem().PaddingHorizontal(10);
+                                    row.RelativeItem()
+                                        .AlignMiddle()
+                                        .LineHorizontal(1)
+                                        .LineColor(Colors.Grey.Lighten2);
+                                    row.AutoItem().Padding(3);
                                 });
 
-                                table.Cell().Row(1).Column(1).Text(jobTitle).Bold().AlignLeft();
-                                table.Cell().Row(1).Column(2).Text(jobDates).Bold().AlignRight();
-                                table.Cell().Row(2).Column(1).Text(jobCompanyName).Bold().AlignLeft();
-                            });
+                            var summaryText = summary;
 
-                            foreach (string res in jobResponsibilities)
-                            {
-                                column.Item().Row(row =>
-                                {
-                                    row.AutoItem().Text(bulletpoint);
-                                    row.ConstantItem(5);
-                                    row.RelativeItem().Text(res);
-                                });
-                            }
-
-                            column.Item().Padding(3);
+                            column.Item().Row(row => row.RelativeItem().Text(summaryText));
                         }
-                    }
 
-                    column.Item().Padding(5);
+                        column.Item().Padding(5);
 
-                    // Skills
-                    if (_m.Skills?.Any() == true)
-                    {
-                        column.Item().Row(row =>
+                        // Experience
+                        List<ExperienceItem>? experience = _m.Experience;
+                        if (experience?.Any() == true)
                         {
-                            row.AutoItem().Text("SKILLS").Bold().FontSize(14);
-                            row.AutoItem().PaddingHorizontal(10);
-                            row.RelativeItem().AlignMiddle().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                            row.AutoItem().Padding(3);
-                        });
-
-                        foreach (var skill in _m.Skills)
-                        {
-                            var skillName = skill.Skill ?? "";
-                            var skillLevel = skill.SkillLevel ?? "";
-
-                            column.Item().Row(row =>
-                            {
-                                row.AutoItem().Text(bulletpoint);
-                                row.ConstantItem(5);
-                                row.RelativeItem().Text($"{skillName} \u2014 {skillLevel}");
-                            });
-                        }
-                    }
-
-                    column.Item().Padding(5);
-
-                    // Education
-                    if (_m.Education?.Any() == true)
-                    {
-                        column.Item().Row(row =>
-                        {
-                            row.AutoItem().Text("EDUCATION").Bold().FontSize(14);
-                            row.AutoItem().PaddingHorizontal(10);
-                            row.RelativeItem().AlignMiddle().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                            row.AutoItem().Padding(3);
-                        });
-
-                        foreach (var ed in _m.Education)
-                        {
-                            var institutionName = ed.Institution ?? "";
-                            var qualification = ed.Qualification ?? "";
-                            var datesStudied = string.Join(" - ", new[] { ed.StartDate, ed.EndDate }.Where(s => !string.IsNullOrWhiteSpace(s)));
-                            var major = ed.Major ?? "";
-
-                            column.Item().Table(table =>
-                            {
-                                table.ColumnsDefinition(columns =>
+                            column
+                                .Item()
+                                .Row(row =>
                                 {
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
+                                    row.AutoItem().Text("EXPERIENCE").Bold().FontSize(14);
+                                    row.AutoItem().PaddingHorizontal(10);
+                                    row.RelativeItem()
+                                        .AlignMiddle()
+                                        .LineHorizontal(1)
+                                        .LineColor(Colors.Grey.Lighten2);
+                                    row.AutoItem().Padding(3);
                                 });
 
-                                table.Cell().Row(1).Column(1).Text(qualification + (!string.IsNullOrWhiteSpace(major) ? ", " + major : "")).Bold().AlignLeft();
-                                table.Cell().Row(1).Column(2).Text(datesStudied).Bold().AlignRight();
-                                table.Cell().Row(2).Column(1).Text(institutionName).AlignLeft();
-                            });
-                            column.Item().Padding(3);
-                        }
-                    }
-
-                    column.Item().Padding(5);
-
-                    // Certifications
-                    if (_m.Certification?.Any() == true)
-                    {
-                        column.Item().Row(row =>
-                        {
-                            row.AutoItem().Text("CERTIFICATIONS").Bold().FontSize(14);
-                            row.AutoItem().PaddingHorizontal(10);
-                            row.RelativeItem().AlignMiddle().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                            row.AutoItem().Padding(3);
-                        });
-
-                        foreach (var ce in _m.Certification)
-                        {
-                            var cert = ce.Name ?? "Unknown";
-                            var certLink = ce.CredentialUrl ?? "";
-                            var org = ce.Organisation ?? "";
-
-                            column.Item().Row(row =>
+                            foreach (var exp in experience)
                             {
-                                row.AutoItem().Text(bulletpoint);
-                                row.ConstantItem(5);
+                                var jobCompanyName = exp.Company ?? "Unknown";
+                                var jobTitle = exp.JobTitle ?? "Unknown";
+                                var jobDates = string.Join(
+                                    " - ",
+                                    new[] { exp.StartDate, exp.EndDate }.Where(s =>
+                                        !string.IsNullOrWhiteSpace(s)
+                                    )
+                                );
+                                var jobResponsibilities =
+                                    exp.Responsibilities ?? new List<string>();
 
-                                row.RelativeItem().Text(text =>
-                                {
-                                    text.Span(cert).Bold();
-                                    if (!string.IsNullOrWhiteSpace(certLink))
+                                column
+                                    .Item()
+                                    .Table(table =>
                                     {
-                                        text.Span(" (").Bold();
-                                        text.Hyperlink("Link", certLink).FontColor(Colors.Blue.Medium).Bold();
-                                        text.Span(")").Bold();
-                                    }
+                                        table.ColumnsDefinition(columns =>
+                                        {
+                                            columns.RelativeColumn(1);
+                                            columns.RelativeColumn(1);
+                                        });
 
-                                    if (!string.IsNullOrWhiteSpace(org))
-                                        text.Span($", {org}");
+                                        table
+                                            .Cell()
+                                            .Row(1)
+                                            .Column(1)
+                                            .Text(jobTitle)
+                                            .Bold()
+                                            .AlignLeft();
+                                        table
+                                            .Cell()
+                                            .Row(1)
+                                            .Column(2)
+                                            .Text(jobDates)
+                                            .Bold()
+                                            .AlignRight();
+                                        table
+                                            .Cell()
+                                            .Row(2)
+                                            .Column(1)
+                                            .Text(jobCompanyName)
+                                            .Bold()
+                                            .AlignLeft();
+                                    });
+
+                                foreach (string res in jobResponsibilities)
+                                {
+                                    column
+                                        .Item()
+                                        .Row(row =>
+                                        {
+                                            row.AutoItem().Text(bulletpoint);
+                                            row.ConstantItem(5);
+                                            row.RelativeItem().Text(res);
+                                        });
+                                }
+
+                                column.Item().Padding(3);
+                            }
+                        }
+
+                        column.Item().Padding(5);
+
+                        // Skills
+                        List<SkillsItem>? skills = _m.Skills;
+                        if (skills?.Any() == true)
+                        {
+                            column
+                                .Item()
+                                .Row(row =>
+                                {
+                                    row.AutoItem().Text("SKILLS").Bold().FontSize(14);
+                                    row.AutoItem().PaddingHorizontal(10);
+                                    row.RelativeItem()
+                                        .AlignMiddle()
+                                        .LineHorizontal(1)
+                                        .LineColor(Colors.Grey.Lighten2);
+                                    row.AutoItem().Padding(3);
                                 });
 
-                            });
+                            foreach (var skill in skills)
+                            {
+                                var skillName = skill.Skill ?? "";
+                                var skillLevel = skill.SkillLevel ?? "";
+
+                                column
+                                    .Item()
+                                    .Row(row =>
+                                    {
+                                        row.AutoItem().Text(bulletpoint);
+                                        row.ConstantItem(5);
+                                        row.RelativeItem().Text($"{skillName} \u2014 {skillLevel}");
+                                    });
+                            }
                         }
-                    }
-                });
+
+                        column.Item().Padding(5);
+
+                        // Education
+                        List<EducationItem>? education = _m.Education;
+                        if (education?.Any() == true)
+                        {
+                            column
+                                .Item()
+                                .Row(row =>
+                                {
+                                    row.AutoItem().Text("EDUCATION").Bold().FontSize(14);
+                                    row.AutoItem().PaddingHorizontal(10);
+                                    row.RelativeItem()
+                                        .AlignMiddle()
+                                        .LineHorizontal(1)
+                                        .LineColor(Colors.Grey.Lighten2);
+                                    row.AutoItem().Padding(3);
+                                });
+
+                            foreach (var ed in education)
+                            {
+                                var institutionName = ed.Institution ?? "";
+                                var qualification = ed.Qualification ?? "";
+                                var datesStudied = string.Join(
+                                    " - ",
+                                    new[] { ed.StartDate, ed.EndDate }.Where(s =>
+                                        !string.IsNullOrWhiteSpace(s)
+                                    )
+                                );
+                                var major = ed.Major ?? "";
+
+                                column
+                                    .Item()
+                                    .Table(table =>
+                                    {
+                                        table.ColumnsDefinition(columns =>
+                                        {
+                                            columns.RelativeColumn(1);
+                                            columns.RelativeColumn(1);
+                                        });
+
+                                        table
+                                            .Cell()
+                                            .Row(1)
+                                            .Column(1)
+                                            .Text(
+                                                qualification
+                                                    + (
+                                                        !string.IsNullOrWhiteSpace(major)
+                                                            ? ", " + major
+                                                            : ""
+                                                    )
+                                            )
+                                            .Bold()
+                                            .AlignLeft();
+                                        table
+                                            .Cell()
+                                            .Row(1)
+                                            .Column(2)
+                                            .Text(datesStudied)
+                                            .Bold()
+                                            .AlignRight();
+                                        table
+                                            .Cell()
+                                            .Row(2)
+                                            .Column(1)
+                                            .Text(institutionName)
+                                            .AlignLeft();
+                                    });
+                                column.Item().Padding(3);
+                            }
+                        }
+
+                        column.Item().Padding(5);
+
+                        // Certifications
+                        List<CertificationItem>? certification = _m.Certification;
+                        if (certification?.Any() == true)
+                        {
+                            column
+                                .Item()
+                                .Row(row =>
+                                {
+                                    row.AutoItem().Text("CERTIFICATIONS").Bold().FontSize(14);
+                                    row.AutoItem().PaddingHorizontal(10);
+                                    row.RelativeItem()
+                                        .AlignMiddle()
+                                        .LineHorizontal(1)
+                                        .LineColor(Colors.Grey.Lighten2);
+                                    row.AutoItem().Padding(3);
+                                });
+
+                            foreach (var ce in certification)
+                            {
+                                var cert = ce.Name ?? "Unknown";
+                                var certLink = ce.CredentialUrl ?? "";
+                                var org = ce.Organisation ?? "";
+
+                                column
+                                    .Item()
+                                    .Row(row =>
+                                    {
+                                        row.AutoItem().Text(bulletpoint);
+                                        row.ConstantItem(5);
+
+                                        row.RelativeItem()
+                                            .Text(text =>
+                                            {
+                                                text.Span(cert).Bold();
+                                                if (!string.IsNullOrWhiteSpace(certLink))
+                                                {
+                                                    text.Span(" (").Bold();
+                                                    text.Hyperlink("Link", certLink)
+                                                        .FontColor(Colors.Blue.Medium)
+                                                        .Bold();
+                                                    text.Span(")").Bold();
+                                                }
+
+                                                if (!string.IsNullOrWhiteSpace(org))
+                                                    text.Span($", {org}");
+                                            });
+                                    });
+                            }
+                        }
+                    });
             });
         }
     }
