@@ -4,7 +4,9 @@
     {
         public static string FileNameFormatter(string username)
         {
-            return !string.IsNullOrEmpty(username) ? username.Replace(' ', '_') + "_resume" : "resume";
+            return !string.IsNullOrEmpty(username)
+                ? username.Replace(' ', '_') + "_resume"
+                : "resume";
         }
     }
 }
