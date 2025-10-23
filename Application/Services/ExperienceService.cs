@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Experience;
 
 namespace Portfolio.Application.Services
 {
@@ -34,6 +35,11 @@ namespace Portfolio.Application.Services
         public Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
         {
             return _experienceRepository.GetAllExperiencesByIds(request);
+        }
+
+        public Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
+        {
+            throw new NotImplementedException();
         }
     }
 }

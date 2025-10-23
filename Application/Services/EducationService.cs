@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Education;
 
 namespace Portfolio.Application.Services
 {
@@ -11,6 +12,11 @@ namespace Portfolio.Application.Services
         public EducationService(IEducationRepository educationRepository)
         {
             _educationRepository = educationRepository;
+        }
+
+        public Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)

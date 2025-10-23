@@ -5,7 +5,7 @@ using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ContactRepository: IContactRepository
+    public class ContactRepository : IContactRepository
     {
         private readonly ApplicationDbContext _dbContext;
 

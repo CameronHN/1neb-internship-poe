@@ -1,8 +1,8 @@
 ﻿using Portfolio.Core.DTOs.ProfessionalSummary;
 
-namespace Portfolio.Core.Contracts.Repositories
+namespace Portfolio.Core.Contracts.Services
 {
-    public interface IProfessionalSummaryRepository
+    public interface IProfessionalSummaryService
     {
         Task<Guid> AddSummaryAsync(AddSummary summary);
     }
