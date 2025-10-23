@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -16,11 +18,23 @@ namespace Portfolio.WebApi.Controllers
             _certificationService = certificationService;
         }
 
+        [Authorize]
         [HttpPost("add")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddCertification(
             [FromBody] List<AddCertification> certification
         )
         {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            foreach (var cert in certification)
+            {
+                cert.UserId = userId.Value;
+            }
+
             await _certificationService.AddCertificationAsync(certification);
             return Created(string.Empty, null);
         }
