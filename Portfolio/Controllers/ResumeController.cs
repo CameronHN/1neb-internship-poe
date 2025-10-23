@@ -55,30 +55,22 @@ namespace Portfolio.WebApi.Controllers
 
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
-            return File(pdf, "application/pdf", FileNameHelper.FileNameFormatter(userInfo?.Name));
+            string fileDownloadName = FileNameHelper.FileNameFormatter(userInfo?.Name);
+            return File(pdf, "application/pdf", fileDownloadName);
         }
 
         [HttpPost("get-resume")]
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
-            try
-            {
-                var userInfo = await _resumeService.GetResume(resumeRequest);
-                var pdf = _resumeService.RenderPdf(userInfo ?? new());
+            var userInfo = await _resumeService.GetResume(resumeRequest);
+            var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
-                if (pdf == null || pdf.Length == 0)
-                    return BadRequest("PDF generation failed.");
+            if (pdf == null || pdf.Length == 0)
+                return BadRequest("PDF generation failed.");
 
-                return File(
-                    pdf,
-                    "application/pdf",
-                    FileNameHelper.FileNameFormatter(userInfo?.Name));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while generating the PDF.");
-            }
+            string fileDownloadName = FileNameHelper.FileNameFormatter(userInfo?.Name);
+            return File(pdf, "application/pdf", fileDownloadName);
         }
     }
 }
