@@ -14,9 +14,9 @@ namespace Portfolio.Application.Services
             _skillRepository = skillRepository;
         }
 
-        public Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills)
+        public async Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills)
         {
-            throw new NotImplementedException();
+            return await _skillRepository.AddSkillsAsync(skills);
         }
 
         public Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)

@@ -37,9 +37,9 @@ namespace Portfolio.Application.Services
             return _experienceRepository.GetAllExperiencesByIds(request);
         }
 
-        public Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
+        public async Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
         {
-            throw new NotImplementedException();
+            return await _experienceRepository.AddExperiencesAsync(experiences);
         }
     }
 }

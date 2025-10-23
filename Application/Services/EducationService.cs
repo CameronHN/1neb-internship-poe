@@ -14,9 +14,9 @@ namespace Portfolio.Application.Services
             _educationRepository = educationRepository;
         }
 
-        public Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
+        public async Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
         {
-            throw new NotImplementedException();
+            return await _educationRepository.AddEducationsAsync(educations);
         }
 
         public Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
