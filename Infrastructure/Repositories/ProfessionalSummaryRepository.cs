@@ -5,7 +5,7 @@ using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ProfessionalSummaryRepository:IProfessionalSummaryRepository
+    public class ProfessionalSummaryRepository : IProfessionalSummaryRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -14,7 +14,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> AddSummariesAsync(AddSummary summary)
+        public async Task<Guid> AddSummaryAsync(AddSummary summary)
         {
             var entity = new ProfessionalSummary
             {

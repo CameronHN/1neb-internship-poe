@@ -2,7 +2,7 @@
 
 namespace Portfolio.Core.DTOs.Experience.ExperienceResponsibility
 {
-    public class UpdateResponsibility: AddResponsibility
+    public class UpdateResponsibility : AddResponsibility
     {
         [Required]
         public Guid Id { get; set; }

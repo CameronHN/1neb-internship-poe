@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Portfolio.WebApi.Controllers
 {
