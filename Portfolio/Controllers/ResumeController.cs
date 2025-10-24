@@ -8,7 +8,9 @@ using Portfolio.Core.DTOs.Education;
 using Portfolio.Core.DTOs.Experience;
 using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
 using Portfolio.Core.DTOs.ProfessionalSummary;
+using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.DTOs.Skill;
+using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.WebApi.Extensions;
 using Portfolio.WebApi.Helper;
@@ -26,16 +28,15 @@ namespace Portfolio.WebApi.Controllers
             _resumeService = resumeService;
         }
 
-        //[HttpPost]
-        //[Produces("application/pdf")]
-        //public async Task<IActionResult> Generate([FromBody] ResumeDto dto)
-        //{
-        //    var pdf = await _resumeService.RenderPdfAsync(dto ?? new());
+        [HttpPost("create-pdf")]
+        public IActionResult GenerateResumeWithoutSavingDetails([FromBody] ResumeDto dto)
+        {
+            var pdf = _resumeService.RenderPdf(dto ?? new());
 
-        //    string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
+            string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
 
-        //    return File(pdf, "application/pdf", $"{name}resume.pdf");
-        //}
+            return File(pdf, "application/pdf", $"{name}resume.pdf");
+        }
 
         [HttpGet("{userId:guid}")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
@@ -49,11 +50,10 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("user/pdf")]
-        [Produces("application/pdf")]
+        [HttpPost("get-resume/{userId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GeneratePdfByUserID()
+        public async Task<IActionResult> GenerateResumeByUserID()
         {
             var userId = User.GetUserId();
             if (userId == null)
@@ -71,7 +71,7 @@ namespace Portfolio.WebApi.Controllers
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
-            var userInfo = await _resumeService.GetResume(resumeRequest);
+            var userInfo = await _resumeService.GetResumeDetailsAsync(resumeRequest);
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
             if (pdf == null || pdf.Length == 0)
@@ -81,8 +81,8 @@ namespace Portfolio.WebApi.Controllers
             return File(pdf, "application/pdf", fileDownloadName);
         }
 
-        [HttpPost("build-resume")]
-        public async Task<IActionResult> BuildResumeByIds(ResumeDto resumeDto)
+        [HttpPost("create-resume")]
+        public async Task<IActionResult> CreateResume(ResumeDto resumeDto)
         {
             var userId = User.GetUserId();
             if (userId == null)
@@ -90,6 +90,7 @@ namespace Portfolio.WebApi.Controllers
 
             // Prepare lists to collect new entity IDs
             Guid? summaryId = null;
+            Guid? titleId = null;
             List<Guid> contactIds = new();
             List<Guid> skillIds = new();
             List<Guid> experienceIds = new();
@@ -105,6 +106,19 @@ namespace Portfolio.WebApi.Controllers
             {
                 try
                 {
+                    // Add Title if provided
+                    if (!string.IsNullOrWhiteSpace(resumeDto.Title))
+                    {
+                        var titleService =
+                            HttpContext.RequestServices.GetRequiredService<ITitleService>();
+                        var addTitle = new AddResumeTitle
+                        {
+                            UserId = userId.Value,
+                            Title = resumeDto.Title,
+                        };
+                        titleId = await titleService.AddTitleAsync(addTitle);
+                    }
+
                     // Add Contact Info if provided
                     if (resumeDto.Socials != null && resumeDto.Socials.Any())
                     {
@@ -238,6 +252,7 @@ namespace Portfolio.WebApi.Controllers
             var resumeRequest = new ResumeRequest
             {
                 UserId = userId.Value,
+                TitleId = titleId,
                 ProfessionalSummaryId = summaryId,
                 SkillsIds = skillIds.Any() ? new ItemListRequest { Ids = skillIds } : null,
                 ExperienceIds = experienceIds.Any()
@@ -253,7 +268,7 @@ namespace Portfolio.WebApi.Controllers
             };
 
             // Generate PDF using the above endpoint logic
-            var userInfo = await _resumeService.GetResume(resumeRequest);
+            var userInfo = await _resumeService.GetResumeDetailsAsync(resumeRequest);
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
             if (pdf == null || pdf.Length == 0)
