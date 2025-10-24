@@ -8,6 +8,9 @@ namespace Portfolio.Core.DTOs
         [JsonIgnore]
         public Guid UserId { get; set; }
 
+        //Used to get a single title
+        public Guid? TitleId { get; set; }
+
         //Used to get a single professional summary
         public Guid? ProfessionalSummaryId { get; set; }
 
