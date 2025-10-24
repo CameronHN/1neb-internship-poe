@@ -2,6 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Certification;
+using Portfolio.Core.DTOs.Contact;
+using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.DTOs.Experience;
+using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
+using Portfolio.Core.DTOs.ProfessionalSummary;
+using Portfolio.Core.DTOs.Skill;
+using Portfolio.Infrastructure.Persistence;
 using Portfolio.WebApi.Extensions;
 using Portfolio.WebApi.Helper;
 
@@ -63,6 +71,188 @@ namespace Portfolio.WebApi.Controllers
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
+            var userInfo = await _resumeService.GetResume(resumeRequest);
+            var pdf = _resumeService.RenderPdf(userInfo ?? new());
+
+            if (pdf == null || pdf.Length == 0)
+                return BadRequest("PDF generation failed.");
+
+            string fileDownloadName = FileNameHelper.FileNameFormatter(userInfo?.Name);
+            return File(pdf, "application/pdf", fileDownloadName);
+        }
+
+        [HttpPost("build-resume")]
+        public async Task<IActionResult> BuildResumeByIds(ResumeDto resumeDto)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            // Prepare lists to collect new entity IDs
+            Guid? summaryId = null;
+            List<Guid> contactIds = new();
+            List<Guid> skillIds = new();
+            List<Guid> experienceIds = new();
+            List<Guid> educationIds = new();
+            List<Guid> certificationIds = new();
+
+            // Use a transaction
+            using (
+                var transaction = await HttpContext
+                    .RequestServices.GetRequiredService<ApplicationDbContext>()
+                    .Database.BeginTransactionAsync()
+            )
+            {
+                try
+                {
+                    // Add Contact Info if provided
+                    if (resumeDto.Socials != null && resumeDto.Socials.Any())
+                    {
+                        var contactService =
+                            HttpContext.RequestServices.GetRequiredService<IContactService>();
+
+                        var addContacts = new List<AddContact>();
+
+                        if (resumeDto.Socials != null && resumeDto.Socials.Any())
+                        {
+                            addContacts.AddRange(
+                                resumeDto
+                                    .Socials.Where(s =>
+                                        !string.IsNullOrWhiteSpace(s.SocialMediaUrl)
+                                    )
+                                    .Select(s => new AddContact
+                                    {
+                                        UserId = userId.Value,
+                                        Social = s.SocialMediaUrl,
+                                    })
+                                    .ToList()
+                            );
+                        }
+
+                        contactIds = await contactService.AddContactsAsync(addContacts);
+                    }
+
+                    // Add Professional Summary if provided
+                    if (!string.IsNullOrWhiteSpace(resumeDto.Summary))
+                    {
+                        var summaryService =
+                            HttpContext.RequestServices.GetRequiredService<IProfessionalSummaryService>();
+                        var addSummary = new AddSummary
+                        {
+                            UserId = userId.Value,
+                            Summary = resumeDto.Summary,
+                        };
+                        summaryId = await summaryService.AddSummaryAsync(addSummary);
+                    }
+
+                    // Add Skills if provided
+                    if (resumeDto.Skills != null && resumeDto.Skills.Any())
+                    {
+                        var skillService =
+                            HttpContext.RequestServices.GetRequiredService<ISkillService>();
+                        var addSkills = resumeDto
+                            .Skills.Select(s => new AddSkill
+                            {
+                                UserId = userId.Value,
+                                Skill = s.Skill,
+                                ProficiencyLevel = s.SkillLevel,
+                            })
+                            .ToList();
+                        skillIds = await skillService.AddSkillsAsync(addSkills);
+                    }
+
+                    // Add Experience if provided
+                    if (resumeDto.Experience != null && resumeDto.Experience.Any())
+                    {
+                        var experienceService =
+                            HttpContext.RequestServices.GetRequiredService<IExperienceService>();
+                        var addExperiences = resumeDto
+                            .Experience.Select(e => new AddExperience
+                            {
+                                UserId = userId.Value,
+                                JobTitle = e.JobTitle,
+                                CompanyName = e.Company,
+                                StartDate = e.StartDate,
+                                EndDate = e.EndDate,
+                                Responsibilities = e
+                                    .Responsibilities.Select(r => new AddResponsibility
+                                    {
+                                        Responsibility = r,
+                                    })
+                                    .ToList(),
+                            })
+                            .ToList();
+                        experienceIds = await experienceService.AddExperiencesAsync(addExperiences);
+                    }
+
+                    // Add Education if provided
+                    if (resumeDto.Education != null && resumeDto.Education.Any())
+                    {
+                        var educationService =
+                            HttpContext.RequestServices.GetRequiredService<IEducationService>();
+                        var addEducations = resumeDto
+                            .Education.Select(e => new AddEducation
+                            {
+                                UserId = userId.Value,
+                                InstitutionName = e.Institution,
+                                Qualification = e.Qualification,
+                                Major = e.Major,
+                                StartDate = e.StartDate,
+                                EndDate = e.EndDate,
+                            })
+                            .ToList();
+                        educationIds = await educationService.AddEducationsAsync(addEducations);
+                    }
+
+                    // Add Certifications if provided
+                    if (resumeDto.Certification != null && resumeDto.Certification.Any())
+                    {
+                        var certificationService =
+                            HttpContext.RequestServices.GetRequiredService<ICertificationService>();
+                        var addCerts = resumeDto
+                            .Certification.Select(c => new AddCertification
+                            {
+                                UserId = userId.Value,
+                                CertificationName = c.Name,
+                                IssuingOrganisation = c.Organisation,
+                                CredentialUrl = c.CredentialUrl,
+                                IssuedDate = c.IssuedDate,
+                                ExpiryDate = c.ExpirationDate,
+                            })
+                            .ToList();
+                        certificationIds = await certificationService.AddCertificationAsync(
+                            addCerts
+                        );
+                    }
+
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, "Failed to build resume. No data was saved.");
+                }
+            }
+
+            // Map to ResumeRequest
+            var resumeRequest = new ResumeRequest
+            {
+                UserId = userId.Value,
+                ProfessionalSummaryId = summaryId,
+                SkillsIds = skillIds.Any() ? new ItemListRequest { Ids = skillIds } : null,
+                ExperienceIds = experienceIds.Any()
+                    ? new ItemListRequest { Ids = experienceIds }
+                    : null,
+                EducationIds = educationIds.Any()
+                    ? new ItemListRequest { Ids = educationIds }
+                    : null,
+                CertificationIds = certificationIds.Any()
+                    ? new ItemListRequest { Ids = certificationIds }
+                    : null,
+                SocialMediaIds = contactIds.Any() ? new ItemListRequest { Ids = contactIds } : null,
+            };
+
+            // Generate PDF using the above endpoint logic
             var userInfo = await _resumeService.GetResume(resumeRequest);
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 

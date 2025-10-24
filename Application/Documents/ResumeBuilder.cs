@@ -30,20 +30,22 @@ namespace Portfolio.Application.Documents
                     {
                         column
                             .Item()
-                            .Text(_m.Name ?? "Your Name")
+                            .Text(_m.Name)
                             .Bold()
                             .FontSize(30)
                             .FontColor(Colors.Blue.Medium)
                             .AlignCenter();
 
-                        var contactParts = new[]
+                        var contactParts = new List<string> { _m.Email, _m.PhoneNumber };
+
+                        if (_m.Socials?.Any() == true)
                         {
-                            _m.Contact?.Website,
-                            _m.Contact?.Phone,
-                            _m.Contact?.Email,
-                            _m.Contact?.LinkedIn,
-                            _m.Contact?.Github,
-                        }.Where(s => !string.IsNullOrWhiteSpace(s));
+                            contactParts.AddRange(
+                                _m.Socials.Select(s => s?.SocialMediaUrl)
+                                    .Where(s => !string.IsNullOrWhiteSpace(s))!
+                            );
+                        }
+
                         column.Item().Text(string.Join(" | ", contactParts)).AlignCenter();
                         column.Item().Padding(5);
                     });
