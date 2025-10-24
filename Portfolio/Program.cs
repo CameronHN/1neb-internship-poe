@@ -65,24 +65,31 @@ builder.Services.AddAuthorization();
 // User
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 // Experience
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<IExperienceService, ExperienceService>();
+
 // Certification
 builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
 builder.Services.AddScoped<ICertificationService, CertificationService>();
+
 // Skill
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<ISkillService, SkillService>();
+
 // Education
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IEducationService, EducationService>();
+
 // Contact
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IContactService, ContactService>();
+
 // Professional Summary
 builder.Services.AddScoped<IProfessionalSummaryRepository, ProfessionalSummaryRepository>();
 builder.Services.AddScoped<IProfessionalSummaryService, ProfessionalSummaryService>();
+
 // Resume
 builder.Services.AddScoped<IResumeService, ResumeService>();
 
