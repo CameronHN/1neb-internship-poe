@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Portfolio.Core.DTOs.Contact
 {
@@ -8,7 +9,7 @@ namespace Portfolio.Core.DTOs.Contact
         [Url(ErrorMessage = "Invalid URL format.")]
         public string? SocialMediaUrl { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public Guid UserId { get; set; }
     }
 }

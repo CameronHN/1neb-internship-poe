@@ -1,5 +1,6 @@
-﻿using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
 
 namespace Portfolio.Core.DTOs.Experience
 {
@@ -22,7 +23,7 @@ namespace Portfolio.Core.DTOs.Experience
         [MinLength(1, ErrorMessage = "At least one responsibility is required.")]
         public required List<AddResponsibility> Responsibilities { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public Guid UserId { get; set; }
     }
 }
