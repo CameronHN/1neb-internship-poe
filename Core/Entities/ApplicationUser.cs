@@ -23,5 +23,7 @@ namespace Portfolio.Core.Entities
         public List<Contact> Contacts { get; set; }
 
         public List<Resume> Resumes { get; set; }
+
+        public List<Title> Titles { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace Portfolio.Infrastructure.Persistence
 
         public DbSet<Skill> Skill { get; set; }
 
+        public DbSet<Title> Title { get; set; }
+
         public DbSet<ApplicationUser> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
