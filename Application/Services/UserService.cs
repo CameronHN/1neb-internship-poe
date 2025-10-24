@@ -2,7 +2,6 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.User;
-using Portfolio.Core.Entities;
 
 namespace Portfolio.Application.Services
 {
@@ -36,7 +35,7 @@ namespace Portfolio.Application.Services
                 throw;
             }
         }
-                public async Task UpdateUser(UpdateUserDTO updateUserDTO)
+        public async Task UpdateUser(UpdateUserDTO updateUserDTO)
         {
             await _userRepository.UpdateUser(updateUserDTO);
         }
