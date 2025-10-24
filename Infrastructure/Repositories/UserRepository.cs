@@ -61,7 +61,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .Select(u => new ResumeDto
                 {
                     Name = u.FirstName + " " + u.LastName,
-                    Title = u.ProfessionalSummaries.FirstOrDefault().Summary,
+                    Title = u.Titles.FirstOrDefault().ResumeTitle,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     Socials = u
