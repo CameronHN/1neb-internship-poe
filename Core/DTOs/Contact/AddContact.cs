@@ -7,7 +7,7 @@ namespace Portfolio.Core.DTOs.Contact
     {
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [Url(ErrorMessage = "Invalid URL format.")]
-        public string? SocialMediaUrl { get; set; }
+        public string? Social { get; set; }
 
         [JsonIgnore]
         public Guid UserId { get; set; }
