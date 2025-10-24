@@ -54,17 +54,31 @@ namespace Portfolio.Application.Documents
                             column.Item().Padding(3);
                         }
 
-                        var contactParts = new List<string> { _m.Email, _m.PhoneNumber };
+                        column
+                            .Item()
+                            .Row(row =>
+                            {
+                                row.RelativeItem()
+                                    .AlignCenter()
+                                    .Text(text =>
+                                    {
+                                        text.Span(_m.Email + " | " + _m.PhoneNumber);
 
-                        if (_m.Socials?.Any() == true)
-                        {
-                            contactParts.AddRange(
-                                _m.Socials.Select(s => s?.SocialMediaUrl)
-                                    .Where(s => !string.IsNullOrWhiteSpace(s))!
-                            );
-                        }
-
-                        column.Item().Text(string.Join(" | ", contactParts)).AlignCenter();
+                                        // Socials
+                                        if (_m.Socials?.Any() == true)
+                                        {
+                                            foreach (var s in _m.Socials)
+                                            {
+                                                var url = s?.SocialMediaUrl;
+                                                if (!string.IsNullOrWhiteSpace(url))
+                                                {
+                                                    text.Span(" | ");
+                                                    text.Hyperlink(url, url);
+                                                }
+                                            }
+                                        }
+                                    });
+                            });
                         column.Item().Padding(5);
                     });
 
