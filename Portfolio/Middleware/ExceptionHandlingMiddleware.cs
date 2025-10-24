@@ -1,6 +1,6 @@
-﻿using Portfolio.Core.Exceptions;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using Portfolio.Core.Exceptions;
 
 namespace Portfolio.WebApi.Middleware
 {
@@ -9,7 +9,10 @@ namespace Portfolio.WebApi.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+        public ExceptionHandlingMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionHandlingMiddleware> logger
+        )
         {
             _next = next;
             _logger = logger;
@@ -35,14 +38,14 @@ namespace Portfolio.WebApi.Middleware
 
             switch (exception)
             {
-                case NotFoundException:
-                    status = HttpStatusCode.NotFound; // 404
-                    break;
                 case ValidationException:
                     status = HttpStatusCode.BadRequest; // 400
                     break;
                 case UnauthorizedAccessAppException:
                     status = HttpStatusCode.Unauthorized; // 401
+                    break;
+                case NotFoundException:
+                    status = HttpStatusCode.NotFound; // 404
                     break;
                 case ConflictException:
                     status = HttpStatusCode.Conflict; // 409
@@ -59,7 +62,7 @@ namespace Portfolio.WebApi.Middleware
             {
                 status = (int)status,
                 title = status.ToString(),
-                detail = message
+                detail = message,
             };
 
             context.Response.ContentType = "application/json; charset=utf-8";
