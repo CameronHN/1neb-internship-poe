@@ -4,15 +4,12 @@ namespace Portfolio.Core.DTOs
 {
     public class ResumeDto
     {
-        [JsonIgnore]
         public string? Name { get; set; }
 
         public string? Title { get; set; }
 
-        [JsonIgnore]
         public string? Email { get; set; }
 
-        [JsonIgnore]
         public string? PhoneNumber { get; set; }
 
         public string? Summary { get; set; }
