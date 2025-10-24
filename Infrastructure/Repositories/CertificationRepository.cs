@@ -16,25 +16,29 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddCertificationsAsync(List<AddCertification> certifications)
+        public async Task<List<Guid>> AddCertificationsAsync(List<AddCertification> certifications)
         {
-            var entities = certifications.Select(cert => new Certification
-            {
-                Id = Guid.NewGuid(),
-                CertificationName = cert.CertificationName,
-                IssuingOrganisation = cert.IssuingOrganisation,
-                CredentialUrl = cert.CredentialUrl,
-                IssuedDate = !string.IsNullOrWhiteSpace(cert.IssuedDate)
-                    ? DateOnly.Parse(cert.IssuedDate)
-                    : null,
-                ExpiryDate = !string.IsNullOrWhiteSpace(cert.ExpiryDate)
-                    ? DateOnly.Parse(cert.ExpiryDate)
-                    : null,
-                UserId = cert.UserId
-            }).ToList();
+            var entities = certifications
+                .Select(cert => new Certification
+                {
+                    Id = Guid.NewGuid(),
+                    CertificationName = cert.CertificationName,
+                    IssuingOrganisation = cert.IssuingOrganisation,
+                    CredentialUrl = cert.CredentialUrl,
+                    IssuedDate = !string.IsNullOrWhiteSpace(cert.IssuedDate)
+                        ? DateOnly.Parse(cert.IssuedDate)
+                        : null,
+                    ExpiryDate = !string.IsNullOrWhiteSpace(cert.ExpiryDate)
+                        ? DateOnly.Parse(cert.ExpiryDate)
+                        : null,
+                    UserId = cert.UserId,
+                })
+                .ToList();
 
             await _dbContext.Certification.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
+
+            return entities.Select(e => e.Id).ToList();
         }
 
         public Task DeleteCertificationAsync(Guid id)
@@ -42,13 +46,16 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(ItemListRequest request)
+        public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(
+            ItemListRequest request
+        )
         {
             var ids = request.Ids;
-            if (ids.Count == 0) return [];
+            if (ids.Count == 0)
+                return [];
 
-            var certs = await _dbContext.Certification
-                .Where(cert => ids.Contains(cert.Id))
+            var certs = await _dbContext
+                .Certification.Where(cert => ids.Contains(cert.Id))
                 .Select(ce => new
                 {
                     ce.Id,
@@ -56,7 +63,7 @@ namespace Portfolio.Infrastructure.Repositories
                     ce.IssuingOrganisation,
                     ce.CredentialUrl,
                     ce.IssuedDate,
-                    ce.ExpiryDate
+                    ce.ExpiryDate,
                 })
                 .ToListAsync();
 
@@ -71,19 +78,28 @@ namespace Portfolio.Infrastructure.Repositories
                 case SortOrder.None:
                 default:
                     // Preserve the order of IDs
-                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
-                    certs = certs.OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    var order = ids.Select((id, idx) => new { id, idx })
+                        .ToDictionary(x => x.id, x => x.idx);
+                    certs = certs
+                        .OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue)
+                        .ToList();
                     break;
             }
 
-            return certs.Select(ce => new CertificationItem
-            {
-                Name = ce.CertificationName,
-                Organisation = ce.IssuingOrganisation,
-                CredentialUrl = ce.CredentialUrl,
-                IssuedDate = ce.IssuedDate.HasValue ? ce.IssuedDate.Value.ToString("MMMM yyyy") : null,
-                ExpirationDate = ce.ExpiryDate.HasValue ? ce.ExpiryDate.Value.ToString("MMMM yyyy") : null
-            }).ToList();
+            return certs
+                .Select(ce => new CertificationItem
+                {
+                    Name = ce.CertificationName,
+                    Organisation = ce.IssuingOrganisation,
+                    CredentialUrl = ce.CredentialUrl,
+                    IssuedDate = ce.IssuedDate.HasValue
+                        ? ce.IssuedDate.Value.ToString("MMMM yyyy")
+                        : null,
+                    ExpirationDate = ce.ExpiryDate.HasValue
+                        ? ce.ExpiryDate.Value.ToString("MMMM yyyy")
+                        : null,
+                })
+                .ToList();
         }
 
         public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)

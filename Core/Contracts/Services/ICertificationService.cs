@@ -6,7 +6,7 @@ namespace Portfolio.Core.Contracts.Services
     public interface ICertificationService
     {
         // Create
-        Task AddCertificationAsync(List<AddCertification> certification);
+        Task<List<Guid>> AddCertificationAsync(List<AddCertification> certification);
 
         // Read
         Task<CertificationItem?> GetCertificationByIdAsync(Guid id);

@@ -20,7 +20,7 @@ namespace Portfolio.WebApi.Controllers
 
         [Authorize]
         [HttpPost("add")]
-        [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddCertification(
             [FromBody] List<AddCertification> certification
@@ -35,8 +35,8 @@ namespace Portfolio.WebApi.Controllers
                 cert.UserId = userId.Value;
             }
 
-            await _certificationService.AddCertificationAsync(certification);
-            return Created(string.Empty, null);
+            var certificationIds = await _certificationService.AddCertificationAsync(certification);
+            return Created(string.Empty, certificationIds);
         }
 
         [HttpPost("certifications")]
