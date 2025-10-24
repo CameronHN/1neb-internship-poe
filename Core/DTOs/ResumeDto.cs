@@ -10,10 +10,10 @@ namespace Portfolio.Core.DTOs
         public string? Title { get; set; }
 
         [JsonIgnore]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonIgnore]
-        public required string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public string? Summary { get; set; }
         public List<SkillsItem>? Skills { get; set; }
