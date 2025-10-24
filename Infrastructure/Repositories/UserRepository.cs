@@ -29,12 +29,6 @@ namespace Portfolio.Infrastructure.Repositories
             return user;
         }
 
-        public async Task AddUser(ApplicationUser user)
-        {
-            await _dbContext.User.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
-        }
-
         public async Task UpdateUser(UpdateUserDTO updateUserDTO)
         {
             var existingUser = await _dbContext.User.FindAsync(updateUserDTO.UserId);

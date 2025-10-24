@@ -24,13 +24,6 @@ namespace Portfolio.WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddUser(AddUserDTO dto)
-        {
-            await _userService.AddUser(dto);
-            return Ok();
-        }
-
         [HttpGet("skills/{userId:guid}")]
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSkillsByUserId(Guid userId)

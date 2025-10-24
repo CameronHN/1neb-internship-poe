@@ -36,21 +36,7 @@ namespace Portfolio.Application.Services
                 throw;
             }
         }
-
-        public async Task AddUser(AddUserDTO userDto)
-        {
-            var user = new ApplicationUser
-            {
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Email = userDto.Email,
-                PhoneNumber = userDto.PhoneNumber
-            };
-
-            await _userRepository.AddUser(user);
-        }
-
-        public async Task UpdateUser(UpdateUserDTO updateUserDTO)
+                public async Task UpdateUser(UpdateUserDTO updateUserDTO)
         {
             await _userRepository.UpdateUser(updateUserDTO);
         }

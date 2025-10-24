@@ -8,8 +8,6 @@ namespace Portfolio.Core.Contracts.Repositories
     {
         Task<ApplicationUser?> GetUserById(Guid id);
 
-        Task AddUser(ApplicationUser user);
-
         Task UpdateUser(UpdateUserDTO updateUserDTO);
 
         Task DeleteUser(Guid id);
