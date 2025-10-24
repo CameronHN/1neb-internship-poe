@@ -38,11 +38,15 @@ namespace Portfolio.WebApi.Controllers
             return File(pdf, "application/pdf", $"{name}resume.pdf");
         }
 
-        [HttpGet("{userId:guid}")]
+        [HttpGet("get-user-resume-details")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
-        public async Task<IActionResult> GetResumeDtoByUserId(Guid userId)
+        public async Task<IActionResult> GetResumeDtoByUserId()
         {
-            var resume = await _resumeService.GetResumeByUserId(userId);
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var resume = await _resumeService.GetResumeByUserId((Guid)userId);
             if (resume == null)
                 return NotFound();
 
@@ -50,7 +54,7 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("get-resume/{userId:guid}")]
+        [HttpPost("get-user-resume")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GenerateResumeByUserID()
