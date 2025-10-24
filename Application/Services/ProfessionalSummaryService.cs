@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Portfolio.Core.Contracts.Repositories;
+﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 
@@ -13,7 +8,9 @@ namespace Portfolio.Application.Services
     {
         private readonly IProfessionalSummaryRepository _professionalSummaryRepository;
 
-        public ProfessionalSummaryService(IProfessionalSummaryRepository professionalSummaryRepository)
+        public ProfessionalSummaryService(
+            IProfessionalSummaryRepository professionalSummaryRepository
+        )
         {
             _professionalSummaryRepository = professionalSummaryRepository;
         }
