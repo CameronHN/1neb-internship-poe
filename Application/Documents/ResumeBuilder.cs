@@ -9,7 +9,10 @@ namespace Portfolio.Application.Documents
     {
         private readonly ResumeDto _m;
 
-        public ResumeBuilder(ResumeDto model) => _m = model ?? new();
+        public ResumeBuilder(ResumeDto model)
+        {
+            _m = model ?? new ResumeDto { Email = string.Empty, PhoneNumber = string.Empty };
+        }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
 
@@ -33,8 +36,23 @@ namespace Portfolio.Application.Documents
                             .Text(_m.Name)
                             .Bold()
                             .FontSize(30)
-                            .FontColor(Colors.Blue.Medium)
+                            .FontColor(Colors.Black)
                             .AlignCenter();
+
+                        // Summary
+                        string? title = _m.Title;
+                        if (title?.Any() == true)
+                        {
+                            column
+                                .Item()
+                                .Text(_m.Title)
+                                .Bold()
+                                .FontSize(20)
+                                .FontColor(Colors.Black)
+                                .AlignCenter();
+
+                            column.Item().Padding(3);
+                        }
 
                         var contactParts = new List<string> { _m.Email, _m.PhoneNumber };
 
