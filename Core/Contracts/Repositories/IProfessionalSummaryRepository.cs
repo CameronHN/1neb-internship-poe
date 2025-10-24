@@ -5,5 +5,6 @@ namespace Portfolio.Core.Contracts.Repositories
     public interface IProfessionalSummaryRepository
     {
         Task<Guid> AddSummaryAsync(AddSummary summary);
+        Task<string?> GetSummaryById(Guid id);
     }
 }

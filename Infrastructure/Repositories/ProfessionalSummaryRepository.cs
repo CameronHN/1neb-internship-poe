@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
@@ -27,6 +28,14 @@ namespace Portfolio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entity.Id;
+        }
+
+        public async Task<string?> GetSummaryById(Guid id)
+        {
+            return await _dbContext.ProfessionalSummary
+                .Where(s => s.Id == id)
+                .Select(s => s.Summary)
+                .FirstOrDefaultAsync();
         }
     }
 }
