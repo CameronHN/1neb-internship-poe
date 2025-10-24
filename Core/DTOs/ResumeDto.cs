@@ -1,25 +1,31 @@
-﻿namespace Portfolio.Core.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace Portfolio.Core.DTOs
 {
     public class ResumeDto
     {
+        [JsonIgnore]
         public string? Name { get; set; }
+
         public string? Title { get; set; }
-        public ContactInfo? Contact { get; set; }
+
+        [JsonIgnore]
+        public string? Email { get; set; }
+
+        [JsonIgnore]
+        public string? PhoneNumber { get; set; }
+
         public string? Summary { get; set; }
         public List<SkillsItem>? Skills { get; set; }
+        public List<SocialMediaItem>? Socials { get; set; }
         public List<ExperienceItem>? Experience { get; set; }
         public List<EducationItem>? Education { get; set; }
         public List<CertificationItem>? Certification { get; set; }
     }
 
-    public class ContactInfo
+    public class SocialMediaItem
     {
-        public string? Email { get; set; }
-        public string? Phone { get; set; }
-        public string? Location { get; set; } // TODO: Add location to entity
-        public string? Website { get; set; }
-        public string? LinkedIn { get; set; }
-        public string? Github { get; set; }
+        public string? SocialMediaUrl { get; set; }
     }
 
     public class SkillsItem
