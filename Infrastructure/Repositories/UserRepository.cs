@@ -68,12 +68,12 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     Name = u.FirstName + " " + u.LastName,
                     Title = u.ProfessionalSummaries.FirstOrDefault().Summary,
-                    Contact = new ContactInfo
-                    {
-                        Email = u.Email,
-                        Phone = u.PhoneNumber,
-                        LinkedIn = u.Contacts.FirstOrDefault().ContactUrl,
-                    },
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    Socials = u
+                        .Contacts.OrderBy(c => c.ContactUrl)
+                        .Select(c => new SocialMediaItem { SocialMediaUrl = c.ContactUrl })
+                        .ToList(),
                     Summary = u.ProfessionalSummaries.FirstOrDefault().Summary,
                     Skills = u
                         .Skills.OrderBy(s => s.SkillName)
