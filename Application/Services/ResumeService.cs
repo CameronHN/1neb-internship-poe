@@ -1,4 +1,5 @@
-﻿using Portfolio.Application.Documents;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Portfolio.Application.Documents;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
@@ -13,13 +14,17 @@ namespace Portfolio.Application.Services
         private readonly IEducationRepository _educationRepository;
         private readonly IExperienceRepository _experienceRepository;
         private readonly ISkillRepository _skillRepository;
+        private readonly IProfessionalSummaryRepository _professionalSummaryRepository;
+        private readonly IContactRepository _contactRepository;
 
         public ResumeService(
             IUserRepository userRepository,
             ICertificationRepository certificationRepository,
             IEducationRepository educationRepository,
             IExperienceRepository experienceRepository,
-            ISkillRepository skillRepository
+            ISkillRepository skillRepository,
+            IProfessionalSummaryRepository professionalSummaryRepository,
+            IContactRepository contactRepository
         )
         {
             _userRepository = userRepository;
@@ -27,6 +32,8 @@ namespace Portfolio.Application.Services
             _educationRepository = educationRepository;
             _experienceRepository = experienceRepository;
             _skillRepository = skillRepository;
+            _professionalSummaryRepository = professionalSummaryRepository;
+            _contactRepository = contactRepository;
         }
 
         public async Task<ResumeDto> GetResume(ResumeRequest resumeRequest)
@@ -39,9 +46,24 @@ namespace Portfolio.Application.Services
 
             user.PhoneNumber ??= "";
 
-            resumeDto.Contact = new ContactInfo();
-            resumeDto.Contact.Phone = user.PhoneNumber;
-            resumeDto.Contact.Email = user.Email;
+            resumeDto.Email = user.Email;
+            resumeDto.PhoneNumber = user.PhoneNumber;
+
+            if (resumeRequest.ProfessionalSummaryId.HasValue)
+            {
+                var summary = await _professionalSummaryRepository.GetSummaryById(
+                    resumeRequest.ProfessionalSummaryId.Value
+                );
+                resumeDto.Summary = summary ?? string.Empty;
+            }
+
+            if (resumeRequest.SocialMediaIds != null)
+            {
+                var socials = await _contactRepository.GetContactsByIdsAsync(
+                    resumeRequest.SocialMediaIds
+                );
+                resumeDto.Socials = socials;
+            }
 
             if (resumeRequest.SkillsIds != null)
             {
@@ -67,9 +89,10 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.CertificationIds != null)
             {
-                var certificationItems = await _certificationRepository.GetAllCertificationsByTheirIdsAsync(
-                    resumeRequest.CertificationIds
-                );
+                var certificationItems =
+                    await _certificationRepository.GetAllCertificationsByTheirIdsAsync(
+                        resumeRequest.CertificationIds
+                    );
                 resumeDto.Certification = certificationItems;
             }
 
