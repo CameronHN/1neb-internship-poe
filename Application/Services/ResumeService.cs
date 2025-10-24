@@ -15,16 +15,9 @@ namespace Portfolio.Application.Services
         private readonly ISkillRepository _skillRepository;
         private readonly IProfessionalSummaryRepository _professionalSummaryRepository;
         private readonly IContactRepository _contactRepository;
+        private readonly ITitleRepository _titleRepository;
 
-        public ResumeService(
-            IUserRepository userRepository,
-            ICertificationRepository certificationRepository,
-            IEducationRepository educationRepository,
-            IExperienceRepository experienceRepository,
-            ISkillRepository skillRepository,
-            IProfessionalSummaryRepository professionalSummaryRepository,
-            IContactRepository contactRepository
-        )
+        public ResumeService(IUserRepository userRepository, ICertificationRepository certificationRepository, IEducationRepository educationRepository, IExperienceRepository experienceRepository, ISkillRepository skillRepository, IProfessionalSummaryRepository professionalSummaryRepository, IContactRepository contactRepository, ITitleRepository titleRepository)
         {
             _userRepository = userRepository;
             _certificationRepository = certificationRepository;
@@ -33,9 +26,10 @@ namespace Portfolio.Application.Services
             _skillRepository = skillRepository;
             _professionalSummaryRepository = professionalSummaryRepository;
             _contactRepository = contactRepository;
+            _titleRepository = titleRepository;
         }
 
-        public async Task<ResumeDto> GetResume(ResumeRequest resumeRequest)
+        public async Task<ResumeDto> GetResumeDetailsAsync(ResumeRequest resumeRequest)
         {
             var resumeDto = new ResumeDto();
 
@@ -47,6 +41,12 @@ namespace Portfolio.Application.Services
 
             resumeDto.Email = user.Email;
             resumeDto.PhoneNumber = user.PhoneNumber;
+
+            if (resumeRequest.TitleId.HasValue)
+            {
+                var title = await _titleRepository.GetTitleById(resumeRequest.TitleId.Value);
+                resumeDto.Title = title ?? string.Empty;
+            }
 
             if (resumeRequest.ProfessionalSummaryId.HasValue)
             {
