@@ -90,6 +90,10 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IProfessionalSummaryRepository, ProfessionalSummaryRepository>();
 builder.Services.AddScoped<IProfessionalSummaryService, ProfessionalSummaryService>();
 
+// Title
+builder.Services.AddScoped<ITitleRepository, TitleRepository>();
+builder.Services.AddScoped<ITitleService, TitleService>();
+
 // Resume
 builder.Services.AddScoped<IResumeService, ResumeService>();
 
