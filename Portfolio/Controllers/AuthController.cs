@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -34,6 +34,7 @@ namespace Portfolio.WebApi.Controllers
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
+                PhoneNumber = model.Phone,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -128,6 +129,7 @@ namespace Portfolio.WebApi.Controllers
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
     }
