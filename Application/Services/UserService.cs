@@ -35,6 +35,7 @@ namespace Portfolio.Application.Services
                 throw;
             }
         }
+
         public async Task UpdateUser(UpdateUserDTO updateUserDTO)
         {
             await _userRepository.UpdateUser(updateUserDTO);

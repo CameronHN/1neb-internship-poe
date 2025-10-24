@@ -1,6 +1,6 @@
-﻿using Portfolio.Core.Exceptions;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using Portfolio.Core.Exceptions;
 
 namespace Portfolio.WebApi.Middleware
 {
