@@ -19,5 +19,10 @@ namespace Portfolio.Application.Services
         {
             return await _professionalSummaryRepository.AddSummaryAsync(summary);
         }
+
+        public Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches)
+        {
+            return _professionalSummaryRepository.PatchSummariesAsync(userId, patches);
+        }
     }
 }

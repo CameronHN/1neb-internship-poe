@@ -5,5 +5,7 @@ namespace Portfolio.Core.Contracts.Services
     public interface IProfessionalSummaryService
     {
         Task<Guid> AddSummaryAsync(AddSummary summary);
+
+        Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches);
     }
 }

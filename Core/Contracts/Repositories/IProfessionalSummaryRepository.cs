@@ -6,5 +6,7 @@ namespace Portfolio.Core.Contracts.Repositories
     {
         Task<Guid> AddSummaryAsync(AddSummary summary);
         Task<string?> GetSummaryById(Guid id);
+
+        Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches);
     }
 }
