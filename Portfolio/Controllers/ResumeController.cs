@@ -63,6 +63,8 @@ namespace Portfolio.WebApi.Controllers
                 return Unauthorized();
 
             var userInfo = await _resumeService.GetResumeByUserId(userId.Value);
+            if (userInfo == null)
+                return NotFound("Resume details not found for the user.");
 
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 

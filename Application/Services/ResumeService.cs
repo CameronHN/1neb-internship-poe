@@ -17,7 +17,16 @@ namespace Portfolio.Application.Services
         private readonly IContactRepository _contactRepository;
         private readonly ITitleRepository _titleRepository;
 
-        public ResumeService(IUserRepository userRepository, ICertificationRepository certificationRepository, IEducationRepository educationRepository, IExperienceRepository experienceRepository, ISkillRepository skillRepository, IProfessionalSummaryRepository professionalSummaryRepository, IContactRepository contactRepository, ITitleRepository titleRepository)
+        public ResumeService(
+            IUserRepository userRepository,
+            ICertificationRepository certificationRepository,
+            IEducationRepository educationRepository,
+            IExperienceRepository experienceRepository,
+            ISkillRepository skillRepository,
+            IProfessionalSummaryRepository professionalSummaryRepository,
+            IContactRepository contactRepository,
+            ITitleRepository titleRepository
+        )
         {
             _userRepository = userRepository;
             _certificationRepository = certificationRepository;
@@ -96,7 +105,7 @@ namespace Portfolio.Application.Services
             return resumeDto;
         }
 
-        public async Task<ResumeDto> GetResumeByUserId(Guid userId)
+        public async Task<ResumeDto?> GetResumeByUserId(Guid userId)
         {
             return await _userRepository.GetResumeDtoByUserId(userId);
         }
