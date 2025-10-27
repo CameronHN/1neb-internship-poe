@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Portfolio.Core.DTOs
+﻿namespace Portfolio.Core.DTOs
 {
     public class ResumeDto
     {
@@ -13,10 +11,15 @@ namespace Portfolio.Core.DTOs
         public string? PhoneNumber { get; set; }
 
         public string? Summary { get; set; }
+
         public List<SkillsItem>? Skills { get; set; }
+
         public List<SocialMediaItem>? Socials { get; set; }
+
         public List<ExperienceItem>? Experience { get; set; }
+
         public List<EducationItem>? Education { get; set; }
+
         public List<CertificationItem>? Certification { get; set; }
     }
 

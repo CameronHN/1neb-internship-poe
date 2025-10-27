@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.WebApi.Extensions;
