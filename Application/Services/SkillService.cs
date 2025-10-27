@@ -23,5 +23,10 @@ namespace Portfolio.Application.Services
         {
             return _skillRepository.GetAllSkillsByIds(request);
         }
+
+        public Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches)
+        {
+            return _skillRepository.PatchSkillsAsync(userId, patches);
+        }
     }
 }

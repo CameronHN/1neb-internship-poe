@@ -8,5 +8,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills);
 
         Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
+
+        Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches);
     }
 }

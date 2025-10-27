@@ -3,6 +3,7 @@ using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.WebApi.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -41,6 +42,30 @@ namespace Portfolio.WebApi.Controllers
 
             var skillIds = await _skillService.AddSkillsAsync(skills);
             return Created(string.Empty, skillIds);
+        }
+
+        [HttpPatch("patch")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> PatchSkills([FromBody] List<PatchSkill> patches)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (patches is null)
+                throw new ValidationException("Request body cannot be null.");
+
+            if (patches.Count == 0)
+                return NoContent();
+
+            var updated = await _skillService.PatchSkillsAsync(userId.Value, patches);
+            if (!updated)
+                return NoContent();
+
+            return Ok(true);
         }
     }
 }

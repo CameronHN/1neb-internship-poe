@@ -76,5 +76,54 @@ namespace Portfolio.Infrastructure.Repositories
                 })
                 .ToList();
         }
+
+        public async Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches)
+        {
+            if (patches == null || patches.Count == 0)
+                return false;
+
+            var ids = patches.Select(p => p.Id).Distinct().ToList();
+
+            // Load only skills owned by the user and included in the patch list
+            var skills = await _dbContext.Skill
+                .Where(s => s.UserId == userId && ids.Contains(s.Id))
+                .ToListAsync();
+
+            if (skills.Count == 0)
+                return false;
+
+            var patchMap = patches.ToDictionary(p => p.Id, p => p);
+            var anyChange = false;
+
+            foreach (var skill in skills)
+            {
+                var patch = patchMap[skill.Id];
+
+                // Update name if provided or different
+                if (patch.Skill != null && patch.Skill != skill.SkillName)
+                {
+                    skill.SkillName = patch.Skill;
+                    anyChange = true;
+                }
+
+                // Update proficiency if provided
+                if (patch.ProficiencyLevel != null)
+                {
+                    var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel) ? null : patch.ProficiencyLevel;
+                    if (newLevel != skill.ProficiencyLevel)
+                    {
+                        skill.ProficiencyLevel = newLevel;
+                        anyChange = true;
+                    }
+                }
+            }
+
+            if (!anyChange)
+                return false;
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
+        }
     }
 }
+

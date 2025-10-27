@@ -10,7 +10,6 @@ using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.DTOs.Skill;
-using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.WebApi.Extensions;
 using Portfolio.WebApi.Helper;
