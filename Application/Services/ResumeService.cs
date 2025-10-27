@@ -37,15 +37,13 @@ namespace Portfolio.Application.Services
 
             resumeDto.Name = $"{user.FirstName} {user.LastName}";
 
-            user.PhoneNumber ??= "";
-
             resumeDto.Email = user.Email;
             resumeDto.PhoneNumber = user.PhoneNumber;
 
             if (resumeRequest.TitleId.HasValue)
             {
                 var title = await _titleRepository.GetTitleById(resumeRequest.TitleId.Value);
-                resumeDto.Title = title ?? string.Empty;
+                resumeDto.Title = title;
             }
 
             if (resumeRequest.ProfessionalSummaryId.HasValue)
@@ -53,7 +51,7 @@ namespace Portfolio.Application.Services
                 var summary = await _professionalSummaryRepository.GetSummaryById(
                     resumeRequest.ProfessionalSummaryId.Value
                 );
-                resumeDto.Summary = summary ?? string.Empty;
+                resumeDto.Summary = summary;
             }
 
             if (resumeRequest.SocialMediaIds != null)
