@@ -10,6 +10,7 @@ namespace Portfolio.Core.Contracts.Services
 
         // Read
         Task<CertificationItem?> GetCertificationByIdAsync(Guid id);
+        Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId);
 
         // Update
         Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);
