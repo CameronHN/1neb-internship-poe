@@ -12,7 +12,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<CertificationItem?> GetCertificationByIdAsync(Guid id);
 
         // Update
-        Task UpdateCertificationAsync(Guid userId, UpdateCertification certification);
+        Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);
 
         // Delete
         Task DeleteCertificationAsync(Guid id);

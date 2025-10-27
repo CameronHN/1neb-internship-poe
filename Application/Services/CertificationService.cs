@@ -34,9 +34,9 @@ namespace Portfolio.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateCertificationAsync(Guid userId, UpdateCertification certification)
+        public Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches)
         {
-            throw new NotImplementedException();
+            return _certificationRepository.PatchCertificationsAsync(userId, patches);
         }
     }
 }
