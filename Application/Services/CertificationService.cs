@@ -26,7 +26,10 @@ namespace Portfolio.Application.Services
 
         public async Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds)
         {
-            return await _certificationRepository.DeleteCertificationsAsync(userId, certificationIds);
+            return await _certificationRepository.DeleteCertificationsAsync(
+                userId,
+                certificationIds
+            );
         }
 
         public async Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
