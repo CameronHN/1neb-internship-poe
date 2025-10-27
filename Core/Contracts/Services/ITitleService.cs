@@ -6,5 +6,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<Guid> AddTitleAsync(AddResumeTitle title);
         Task<string?> GetTitleById(Guid id);
+
+        Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);
     }
 }
