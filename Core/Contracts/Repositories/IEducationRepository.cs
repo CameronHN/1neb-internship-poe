@@ -10,5 +10,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
 
         Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches);
+
+        Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds);
     }
 }

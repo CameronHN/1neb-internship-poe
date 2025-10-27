@@ -26,6 +26,26 @@ namespace Portfolio.WebApi.Controllers
             return Ok(educations);
         }
 
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteEducations([FromBody] List<Guid> educationIds)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (educationIds == null || !educationIds.Any())
+                return BadRequest("Education IDs cannot be null or empty.");
+
+            var deleted = await _educationService.DeleteEducationsAsync(userId.Value, educationIds);
+            if (!deleted)
+                return BadRequest("Failed to delete the specified educations.");
+
+            return Ok(true);
+        }
+
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

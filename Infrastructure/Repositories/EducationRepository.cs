@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
@@ -38,11 +39,29 @@ namespace Portfolio.Infrastructure.Repositories
             return entities.Select(e => e.Id).ToList();
         }
 
+        public async Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds)
+        {
+            if (educationIds.IsNullOrEmpty())
+                return false;
+
+            var educationsToDelete = await _dbContext.Education
+                .Where(edu => edu.UserId == userId && educationIds.Contains(edu.Id))
+                .ToListAsync();
+
+            if (educationsToDelete.Count != educationIds.Count)
+                return false;
+
+            _dbContext.Education.RemoveRange(educationsToDelete);
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
+        }
+
         public async Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
         {
             var ids = request.Ids;
             if (ids.Count == 0)
-                return [];
+                return new List<EducationItem>();
 
             var educations = await _dbContext
                 .Education.Where(edu => ids.Contains(edu.Id))
