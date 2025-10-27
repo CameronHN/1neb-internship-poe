@@ -67,5 +67,25 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
+
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteSkills([FromBody] List<Guid> skillIds)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (skillIds == null || !skillIds.Any())
+                return BadRequest("Skill IDs cannot be null or empty.");
+
+            var deleted = await _skillService.DeleteSkillsAsync(userId.Value, skillIds);
+            if (!deleted)
+                return BadRequest("Failed to delete the specified skills.");
+
+            return Ok(true);
+        }
     }
 }

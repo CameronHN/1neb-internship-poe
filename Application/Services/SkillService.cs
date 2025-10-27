@@ -19,14 +19,19 @@ namespace Portfolio.Application.Services
             return await _skillRepository.AddSkillsAsync(skills);
         }
 
+        public async Task<bool> DeleteSkillsAsync(Guid userId, List<Guid> skillIds)
+        {
+            return await _skillRepository.DeleteSkillsAsync(userId, skillIds);
+        }
+
         public Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
         {
             return _skillRepository.GetAllSkillsByIds(request);
         }
 
-        public Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches)
+        public async Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches)
         {
-            return _skillRepository.PatchSkillsAsync(userId, patches);
+            return await _skillRepository.PatchSkillsAsync(userId, patches);
         }
     }
 }

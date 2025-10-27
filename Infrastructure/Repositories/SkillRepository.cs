@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
@@ -32,6 +33,24 @@ namespace Portfolio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entities.Select(e => e.Id).ToList();
+        }
+
+        public async Task<bool> DeleteSkillsAsync(Guid userId, List<Guid> skillIds)
+        {
+            if (skillIds.IsNullOrEmpty())
+                return false;
+
+            var skillsToDelete = await _dbContext.Skill
+                .Where(skill => skill.UserId == userId && skillIds.Contains(skill.Id))
+                .ToListAsync();
+
+            if (skillsToDelete.Count != skillIds.Count)
+                return false;
+
+            _dbContext.Skill.RemoveRange(skillsToDelete);
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
 
         public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
