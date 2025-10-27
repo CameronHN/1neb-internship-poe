@@ -22,11 +22,15 @@ namespace Portfolio.WebApi.Controllers
             return Ok(experience);
         }
 
-        [HttpGet("experiences/{userId}")]
+        [HttpGet("experiences")]
         [ProducesResponseType(typeof(List<ExperienceItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetExperienceItemsByUserId(Guid userId)
+        public async Task<IActionResult> GetExperienceItemsByUserId()
         {
-            var experiences = await _experienceService.GetExperienceItemsByUserId(userId);
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var experiences = await _experienceService.GetExperienceItemsByUserId((Guid)userId);
             return Ok(experiences);
         }
 
@@ -93,7 +97,10 @@ namespace Portfolio.WebApi.Controllers
             if (experienceIds == null || !experienceIds.Any())
                 return BadRequest("Experience IDs cannot be null or empty.");
 
-            var deleted = await _experienceService.DeleteExperiencesAsync(userId.Value, experienceIds);
+            var deleted = await _experienceService.DeleteExperiencesAsync(
+                userId.Value,
+                experienceIds
+            );
             if (!deleted)
                 return BadRequest("Failed to delete the specified experiences.");
 
