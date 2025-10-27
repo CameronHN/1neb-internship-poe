@@ -85,8 +85,8 @@ namespace Portfolio.Infrastructure.Repositories
             var ids = patches.Select(p => p.Id).Distinct().ToList();
 
             // Load only skills owned by the user and included in the patch list
-            var skills = await _dbContext.Skill
-                .Where(s => s.UserId == userId && ids.Contains(s.Id))
+            var skills = await _dbContext
+                .Skill.Where(s => s.UserId == userId && ids.Contains(s.Id))
                 .ToListAsync();
 
             if (skills.Count == 0)
@@ -109,7 +109,9 @@ namespace Portfolio.Infrastructure.Repositories
                 // Update proficiency if provided
                 if (patch.ProficiencyLevel != null)
                 {
-                    var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel) ? null : patch.ProficiencyLevel;
+                    var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel)
+                        ? null
+                        : patch.ProficiencyLevel;
                     if (newLevel != skill.ProficiencyLevel)
                     {
                         skill.ProficiencyLevel = newLevel;
@@ -126,4 +128,3 @@ namespace Portfolio.Infrastructure.Repositories
         }
     }
 }
-

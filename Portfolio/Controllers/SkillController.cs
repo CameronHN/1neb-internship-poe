@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.WebApi.Extensions;
-using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
