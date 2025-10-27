@@ -23,5 +23,10 @@ namespace Portfolio.Application.Services
         {
             return _educationRepository.GetAllEducationsByIds(request);
         }
+
+        public Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches)
+        {
+            return _educationRepository.PatchEducationsAsync(userId, patches);
+        }
     }
 }

@@ -9,7 +9,6 @@ namespace Portfolio.Infrastructure.Repositories
 {
     public class EducationRepository : IEducationRepository
     {
-
         private readonly ApplicationDbContext _dbContext;
 
         public EducationRepository(ApplicationDbContext dbContext)
@@ -19,17 +18,19 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
         {
-            var entities = educations.Select(edu => new Education
-            {
-                Id = Guid.NewGuid(),
-                InstitutionName = edu.InstitutionName,
-                Qualification = edu.Qualification,
-                StartDate = DateOnly.Parse(edu.StartDate),
-                EndDate = DateOnly.Parse(edu.EndDate),
-                Major = edu.Major,
-                Achievement = edu.Achievement,
-                UserId = edu.UserId
-            }).ToList();
+            var entities = educations
+                .Select(edu => new Education
+                {
+                    Id = Guid.NewGuid(),
+                    InstitutionName = edu.InstitutionName,
+                    Qualification = edu.Qualification,
+                    StartDate = DateOnly.Parse(edu.StartDate),
+                    EndDate = DateOnly.Parse(edu.EndDate),
+                    Major = edu.Major,
+                    Achievement = edu.Achievement,
+                    UserId = edu.UserId,
+                })
+                .ToList();
 
             await _dbContext.Education.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
@@ -40,10 +41,11 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
         {
             var ids = request.Ids;
-            if (ids.Count == 0) return [];
+            if (ids.Count == 0)
+                return [];
 
-            var educations = await _dbContext.Education
-                .Where(edu => ids.Contains(edu.Id))
+            var educations = await _dbContext
+                .Education.Where(edu => ids.Contains(edu.Id))
                 .Select(ed => new
                 {
                     ed.Id,
@@ -51,7 +53,7 @@ namespace Portfolio.Infrastructure.Repositories
                     ed.Qualification,
                     ed.Major,
                     ed.StartDate,
-                    ed.EndDate
+                    ed.EndDate,
                 })
                 .ToListAsync();
 
@@ -65,19 +67,116 @@ namespace Portfolio.Infrastructure.Repositories
                     break;
                 case SortOrder.None:
                 default:
-                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
-                    educations = educations.OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    var order = ids.Select((id, idx) => new { id, idx })
+                        .ToDictionary(x => x.id, x => x.idx);
+                    educations = educations
+                        .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
+                        .ToList();
                     break;
             }
 
-            return educations.Select(ed => new EducationItem
+            return educations
+                .Select(ed => new EducationItem
+                {
+                    Institution = ed.InstitutionName,
+                    Qualification = ed.Qualification,
+                    Major = ed.Major,
+                    StartDate = ed.StartDate.ToString("MMMM yyyy"),
+                    EndDate = ed.EndDate.ToString("MMMM yyyy"),
+                })
+                .ToList();
+        }
+
+        public async Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches)
+        {
+            if (patches == null || patches.Count == 0)
+                return false;
+
+            var ids = patches.Select(p => p.Id).Distinct().ToList();
+
+            var educations = await _dbContext
+                .Set<Education>()
+                .Where(e => e.UserId == userId && ids.Contains(e.Id))
+                .ToListAsync();
+
+            if (educations.Count == 0)
+                return false;
+
+            var patchMap = patches.ToDictionary(p => p.Id, p => p);
+            var anyChange = false;
+
+            foreach (var edu in educations)
             {
-                Institution = ed.InstitutionName,
-                Qualification = ed.Qualification,
-                Major = ed.Major,
-                StartDate = ed.StartDate.ToString("MMMM yyyy"),
-                EndDate = ed.EndDate.ToString("MMMM yyyy")
-            }).ToList();
+                var patch = patchMap[edu.Id];
+
+                if (patch.InstitutionName != null && patch.InstitutionName != edu.InstitutionName)
+                {
+                    edu.InstitutionName = patch.InstitutionName;
+                    anyChange = true;
+                }
+
+                if (patch.Qualification != null && patch.Qualification != edu.Qualification)
+                {
+                    edu.Qualification = patch.Qualification;
+                    anyChange = true;
+                }
+
+                if (patch.StartDate != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.StartDate)
+                        ? null
+                        : patch.StartDate;
+                    DateOnly? newStartDate = !string.IsNullOrWhiteSpace(newValue)
+                        ? DateOnly.Parse(newValue)
+                        : null;
+                    if (newStartDate != edu.StartDate)
+                    {
+                        edu.StartDate = newStartDate ?? edu.StartDate;
+                        anyChange = true;
+                    }
+                }
+
+                if (patch.EndDate != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
+                    DateOnly? newEndDate = !string.IsNullOrWhiteSpace(newValue)
+                        ? DateOnly.Parse(newValue)
+                        : null;
+                    if (newEndDate != edu.EndDate)
+                    {
+                        edu.EndDate = newEndDate ?? edu.EndDate;
+                        anyChange = true;
+                    }
+                }
+
+                if (patch.Major != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.Major) ? null : patch.Major;
+                    if (newValue != edu.Major)
+                    {
+                        edu.Major = newValue;
+                        anyChange = true;
+                    }
+                }
+
+                if (patch.Achievement != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.Achievement)
+                        ? null
+                        : patch.Achievement;
+                    if (newValue != edu.Achievement)
+                    {
+                        edu.Achievement = newValue;
+                        anyChange = true;
+                    }
+                }
+            }
+
+            if (!anyChange)
+                return false;
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
     }
 }
