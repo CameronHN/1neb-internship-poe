@@ -72,5 +72,25 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
+
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteTitles([FromBody] List<Guid> titleIds)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (titleIds == null || !titleIds.Any())
+                return BadRequest("Title IDs cannot be null or empty.");
+
+            var deleted = await _titleService.DeleteTitlesAsync(userId.Value, titleIds);
+            if (!deleted)
+                return BadRequest("Failed to delete the specified titles.");
+
+            return Ok(true);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Entities;
@@ -28,6 +29,24 @@ namespace Portfolio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entity.Id;
+        }
+
+        public async Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds)
+        {
+            if (titleIds.IsNullOrEmpty())
+                return false;
+
+            var titlesToDelete = await _dbContext.Title
+                .Where(title => title.UserId == userId && titleIds.Contains(title.Id))
+                .ToListAsync();
+
+            if (titlesToDelete.Count != titleIds.Count)
+                return false;
+
+            _dbContext.Title.RemoveRange(titlesToDelete);
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
 
         public async Task<string?> GetTitleById(Guid id)

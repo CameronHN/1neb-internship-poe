@@ -18,14 +18,19 @@ namespace Portfolio.Application.Services
             return await _titleRepository.AddTitleAsync(title);
         }
 
+        public async Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds)
+        {
+            return await _titleRepository.DeleteTitlesAsync(userId, titleIds);
+        }
+
         public async Task<string?> GetTitleById(Guid id)
         {
             return await _titleRepository.GetTitleById(id);
         }
 
-        public Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches)
+        public async Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches)
         {
-            return _titleRepository.PatchTitlesAsync(userId, patches);
+            return await _titleRepository.PatchTitlesAsync(userId, patches);
         }
     }
 }

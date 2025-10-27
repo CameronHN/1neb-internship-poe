@@ -8,5 +8,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<string?> GetTitleById(Guid id);
 
         Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);
+
+        Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds);
     }
 }
