@@ -53,6 +53,18 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
+        public async Task<List<SkillsItem>> GetSkillsByUserIdAsync(Guid userId)
+        {
+            return await _dbContext.Skill
+                .Where(skill => skill.UserId == userId)
+                .Select(skill => new SkillsItem
+                {
+                    Skill = skill.SkillName,
+                    SkillLevel = skill.ProficiencyLevel
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
         {
             var ids = request.Ids;

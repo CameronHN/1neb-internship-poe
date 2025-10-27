@@ -121,6 +121,25 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId)
+        {
+            return await _dbContext.Certification
+                .Where(cert => cert.UserId == userId)
+                .Select(cert => new CertificationItem
+                {
+                    Name = cert.CertificationName,
+                    Organisation = cert.IssuingOrganisation,
+                    CredentialUrl = cert.CredentialUrl,
+                    IssuedDate = cert.IssuedDate.HasValue
+                        ? cert.IssuedDate.Value.ToString("MMMM yyyy")
+                        : null,
+                    ExpirationDate = cert.ExpiryDate.HasValue
+                        ? cert.ExpiryDate.Value.ToString("MMMM yyyy")
+                        : null,
+                })
+                .ToListAsync();
+        }
+
         public async Task<bool> PatchCertificationsAsync(
             Guid userId,
             List<PatchCertification> patches

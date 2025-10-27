@@ -8,6 +8,8 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations);
 
         Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
+        Task<List<EducationItem>> GetEducationsByUserIdAsync(Guid userId);
+
 
         Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches);
 

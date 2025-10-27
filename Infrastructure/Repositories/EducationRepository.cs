@@ -44,8 +44,8 @@ namespace Portfolio.Infrastructure.Repositories
             if (educationIds.IsNullOrEmpty())
                 return false;
 
-            var educationsToDelete = await _dbContext.Education
-                .Where(edu => edu.UserId == userId && educationIds.Contains(edu.Id))
+            var educationsToDelete = await _dbContext
+                .Education.Where(edu => edu.UserId == userId && educationIds.Contains(edu.Id))
                 .ToListAsync();
 
             if (educationsToDelete.Count != educationIds.Count)
@@ -104,6 +104,22 @@ namespace Portfolio.Infrastructure.Repositories
                     EndDate = ed.EndDate.ToString("MMMM yyyy"),
                 })
                 .ToList();
+        }
+
+        public async Task<List<EducationItem>> GetEducationsByUserIdAsync(Guid userId)
+        {
+            return await _dbContext
+                .Education.Where(edu => edu.UserId == userId)
+                .Select(edu => new EducationItem
+                {
+                    Institution = edu.InstitutionName,
+                    Qualification = edu.Qualification,
+                    StartDate = edu.StartDate.ToString("MMMM yyyy"),
+                    EndDate = edu.EndDate.ToString("MMMM yyyy"),
+                    Major = edu.Major,
+                    Achievement = edu.Achievement,
+                })
+                .ToListAsync();
         }
 
         public async Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches)

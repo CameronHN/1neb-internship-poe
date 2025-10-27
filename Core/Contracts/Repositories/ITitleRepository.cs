@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.DTOs.ResumeTitle;
+﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.ResumeTitle;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
@@ -6,6 +7,8 @@ namespace Portfolio.Core.Contracts.Repositories
     {
         Task<Guid> AddTitleAsync(AddResumeTitle title);
         Task<string?> GetTitleById(Guid id);
+        Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
+
 
         Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);
 

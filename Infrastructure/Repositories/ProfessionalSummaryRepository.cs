@@ -49,6 +49,15 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
+        public async Task<List<string>> GetSummariesByUserId(Guid userId)
+        {
+            return await _dbContext
+                .ProfessionalSummary
+                .Where(s => s.UserId == userId)
+                .Select(s => s.Summary)
+                .ToListAsync();
+        }
+
         public async Task<string?> GetSummaryById(Guid id)
         {
             return await _dbContext

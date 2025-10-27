@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
@@ -14,6 +15,15 @@ namespace Portfolio.Infrastructure.Repositories
         public TitleRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<List<string>> GetTitlesByUserIdAsync(Guid userId)
+        {
+            return await _dbContext
+                .Title
+                .Where(s => s.UserId == userId)
+                .Select(s => s.ResumeTitle)
+                .ToListAsync();
         }
 
         public async Task<Guid> AddTitleAsync(AddResumeTitle title)
