@@ -42,9 +42,14 @@ namespace Portfolio.Application.Services
             return await _experienceRepository.AddExperiencesAsync(experiences);
         }
 
-        public Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        public async Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
         {
-            return _experienceRepository.PatchExperiencesAsync(userId, patches);
+            return await _experienceRepository.PatchExperiencesAsync(userId, patches);
+        }
+
+        public async Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds)
+        {
+            return await _experienceRepository.DeleteExperiencesAsync(userId, experienceIds);
         }
     }
 }
