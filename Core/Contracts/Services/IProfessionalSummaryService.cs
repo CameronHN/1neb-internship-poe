@@ -7,5 +7,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<Guid> AddSummaryAsync(AddSummary summary);
 
         Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches);
+
+        Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds);
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.WebApi.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -52,6 +53,26 @@ namespace Portfolio.WebApi.Controllers
             var updated = await _summaryService.PatchSummariesAsync(userId.Value, patches);
             if (!updated)
                 return NoContent();
+
+            return Ok(true);
+        }
+
+        [HttpDelete("delete")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DeleteProfessionalSummaries([FromBody] List<Guid> summaryIds)
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            if (summaryIds == null || !summaryIds.Any())
+                return BadRequest("Summary IDs cannot be null or empty.");
+
+            var deleted = await _summaryService.DeleteProfessionalSummariesAsync(userId.Value, summaryIds);
+            if (!deleted)
+                return BadRequest("Failed to delete the specified professional summaries.");
 
             return Ok(true);
         }

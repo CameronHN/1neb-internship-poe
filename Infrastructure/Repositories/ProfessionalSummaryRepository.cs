@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.Core.Entities;
@@ -28,6 +29,24 @@ namespace Portfolio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entity.Id;
+        }
+
+        public async Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds)
+        {
+            if (summaryIds.IsNullOrEmpty())
+                return false;
+
+            var summariesToDelete = await _dbContext.ProfessionalSummary
+                .Where(summary => summary.UserId == userId && summaryIds.Contains(summary.Id))
+                .ToListAsync();
+
+            if (summariesToDelete.Count != summaryIds.Count)
+                return false;
+
+            _dbContext.ProfessionalSummary.RemoveRange(summariesToDelete);
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
 
         public async Task<string?> GetSummaryById(Guid id)
