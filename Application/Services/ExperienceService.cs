@@ -41,5 +41,10 @@ namespace Portfolio.Application.Services
         {
             return await _experienceRepository.AddExperiencesAsync(experiences);
         }
+
+        public Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        {
+            return _experienceRepository.PatchExperiencesAsync(userId, patches);
+        }
     }
 }

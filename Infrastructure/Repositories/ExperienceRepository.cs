@@ -36,8 +36,8 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<List<ExperienceItem>> GetAllExperiencesByUserId(Guid id)
         {
-            return await _dbContext.Experience
-                .Where(e => e.UserId == id)
+            return await _dbContext
+                .Experience.Where(e => e.UserId == id)
                 .Include(e => e.Responsibilities)
                 .OrderBy(e => e.EndDate)
                 .Select(e => new ExperienceItem
@@ -46,15 +46,15 @@ namespace Portfolio.Infrastructure.Repositories
                     JobTitle = e.JobTitle,
                     StartDate = e.StartDate.ToString("MMMM yyyy"),
                     EndDate = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
-                    Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList()
+                    Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList(),
                 })
                 .ToListAsync();
         }
 
         public async Task<ExperienceItem?> GetExperienceById(Guid id)
         {
-            var experience = await _dbContext.Experience
-                .Include(e => e.Responsibilities)
+            var experience = await _dbContext
+                .Experience.Include(e => e.Responsibilities)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (experience == null)
@@ -67,18 +67,24 @@ namespace Portfolio.Infrastructure.Repositories
                 Company = experience.CompanyName,
                 JobTitle = experience.JobTitle,
                 StartDate = experience.StartDate.ToString("MMMM yyyy"),
-                EndDate = experience.EndDate == default ? "Present" : experience.EndDate.ToString("MMMM yyyy"),
-                Responsibilities = experience.Responsibilities.Select(r => r.Responsibility).ToList()
+                EndDate =
+                    experience.EndDate == default
+                        ? "Present"
+                        : experience.EndDate.ToString("MMMM yyyy"),
+                Responsibilities = experience
+                    .Responsibilities.Select(r => r.Responsibility)
+                    .ToList(),
             };
         }
 
         public async Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
         {
             var ids = request.Ids;
-            if (ids.Count == 0) return [];
+            if (ids.Count == 0)
+                return [];
 
-            var experiences = await _dbContext.Experience
-                .Where(exp => ids.Contains(exp.Id))
+            var experiences = await _dbContext
+                .Experience.Where(exp => ids.Contains(exp.Id))
                 .Select(ex => new
                 {
                     ex.Id,
@@ -86,7 +92,7 @@ namespace Portfolio.Infrastructure.Repositories
                     ex.JobTitle,
                     ex.StartDate,
                     ex.EndDate,
-                    ex.Responsibilities
+                    ex.Responsibilities,
                 })
                 .ToListAsync();
 
@@ -100,48 +106,154 @@ namespace Portfolio.Infrastructure.Repositories
                     break;
                 case SortOrder.None:
                 default:
-                    var order = ids.Select((id, idx) => new { id, idx }).ToDictionary(x => x.id, x => x.idx);
-                    experiences = experiences.OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue).ToList();
+                    var order = ids.Select((id, idx) => new { id, idx })
+                        .ToDictionary(x => x.id, x => x.idx);
+                    experiences = experiences
+                        .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
+                        .ToList();
                     break;
             }
 
-            return experiences.Select(ex => new ExperienceItem
-            {
-                Company = ex.CompanyName,
-                JobTitle = ex.JobTitle,
-                StartDate = ex.StartDate.ToString("MMMM yyyy"),
-                EndDate = ex.EndDate.ToString("MMMM yyyy"),
-                Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList()
-            }).ToList();
+            return experiences
+                .Select(ex => new ExperienceItem
+                {
+                    Company = ex.CompanyName,
+                    JobTitle = ex.JobTitle,
+                    StartDate = ex.StartDate.ToString("MMMM yyyy"),
+                    EndDate = ex.EndDate.ToString("MMMM yyyy"),
+                    Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList(),
+                })
+                .ToList();
         }
 
         public async Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
         {
-            var entities = experiences.Select(exp =>
-            {
-                Guid id = Guid.NewGuid();
-                var experience = new Experience
+            var entities = experiences
+                .Select(exp =>
                 {
-                    Id = id,
-                    JobTitle = exp.JobTitle,
-                    CompanyName = exp.CompanyName,
-                    StartDate = DateOnly.Parse(exp.StartDate),
-                    EndDate = DateOnly.Parse(exp.EndDate),
-                    UserId = exp.UserId,
-                    Responsibilities = exp.Responsibilities.Select(r => new ExperienceResponsibility
+                    Guid id = Guid.NewGuid();
+                    var experience = new Experience
                     {
-                        Id = Guid.NewGuid(),
-                        ExperienceId = id,
-                        Responsibility = r.Responsibility
-                    }).ToList()
-                };
-                return experience;
-            }).ToList();
+                        Id = id,
+                        JobTitle = exp.JobTitle,
+                        CompanyName = exp.CompanyName,
+                        StartDate = DateOnly.Parse(exp.StartDate),
+                        EndDate = DateOnly.Parse(exp.EndDate),
+                        UserId = exp.UserId,
+                        Responsibilities = exp
+                            .Responsibilities.Select(r => new ExperienceResponsibility
+                            {
+                                Id = Guid.NewGuid(),
+                                ExperienceId = id,
+                                Responsibility = r.Responsibility,
+                            })
+                            .ToList(),
+                    };
+                    return experience;
+                })
+                .ToList();
 
             await _dbContext.Experience.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
 
             return entities.Select(e => e.Id).ToList();
+        }
+
+        public async Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        {
+            if (patches == null || patches.Count == 0)
+                return false;
+
+            var ids = patches.Select(p => p.Id).Distinct().ToList();
+
+            var experiences = await _dbContext
+                .Set<Experience>()
+                .Where(e => e.UserId == userId && ids.Contains(e.Id))
+                .ToListAsync();
+
+            if (experiences.Count == 0)
+                return false;
+
+            var patchMap = patches.ToDictionary(p => p.Id, p => p);
+            var anyChange = false;
+
+            var experienceIds = experiences.Select(e => e.Id).ToList();
+            var responsibilities = await _dbContext
+                .Set<ExperienceResponsibility>()
+                .Where(r => experienceIds.Contains(r.ExperienceId))
+                .ToListAsync();
+
+            foreach (var exp in experiences)
+            {
+                var patch = patchMap[exp.Id];
+
+                if (patch.JobTitle != null && patch.JobTitle != exp.JobTitle)
+                {
+                    exp.JobTitle = patch.JobTitle;
+                    anyChange = true;
+                }
+
+                if (patch.CompanyName != null && patch.CompanyName != exp.CompanyName)
+                {
+                    exp.CompanyName = patch.CompanyName;
+                    anyChange = true;
+                }
+
+                if (patch.StartDate != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.StartDate)
+                        ? null
+                        : patch.StartDate;
+                    if (newValue != null)
+                    {
+                        var newStart = DateOnly.Parse(newValue);
+                        if (newStart != exp.StartDate)
+                        {
+                            exp.StartDate = newStart;
+                            anyChange = true;
+                        }
+                    }
+                }
+
+                if (patch.EndDate != null)
+                {
+                    var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
+                    if (newValue != null)
+                    {
+                        var newEnd = DateOnly.Parse(newValue);
+                        if (newEnd != exp.EndDate)
+                        {
+                            exp.EndDate = newEnd;
+                            anyChange = true;
+                        }
+                    }
+                }
+
+                if (patch.Responsibilities != null && patch.Responsibilities.Any())
+                {
+                    foreach (var respPatch in patch.Responsibilities)
+                    {
+                        var respEntity = responsibilities.FirstOrDefault(r =>
+                            r.Id == respPatch.ExperienceId && r.ExperienceId == exp.Id
+                        );
+                        if (
+                            respEntity != null
+                            && respPatch.Responsibility != null
+                            && respPatch.Responsibility != respEntity.Responsibility
+                        )
+                        {
+                            respEntity.Responsibility = respPatch.Responsibility;
+                            anyChange = true;
+                        }
+                    }
+                }
+            }
+
+            if (!anyChange)
+                return false;
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
     }
 }

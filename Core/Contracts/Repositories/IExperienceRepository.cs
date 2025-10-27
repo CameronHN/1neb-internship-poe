@@ -14,5 +14,7 @@ namespace Portfolio.Core.Contracts.Repositories
         //Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
 
         Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);
+
+        Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches);
     }
 }
