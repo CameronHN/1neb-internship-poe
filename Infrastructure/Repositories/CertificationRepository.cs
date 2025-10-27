@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
@@ -41,9 +42,22 @@ namespace Portfolio.Infrastructure.Repositories
             return entities.Select(e => e.Id).ToList();
         }
 
-        public Task DeleteCertificationAsync(Guid id)
+        public async Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds)
         {
-            throw new NotImplementedException();
+            if (certificationIds.IsNullOrEmpty())
+                return false;
+
+            var certificationsToDelete = await _dbContext.Certification
+                .Where(cert => cert.UserId == userId && certificationIds.Contains(cert.Id))
+                .ToListAsync();
+
+            if (certificationsToDelete.Count != certificationIds.Count)
+                return false;
+
+            _dbContext.Certification.RemoveRange(certificationsToDelete);
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
         }
 
         public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(

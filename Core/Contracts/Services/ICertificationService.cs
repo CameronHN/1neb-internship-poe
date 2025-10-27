@@ -15,7 +15,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);
 
         // Delete
-        Task DeleteCertificationAsync(Guid id);
+        Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds);
 
         Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest certificationRequest);
     }

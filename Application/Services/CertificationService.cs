@@ -24,9 +24,14 @@ namespace Portfolio.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
+        public async Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds)
         {
-            return _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
+            return await _certificationRepository.DeleteCertificationsAsync(userId, certificationIds);
+        }
+
+        public async Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
+        {
+            return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
         }
 
         public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)
