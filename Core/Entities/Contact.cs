@@ -9,7 +9,7 @@ namespace Portfolio.Core.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Column(TypeName = "varchar(100)")]
-        public string? ContactUrl { get; set; }
+        public required string ContactUrl { get; set; }
 
         public ApplicationUser User { get; set; }
 
