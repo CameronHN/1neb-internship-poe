@@ -21,7 +21,6 @@ namespace Portfolio.Infrastructure.Repositories
             var entities = contacts
                 .Select(contact => new Contact
                 {
-                    Id = Guid.NewGuid(),
                     ContactUrl = contact.Social,
                     UserId = contact.UserId,
                 })
