@@ -28,7 +28,7 @@ namespace Portfolio.Application.Services
             return experience;
         }
 
-        public Task<List<ExperienceWithResponsibilitiesModel>> GetExperienceItemsByUserId(Guid id)
+        public Task<List<ExperienceWithResponsibilitiesModel>> GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id)
         {
             return _experienceRepository.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
                 id
@@ -40,19 +40,19 @@ namespace Portfolio.Application.Services
             return _experienceRepository.GetAllExperiencesByIds(request);
         }
 
-        public async Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
+        public Task<List<Guid>> AddExperiencesAsync(Guid userId, List<AddExperience> experiences)
         {
-            return await _experienceRepository.AddExperiencesAsync(experiences);
+            return _experienceRepository.AddExperiencesAsync(userId, experiences);
         }
 
-        public async Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        public Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
         {
-            return await _experienceRepository.PatchExperiencesAsync(userId, patches);
+            return _experienceRepository.PatchExperiencesAsync(userId, patches);
         }
 
-        public async Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds)
+        public Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds)
         {
-            return await _experienceRepository.DeleteExperiencesAsync(userId, experienceIds);
+            return _experienceRepository.DeleteExperiencesAsync(userId, experienceIds);
         }
     }
 }

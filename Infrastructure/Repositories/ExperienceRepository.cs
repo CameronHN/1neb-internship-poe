@@ -129,30 +129,32 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<List<Guid>> AddExperiencesAsync(List<AddExperience> experiences)
+        public async Task<List<Guid>> AddExperiencesAsync(
+            Guid userId,
+            List<AddExperience> experiences
+        )
         {
             var entities = experiences
                 .Select(exp =>
                 {
-                    Guid id = Guid.NewGuid();
-                    var experience = new Experience
+                    var experienceId = Guid.NewGuid();
+                    return new Experience
                     {
-                        Id = id,
+                        Id = experienceId,
                         JobTitle = exp.JobTitle,
                         CompanyName = exp.CompanyName,
                         StartDate = DateOnly.Parse(exp.StartDate),
                         EndDate = DateOnly.Parse(exp.EndDate),
-                        UserId = exp.UserId,
+                        UserId = userId,
                         Responsibilities = exp
                             .Responsibilities.Select(r => new ExperienceResponsibility
                             {
                                 Id = Guid.NewGuid(),
-                                ExperienceId = id,
+                                ExperienceId = experienceId,
                                 Responsibility = r.Responsibility,
                             })
                             .ToList(),
                     };
-                    return experience;
                 })
                 .ToList();
 

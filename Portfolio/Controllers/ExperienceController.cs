@@ -30,7 +30,10 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var experiences = await _experienceService.GetExperienceItemsByUserId((Guid)userId);
+            var experiences =
+                await _experienceService.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
+                    userId.Value
+                );
             return Ok(experiences);
         }
 
@@ -44,6 +47,7 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddExperiences([FromBody] List<AddExperience> experiences)
         {
@@ -51,12 +55,13 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            foreach (var experience in experiences)
-            {
-                experience.UserId = userId.Value;
-            }
+            if (experiences is null || experiences.Count == 0)
+                return BadRequest("At least one experience is required.");
 
-            var experienceIds = await _experienceService.AddExperiencesAsync(experiences);
+            var experienceIds = await _experienceService.AddExperiencesAsync(
+                userId.Value,
+                experiences
+            );
             return Created(string.Empty, experienceIds);
         }
 
@@ -72,7 +77,7 @@ namespace Portfolio.WebApi.Controllers
                 return Unauthorized();
 
             if (patches is null)
-                throw new ValidationException("Request body cannot be null.");
+                return BadRequest();
 
             if (patches.Count == 0)
                 return NoContent();
