@@ -81,7 +81,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteCertifications([FromBody] List<Guid> certificationIds)
+        public async Task<IActionResult> DeleteCertifications(
+            [FromBody] List<Guid> certificationIds
+        )
         {
             var userId = User.GetUserId();
             if (userId == null)
@@ -90,11 +92,29 @@ namespace Portfolio.WebApi.Controllers
             if (certificationIds == null || !certificationIds.Any())
                 return BadRequest("Certification IDs cannot be null or empty.");
 
-            var deleted = await _certificationService.DeleteCertificationsAsync(userId.Value, certificationIds);
+            var deleted = await _certificationService.DeleteCertificationsAsync(
+                userId.Value,
+                certificationIds
+            );
             if (!deleted)
                 return BadRequest("Failed to delete the specified certifications.");
 
             return Ok(true);
+        }
+
+        [HttpGet("certifications")]
+        [ProducesResponseType(typeof(List<CertificationItem>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetCertifications()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var certifications = await _certificationService.GetCertificationsByUserIdAsync(
+                userId.Value
+            );
+            return Ok(certifications);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Exceptions;
 using Portfolio.WebApi.Extensions;
@@ -91,6 +92,19 @@ namespace Portfolio.WebApi.Controllers
                 return BadRequest("Failed to delete the specified titles.");
 
             return Ok(true);
+        }
+
+        [HttpGet("titles")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetTitles()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var titles = await _titleService.GetTitlesByUserIdAsync(userId.Value);
+            return Ok(titles);
         }
     }
 }

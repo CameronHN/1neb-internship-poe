@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.WebApi.Extensions;
-using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -61,7 +61,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteProfessionalSummaries([FromBody] List<Guid> summaryIds)
+        public async Task<IActionResult> DeleteProfessionalSummaries(
+            [FromBody] List<Guid> summaryIds
+        )
         {
             var userId = User.GetUserId();
             if (userId == null)
@@ -70,11 +72,27 @@ namespace Portfolio.WebApi.Controllers
             if (summaryIds == null || !summaryIds.Any())
                 return BadRequest("Summary IDs cannot be null or empty.");
 
-            var deleted = await _summaryService.DeleteProfessionalSummariesAsync(userId.Value, summaryIds);
+            var deleted = await _summaryService.DeleteProfessionalSummariesAsync(
+                userId.Value,
+                summaryIds
+            );
             if (!deleted)
                 return BadRequest("Failed to delete the specified professional summaries.");
 
             return Ok(true);
+        }
+
+        [HttpGet("summary")]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetProfessionalSummary()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var summary = await _summaryService.GetSummariesByUserId(userId.Value);
+            return Ok(summary);
         }
     }
 }

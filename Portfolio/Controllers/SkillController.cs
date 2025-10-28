@@ -87,5 +87,18 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
+
+        [HttpGet("skills")]
+        [ProducesResponseType(typeof(List<SkillsItem>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetSkills()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var skills = await _skillService.GetSkillsByUserIdAsync(userId.Value);
+            return Ok(skills);
+        }
     }
 }

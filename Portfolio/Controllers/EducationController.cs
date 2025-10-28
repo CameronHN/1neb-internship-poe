@@ -87,5 +87,18 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
+
+        [HttpGet("educations")]
+        [ProducesResponseType(typeof(List<EducationItem>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetEducations()
+        {
+            var userId = User.GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var educations = await _educationService.GetEducationsByUserIdAsync(userId.Value);
+            return Ok(educations);
+        }
     }
 }
