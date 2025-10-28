@@ -4,6 +4,7 @@ using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -123,21 +124,17 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId)
+        public async Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .Certification.Where(cert => cert.UserId == userId)
-                .Select(cert => new CertificationItem
+                .Select(cert => new CertificationModel
                 {
-                    Name = cert.CertificationName,
-                    Organisation = cert.IssuingOrganisation,
+                    CertificationName = cert.CertificationName,
+                    IssuingOrganisation = cert.IssuingOrganisation,
                     CredentialUrl = cert.CredentialUrl,
-                    IssuedDate = cert.IssuedDate.HasValue
-                        ? cert.IssuedDate.Value.ToString("MMMM yyyy")
-                        : null,
-                    ExpirationDate = cert.ExpiryDate.HasValue
-                        ? cert.ExpiryDate.Value.ToString("MMMM yyyy")
-                        : null,
+                    IssuedDate = cert.IssuedDate,
+                    ExpiryDate = cert.ExpiryDate,
                 })
                 .ToListAsync();
         }

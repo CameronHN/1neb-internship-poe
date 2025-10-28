@@ -4,6 +4,7 @@ using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -53,14 +54,14 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<List<SkillsItem>> GetSkillsByUserIdAsync(Guid userId)
+        public async Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .Skill.Where(skill => skill.UserId == userId)
-                .Select(skill => new SkillsItem
+                .Select(skill => new SkillModel
                 {
-                    Skill = skill.SkillName,
-                    SkillLevel = skill.ProficiencyLevel,
+                    SkillName = skill.SkillName,
+                    ProficiencyLevel = skill.ProficiencyLevel,
                 })
                 .ToListAsync();
         }

@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
@@ -9,7 +10,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<ExperienceItem?> GetExperienceById(Guid id);
 
-        Task<List<ExperienceItem>> GetAllExperiencesByUserId(Guid id);
+        Task<List<ExperienceModel>> GetAllExperiencesByUserIdAsync(Guid id);
 
         //Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
 

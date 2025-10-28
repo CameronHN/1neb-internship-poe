@@ -5,6 +5,7 @@ using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -35,18 +36,18 @@ namespace Portfolio.Infrastructure.Repositories
         //        .ToListAsync();
         //}
 
-        public async Task<List<ExperienceItem>> GetAllExperiencesByUserId(Guid id)
+        public async Task<List<ExperienceModel>> GetAllExperiencesByUserIdAsync(Guid id)
         {
             return await _dbContext
                 .Experience.Where(e => e.UserId == id)
                 .Include(e => e.Responsibilities)
                 .OrderBy(e => e.EndDate)
-                .Select(e => new ExperienceItem
+                .Select(e => new ExperienceModel
                 {
-                    Company = e.CompanyName,
+                    CompanyName = e.CompanyName,
                     JobTitle = e.JobTitle,
-                    StartDate = e.StartDate.ToString("MMMM yyyy"),
-                    EndDate = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
                     Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList(),
                 })
                 .ToListAsync();

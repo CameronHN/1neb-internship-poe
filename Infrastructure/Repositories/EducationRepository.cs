@@ -4,6 +4,7 @@ using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -106,16 +107,16 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<List<EducationItem>> GetEducationsByUserIdAsync(Guid userId)
+        public async Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .Education.Where(edu => edu.UserId == userId)
-                .Select(edu => new EducationItem
+                .Select(edu => new EducationModel
                 {
-                    Institution = edu.InstitutionName,
+                    InstitutionName = edu.InstitutionName,
                     Qualification = edu.Qualification,
-                    StartDate = edu.StartDate.ToString("MMMM yyyy"),
-                    EndDate = edu.EndDate.ToString("MMMM yyyy"),
+                    StartDate = edu.StartDate,
+                    EndDate = edu.EndDate,
                     Major = edu.Major,
                     Achievement = edu.Achievement,
                 })

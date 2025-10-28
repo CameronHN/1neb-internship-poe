@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
-using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;

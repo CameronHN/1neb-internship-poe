@@ -29,7 +29,7 @@ namespace Portfolio.Application.Services
 
         public Task<List<ExperienceItem>> GetExperienceItemsByUserId(Guid id)
         {
-            return _experienceRepository.GetAllExperiencesByUserId(id);
+            return _experienceRepository.GetAllExperiencesByUserIdAsync(id);
         }
 
         public Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)

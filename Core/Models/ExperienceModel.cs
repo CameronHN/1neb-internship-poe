@@ -9,5 +9,7 @@
         public DateOnly StartDate { get; set; }
 
         public DateOnly EndDate { get; set; }
+
+        public List<string>? Responsibilities { get; set; }
     }
 }
