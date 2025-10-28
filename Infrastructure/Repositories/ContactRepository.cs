@@ -18,12 +18,14 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<List<Guid>> AddContactsAsync(List<AddContact> contacts)
         {
-            var entities = contacts.Select(contact => new Contact
-            {
-                Id = Guid.NewGuid(),
-                ContactUrl = contact.Social,
-                UserId = contact.UserId
-            }).ToList();
+            var entities = contacts
+                .Select(contact => new Contact
+                {
+                    Id = Guid.NewGuid(),
+                    ContactUrl = contact.Social,
+                    UserId = contact.UserId,
+                })
+                .ToList();
 
             await _dbContext.Contact.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
@@ -37,13 +39,9 @@ namespace Portfolio.Infrastructure.Repositories
             if (request == null || ids == null || ids.Count == 0)
                 return [];
 
-            var contacts = await _dbContext.Contact
-                .Where(c => ids.Contains(c.Id))
-                .Select(c => new
-                {
-                    c.Id,
-                    c.ContactUrl
-                })
+            var contacts = await _dbContext
+                .Contact.Where(c => ids.Contains(c.Id))
+                .Select(c => new { c.Id, c.ContactUrl })
                 .ToListAsync();
 
             // Preserve input order
@@ -55,10 +53,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
 
             return contacts
-                .Select(c => new SocialMediaItem
-                {
-                    SocialMediaUrl = c.ContactUrl
-                })
+                .Select(c => new SocialMediaItem { SocialMediaUrl = c.ContactUrl })
                 .ToList();
         }
     }

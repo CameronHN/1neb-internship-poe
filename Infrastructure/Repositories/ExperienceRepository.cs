@@ -262,8 +262,8 @@ namespace Portfolio.Infrastructure.Repositories
             if (experienceIds.IsNullOrEmpty())
                 return false;
 
-            var experiencesToDelete = await _dbContext.Experience
-                .Where(exp => exp.UserId == userId && experienceIds.Contains(exp.Id))
+            var experiencesToDelete = await _dbContext
+                .Experience.Where(exp => exp.UserId == userId && experienceIds.Contains(exp.Id))
                 .ToListAsync();
 
             if (experiencesToDelete.Count != experienceIds.Count)

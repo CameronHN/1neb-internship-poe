@@ -40,8 +40,8 @@ namespace Portfolio.Infrastructure.Repositories
             if (skillIds.IsNullOrEmpty())
                 return false;
 
-            var skillsToDelete = await _dbContext.Skill
-                .Where(skill => skill.UserId == userId && skillIds.Contains(skill.Id))
+            var skillsToDelete = await _dbContext
+                .Skill.Where(skill => skill.UserId == userId && skillIds.Contains(skill.Id))
                 .ToListAsync();
 
             if (skillsToDelete.Count != skillIds.Count)
@@ -55,12 +55,12 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<List<SkillsItem>> GetSkillsByUserIdAsync(Guid userId)
         {
-            return await _dbContext.Skill
-                .Where(skill => skill.UserId == userId)
+            return await _dbContext
+                .Skill.Where(skill => skill.UserId == userId)
                 .Select(skill => new SkillsItem
                 {
                     Skill = skill.SkillName,
-                    SkillLevel = skill.ProficiencyLevel
+                    SkillLevel = skill.ProficiencyLevel,
                 })
                 .ToListAsync();
         }

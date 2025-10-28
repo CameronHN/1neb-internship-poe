@@ -47,8 +47,10 @@ namespace Portfolio.Infrastructure.Repositories
             if (certificationIds.IsNullOrEmpty())
                 return false;
 
-            var certificationsToDelete = await _dbContext.Certification
-                .Where(cert => cert.UserId == userId && certificationIds.Contains(cert.Id))
+            var certificationsToDelete = await _dbContext
+                .Certification.Where(cert =>
+                    cert.UserId == userId && certificationIds.Contains(cert.Id)
+                )
                 .ToListAsync();
 
             if (certificationsToDelete.Count != certificationIds.Count)
@@ -123,8 +125,8 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId)
         {
-            return await _dbContext.Certification
-                .Where(cert => cert.UserId == userId)
+            return await _dbContext
+                .Certification.Where(cert => cert.UserId == userId)
                 .Select(cert => new CertificationItem
                 {
                     Name = cert.CertificationName,

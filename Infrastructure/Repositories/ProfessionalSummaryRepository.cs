@@ -36,8 +36,10 @@ namespace Portfolio.Infrastructure.Repositories
             if (summaryIds.IsNullOrEmpty())
                 return false;
 
-            var summariesToDelete = await _dbContext.ProfessionalSummary
-                .Where(summary => summary.UserId == userId && summaryIds.Contains(summary.Id))
+            var summariesToDelete = await _dbContext
+                .ProfessionalSummary.Where(summary =>
+                    summary.UserId == userId && summaryIds.Contains(summary.Id)
+                )
                 .ToListAsync();
 
             if (summariesToDelete.Count != summaryIds.Count)
@@ -52,8 +54,7 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<string>> GetSummariesByUserId(Guid userId)
         {
             return await _dbContext
-                .ProfessionalSummary
-                .Where(s => s.UserId == userId)
+                .ProfessionalSummary.Where(s => s.UserId == userId)
                 .Select(s => s.Summary)
                 .ToListAsync();
         }
