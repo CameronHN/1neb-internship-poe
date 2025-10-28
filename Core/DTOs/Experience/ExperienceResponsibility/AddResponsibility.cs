@@ -8,8 +8,5 @@ namespace Portfolio.Core.DTOs.Experience.ExperienceResponsibility
         [MaxLength(255, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [RegularExpression(@"\S.*", ErrorMessage = "Responsibility cannot be whitespace.")]
         public required string Responsibility { get; set; }
-
-        [Required]
-        public Guid ExperienceId { get; set; }
     }
 }

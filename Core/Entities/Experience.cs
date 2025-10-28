@@ -21,6 +21,6 @@ namespace Portfolio.Core.Entities
 
         public ApplicationUser User { get; set; }
 
-        public List<ExperienceResponsibility> Responsibilities { get; set; }
+        public List<ExperienceResponsibility> Responsibilities { get; set; } = new();
     }
 }

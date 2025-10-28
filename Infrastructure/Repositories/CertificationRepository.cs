@@ -23,7 +23,6 @@ namespace Portfolio.Infrastructure.Repositories
             var entities = certifications
                 .Select(cert => new Certification
                 {
-                    Id = Guid.NewGuid(),
                     CertificationName = cert.CertificationName,
                     IssuingOrganisation = cert.IssuingOrganisation,
                     CredentialUrl = cert.CredentialUrl,

@@ -45,6 +45,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .OrderBy(e => e.EndDate)
                 .Select(e => new ExperienceWithResponsibilitiesModel
                 {
+                    Id = e.Id,
                     CompanyName = e.CompanyName,
                     JobTitle = e.JobTitle,
                     StartDate = e.StartDate,
@@ -135,26 +136,19 @@ namespace Portfolio.Infrastructure.Repositories
         )
         {
             var entities = experiences
-                .Select(exp =>
+                .Select(exp => new Experience
                 {
-                    var experienceId = Guid.NewGuid();
-                    return new Experience
-                    {
-                        Id = experienceId,
-                        JobTitle = exp.JobTitle,
-                        CompanyName = exp.CompanyName,
-                        StartDate = DateOnly.Parse(exp.StartDate),
-                        EndDate = DateOnly.Parse(exp.EndDate),
-                        UserId = userId,
-                        Responsibilities = exp
-                            .Responsibilities.Select(r => new ExperienceResponsibility
-                            {
-                                Id = Guid.NewGuid(),
-                                ExperienceId = experienceId,
-                                Responsibility = r.Responsibility,
-                            })
-                            .ToList(),
-                    };
+                    JobTitle = exp.JobTitle,
+                    CompanyName = exp.CompanyName,
+                    StartDate = DateOnly.Parse(exp.StartDate),
+                    EndDate = DateOnly.Parse(exp.EndDate),
+                    UserId = userId,
+                    Responsibilities = exp
+                        .Responsibilities.Select(r => new ExperienceResponsibility
+                        {
+                            Responsibility = r.Responsibility,
+                        })
+                        .ToList(),
                 })
                 .ToList();
 
@@ -239,7 +233,7 @@ namespace Portfolio.Infrastructure.Repositories
                     foreach (var respPatch in patch.Responsibilities)
                     {
                         var respEntity = responsibilities.FirstOrDefault(r =>
-                            r.Id == respPatch.ExperienceId && r.ExperienceId == exp.Id
+                            r.Id == respPatch.Id && r.ExperienceId == exp.Id
                         );
                         if (
                             respEntity != null

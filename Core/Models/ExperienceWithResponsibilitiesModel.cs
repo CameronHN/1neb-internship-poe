@@ -2,6 +2,8 @@
 {
     public class ExperienceWithResponsibilitiesModel
     {
+        public Guid Id { get; set; }
+
         public required string JobTitle { get; set; }
 
         public string? CompanyName { get; set; }

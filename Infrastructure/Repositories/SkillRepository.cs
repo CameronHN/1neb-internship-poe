@@ -23,7 +23,6 @@ namespace Portfolio.Infrastructure.Repositories
             var entities = skills
                 .Select(skill => new Skill
                 {
-                    Id = Guid.NewGuid(),
                     SkillName = skill.Skill,
                     ProficiencyLevel = skill.ProficiencyLevel,
                     UserId = skill.UserId,

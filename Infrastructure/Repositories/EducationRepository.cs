@@ -23,7 +23,6 @@ namespace Portfolio.Infrastructure.Repositories
             var entities = educations
                 .Select(edu => new Education
                 {
-                    Id = Guid.NewGuid(),
                     InstitutionName = edu.InstitutionName,
                     Qualification = edu.Qualification,
                     StartDate = DateOnly.Parse(edu.StartDate),

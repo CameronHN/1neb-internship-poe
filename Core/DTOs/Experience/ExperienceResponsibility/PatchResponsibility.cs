@@ -9,6 +9,6 @@ namespace Portfolio.Core.DTOs.Experience.ExperienceResponsibility
         public string? Responsibility { get; set; }
 
         [Required]
-        public Guid ExperienceId { get; set; }
+        public Guid Id { get; set; }
     }
 }

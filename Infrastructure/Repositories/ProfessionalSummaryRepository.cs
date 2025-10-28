@@ -20,7 +20,6 @@ namespace Portfolio.Infrastructure.Repositories
         {
             var entity = new ProfessionalSummary
             {
-                Id = Guid.NewGuid(),
                 Summary = summary.Summary,
                 UserId = summary.UserId,
             };
