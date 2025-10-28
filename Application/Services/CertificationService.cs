@@ -2,6 +2,7 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
 {
@@ -42,7 +43,7 @@ namespace Portfolio.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId)
+        public async Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId)
         {
             return await _certificationRepository.GetCertificationsByUserIdAsync(userId);
         }

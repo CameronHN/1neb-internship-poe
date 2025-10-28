@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Services
 {
@@ -10,7 +11,7 @@ namespace Portfolio.Core.Contracts.Services
 
         // Read
         Task<CertificationItem?> GetCertificationByIdAsync(Guid id);
-        Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId);
+        Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId);
 
         // Update
         Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);

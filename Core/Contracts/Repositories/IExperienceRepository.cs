@@ -10,9 +10,9 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<ExperienceItem?> GetExperienceById(Guid id);
 
-        Task<List<ExperienceModel>> GetAllExperiencesByUserIdAsync(Guid id);
+        Task<List<ExperienceWithResponsibilitiesModel>> GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id);
 
-        //Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids);
+        Task<List<ExperienceModel>> GetAllExperiencesByIds(List<Guid> ids);
 
         Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);
 

@@ -2,6 +2,7 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
 {
@@ -29,7 +30,7 @@ namespace Portfolio.Application.Services
             return _skillRepository.GetAllSkillsByIds(request);
         }
 
-        public async Task<List<SkillsItem>> GetSkillsByUserIdAsync(Guid userId)
+        public async Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId)
         {
             return await _skillRepository.GetSkillsByUserIdAsync(userId);
         }

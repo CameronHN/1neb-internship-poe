@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Skill;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Services
 {
@@ -8,7 +9,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills);
 
         Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
-        Task<List<SkillsItem>> GetSkillsByUserIdAsync(Guid userId);
+        Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);
 
         Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches);
 

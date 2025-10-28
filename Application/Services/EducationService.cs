@@ -2,6 +2,7 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
 {
@@ -29,7 +30,7 @@ namespace Portfolio.Application.Services
             return _educationRepository.GetAllEducationsByIds(request);
         }
 
-        public async Task<List<EducationItem>> GetEducationsByUserIdAsync(Guid userId)
+        public async Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId)
         {
             return await _educationRepository.GetEducationsByUserIdAsync(userId);
         }

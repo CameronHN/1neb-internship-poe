@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Services
 {
@@ -8,7 +9,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations);
 
         Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
-        Task<List<EducationItem>> GetEducationsByUserIdAsync(Guid userId);
+        Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
 
         Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches);
 

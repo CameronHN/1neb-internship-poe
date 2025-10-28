@@ -2,6 +2,7 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
 {
@@ -14,10 +15,10 @@ namespace Portfolio.Application.Services
             _experienceRepository = experienceRepository;
         }
 
-        //public Task<List<ExperienceItem>> GetAllExperiencesByIds(List<Guid> ids)
-        //{
-        //    return _experienceRepository.GetAllExperiencesByIds(ids);
-        //}
+        public Task<List<ExperienceModel>> GetAllExperiencesByIds(List<Guid> ids)
+        {
+            return _experienceRepository.GetAllExperiencesByIds(ids);
+        }
 
         public async Task<ExperienceItem> GetExperienceById(Guid id)
         {
@@ -27,9 +28,11 @@ namespace Portfolio.Application.Services
             return experience;
         }
 
-        public Task<List<ExperienceItem>> GetExperienceItemsByUserId(Guid id)
+        public Task<List<ExperienceWithResponsibilitiesModel>> GetExperienceItemsByUserId(Guid id)
         {
-            return _experienceRepository.GetAllExperiencesByUserIdAsync(id);
+            return _experienceRepository.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
+                id
+            );
         }
 
         public Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
