@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Exceptions;
 using Portfolio.WebApi.Extensions;
