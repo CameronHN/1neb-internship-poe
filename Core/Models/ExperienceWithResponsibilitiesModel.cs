@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Portfolio.Core.Models
+﻿namespace Portfolio.Core.Models
 {
-    public class ExperienceModel
+    public class ExperienceWithResponsibilitiesModel
     {
         public required string JobTitle { get; set; }
 
@@ -15,5 +9,7 @@ namespace Portfolio.Core.Models
         public DateOnly StartDate { get; set; }
 
         public DateOnly EndDate { get; set; }
+
+        public List<string>? Responsibilities { get; set; }
     }
 }
