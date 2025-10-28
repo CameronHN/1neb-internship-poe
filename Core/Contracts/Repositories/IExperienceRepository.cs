@@ -17,6 +17,6 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches);
 
-         Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds);
+        Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds);
     }
 }
