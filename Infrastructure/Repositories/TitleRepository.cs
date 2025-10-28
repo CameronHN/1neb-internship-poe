@@ -20,20 +20,14 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<string>> GetTitlesByUserIdAsync(Guid userId)
         {
             return await _dbContext
-                .Title
-                .Where(s => s.UserId == userId)
+                .Title.Where(s => s.UserId == userId)
                 .Select(s => s.ResumeTitle)
                 .ToListAsync();
         }
 
         public async Task<Guid> AddTitleAsync(AddResumeTitle title)
         {
-            var entity = new Title
-            {
-                Id = Guid.NewGuid(),
-                ResumeTitle = title.Title,
-                UserId = title.UserId,
-            };
+            var entity = new Title { ResumeTitle = title.Title, UserId = title.UserId };
 
             await _dbContext.Title.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -46,8 +40,8 @@ namespace Portfolio.Infrastructure.Repositories
             if (titleIds.IsNullOrEmpty())
                 return false;
 
-            var titlesToDelete = await _dbContext.Title
-                .Where(title => title.UserId == userId && titleIds.Contains(title.Id))
+            var titlesToDelete = await _dbContext
+                .Title.Where(title => title.UserId == userId && titleIds.Contains(title.Id))
                 .ToListAsync();
 
             if (titlesToDelete.Count != titleIds.Count)
