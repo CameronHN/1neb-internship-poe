@@ -42,6 +42,11 @@ namespace Portfolio.Application.Services
             throw new NotImplementedException();
         }
 
+        public async Task<List<CertificationItem>> GetCertificationsByUserIdAsync(Guid userId)
+        {
+            return await _certificationRepository.GetCertificationsByUserIdAsync(userId);
+        }
+
         public Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches)
         {
             return _certificationRepository.PatchCertificationsAsync(userId, patches);
