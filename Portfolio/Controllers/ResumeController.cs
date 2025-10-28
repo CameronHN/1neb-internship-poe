@@ -45,7 +45,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var resume = await _resumeService.GetResumeByUserId((Guid)userId);
+            var resume = await _resumeService.GetResumeByUserId(userId.Value);
             if (resume == null)
                 return NotFound();
 
@@ -185,10 +185,11 @@ namespace Portfolio.WebApi.Controllers
                     {
                         var experienceService =
                             HttpContext.RequestServices.GetRequiredService<IExperienceService>();
+                        Guid id = userId.Value;
                         var addExperiences = resumeDto
                             .Experience.Select(e => new AddExperience
                             {
-                                UserId = userId.Value,
+                                UserId = id,
                                 JobTitle = e.JobTitle,
                                 CompanyName = e.Company,
                                 StartDate = e.StartDate,
@@ -201,7 +202,10 @@ namespace Portfolio.WebApi.Controllers
                                     .ToList(),
                             })
                             .ToList();
-                        experienceIds = await experienceService.AddExperiencesAsync(addExperiences);
+                        experienceIds = await experienceService.AddExperiencesAsync(
+                            id,
+                            addExperiences
+                        );
                     }
 
                     // Add Education if provided
