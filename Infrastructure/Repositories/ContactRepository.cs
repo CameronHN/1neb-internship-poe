@@ -16,15 +16,17 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(List<AddContact> contacts)
+        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts)
         {
             var entities = contacts
                 .Select(contact => new Contact
                 {
                     ContactUrl = contact.Social,
-                    UserId = contact.UserId,
+                    UserId = userId,
                 })
                 .ToList();
+
+
 
             await _dbContext.Contact.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();

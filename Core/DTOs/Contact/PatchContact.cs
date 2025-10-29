@@ -2,11 +2,13 @@
 
 namespace Portfolio.Core.DTOs.Contact
 {
-    public class AddContact
+    public class PatchContact
     {
-        [Required(ErrorMessage = "Social link is required.")]
+        [Required]
+        public Guid Id { get; set; }
+
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [Url(ErrorMessage = "Invalid URL format.")]
-        public required string Social { get; set; }
+        public string? Social { get; set; }
     }
 }

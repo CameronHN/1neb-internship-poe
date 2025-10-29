@@ -14,9 +14,9 @@ namespace Portfolio.Core.Services
             _contactRepository = contactRepository;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(List<AddContact> contacts)
+        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts)
         {
-            return await _contactRepository.AddContactsAsync(contacts);
+            return await _contactRepository.AddContactsAsync(userId, contacts);
         }
 
         public Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request)

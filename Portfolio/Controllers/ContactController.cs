@@ -25,12 +25,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            foreach (var contact in contacts)
-            {
-                contact.UserId = userId.Value;
-            }
-
-            var addedIds = await _contactService.AddContactsAsync(contacts);
+            var addedIds = await _contactService.AddContactsAsync(userId.Value, contacts);
             return Created(string.Empty, addedIds);
         }
     }

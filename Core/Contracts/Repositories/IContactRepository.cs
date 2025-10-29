@@ -5,7 +5,7 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IContactRepository
     {
-        Task<List<Guid>> AddContactsAsync(List<AddContact> contacts);
+        Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts);
 
         Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request);
     }
