@@ -93,6 +93,10 @@ builder.Services.AddScoped<IProfessionalSummaryService, ProfessionalSummaryServi
 builder.Services.AddScoped<ITitleRepository, TitleRepository>();
 builder.Services.AddScoped<ITitleService, TitleService>();
 
+// Saved Resume
+builder.Services.AddScoped<ISavedResumeRepository, SavedResumeRepository>();
+builder.Services.AddScoped<ISavedResumeService, SavedResumeService>();
+
 // Resume
 builder.Services.AddScoped<IResumeService, ResumeService>();
 
