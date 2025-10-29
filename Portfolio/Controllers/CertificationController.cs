@@ -31,12 +31,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            foreach (var cert in certification)
-            {
-                cert.UserId = userId.Value;
-            }
-
-            var certificationIds = await _certificationService.AddCertificationAsync(certification);
+            var certificationIds = await _certificationService.AddCertificationAsync(userId.Value, certification);
             return Created(string.Empty, certificationIds);
         }
 

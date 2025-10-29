@@ -18,7 +18,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddCertificationsAsync(List<AddCertification> certifications)
+        public async Task<List<Guid>> AddCertificationsAsync(Guid userId, List<AddCertification> certifications)
         {
             var entities = certifications
                 .Select(cert => new Certification
@@ -32,7 +32,7 @@ namespace Portfolio.Infrastructure.Repositories
                     ExpiryDate = !string.IsNullOrWhiteSpace(cert.ExpiryDate)
                         ? DateOnly.Parse(cert.ExpiryDate)
                         : null,
-                    UserId = cert.UserId,
+                    UserId = userId,
                 })
                 .ToList();
 

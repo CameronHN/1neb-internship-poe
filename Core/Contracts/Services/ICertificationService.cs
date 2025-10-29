@@ -7,11 +7,12 @@ namespace Portfolio.Core.Contracts.Services
     public interface ICertificationService
     {
         // Create
-        Task<List<Guid>> AddCertificationAsync(List<AddCertification> certification);
+        Task<List<Guid>> AddCertificationAsync(Guid userId, List<AddCertification> certification);
 
         // Read
         Task<CertificationItem?> GetCertificationByIdAsync(Guid id);
         Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId);
+        Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest certificationRequest);
 
         // Update
         Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);
@@ -19,6 +20,5 @@ namespace Portfolio.Core.Contracts.Services
         // Delete
         Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds);
 
-        Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest certificationRequest);
     }
 }

@@ -15,9 +15,9 @@ namespace Portfolio.Application.Services
             _certificationRepository = certificationRepository;
         }
 
-        public async Task<List<Guid>> AddCertificationAsync(List<AddCertification> certification)
+        public async Task<List<Guid>> AddCertificationAsync(Guid userId, List<AddCertification> certification)
         {
-            return await _certificationRepository.AddCertificationsAsync(certification);
+            return await _certificationRepository.AddCertificationsAsync(userId, certification);
         }
 
         public Task DeleteCertificationAsync(Guid id)
