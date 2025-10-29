@@ -3,7 +3,7 @@ using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Contact;
 
-namespace Portfolio.Core.Services
+namespace Portfolio.Application.Services
 {
     public class ContactService : IContactService
     {
