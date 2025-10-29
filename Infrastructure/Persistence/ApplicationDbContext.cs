@@ -24,9 +24,7 @@ namespace Portfolio.Infrastructure.Persistence
 
         public DbSet<ProfessionalSummary> ProfessionalSummary { get; set; }
 
-        public DbSet<Resume> Resume { get; set; }
-
-        public DbSet<ResumeTemplate> ResumeTemplate { get; set; }
+        public DbSet<SavedResume> SavedResume { get; set; }
 
         public DbSet<Skill> Skill { get; set; }
 
@@ -37,6 +35,17 @@ namespace Portfolio.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<SavedResume>(entity =>
+            {
+                entity
+                    .HasOne(sr => sr.User)
+                    .WithMany(u => u.SavedResumes)
+                    .HasForeignKey(sr => sr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(sr => new { sr.UserId, sr.CreatedAt });
+            });
         }
 
         // Override to configure the database provider
