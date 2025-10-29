@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Portfolio.Core.DTOs
+﻿namespace Portfolio.Core.DTOs
 {
     public class ResumeRequest
     {
