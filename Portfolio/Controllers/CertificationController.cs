@@ -8,6 +8,7 @@ using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CertificationController : ControllerBase
@@ -19,7 +20,6 @@ namespace Portfolio.WebApi.Controllers
             _certificationService = certificationService;
         }
 
-        [Authorize]
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -27,11 +27,12 @@ namespace Portfolio.WebApi.Controllers
             [FromBody] List<AddCertification> certification
         )
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var certificationIds = await _certificationService.AddCertificationAsync(userId.Value, certification);
+            var certificationIds = await _certificationService.AddCertificationAsync(
+                userId,
+                certification
+            );
             return Created(string.Empty, certificationIds);
         }
 
@@ -52,9 +53,7 @@ namespace Portfolio.WebApi.Controllers
             [FromBody] List<PatchCertification> patches
         )
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (patches is null)
                 throw new ValidationException("Request body cannot be null.");
@@ -62,10 +61,7 @@ namespace Portfolio.WebApi.Controllers
             if (patches.Count == 0)
                 return NoContent();
 
-            var updated = await _certificationService.PatchCertificationsAsync(
-                userId.Value,
-                patches
-            );
+            var updated = await _certificationService.PatchCertificationsAsync(userId, patches);
             if (!updated)
                 return NoContent();
 
@@ -80,15 +76,13 @@ namespace Portfolio.WebApi.Controllers
             [FromBody] List<Guid> certificationIds
         )
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (certificationIds == null || certificationIds.Count == 0)
                 return BadRequest("Certification IDs cannot be null or empty.");
 
             var deleted = await _certificationService.DeleteCertificationsAsync(
-                userId.Value,
+                userId,
                 certificationIds
             );
             if (!deleted)
@@ -102,13 +96,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetCertifications()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var certifications = await _certificationService.GetCertificationsByUserIdAsync(
-                userId.Value
-            );
+            var certifications = await _certificationService.GetCertificationsByUserIdAsync(userId);
             return Ok(certifications);
         }
     }

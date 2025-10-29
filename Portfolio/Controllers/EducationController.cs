@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
@@ -7,6 +8,7 @@ using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationController : ControllerBase
@@ -32,14 +34,12 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteEducations([FromBody] List<Guid> educationIds)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (educationIds == null || educationIds.Count == 0)
                 return BadRequest("Education IDs cannot be null or empty.");
 
-            var deleted = await _educationService.DeleteEducationsAsync(userId.Value, educationIds);
+            var deleted = await _educationService.DeleteEducationsAsync(userId, educationIds);
             if (!deleted)
                 return BadRequest("Failed to delete the specified educations.");
 
@@ -51,11 +51,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddEducations([FromBody] List<AddEducation> educations)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var educationIds = await _educationService.AddEducationsAsync(userId.Value, educations);
+            var educationIds = await _educationService.AddEducationsAsync(userId, educations);
             return Created(string.Empty, educationIds);
         }
 
@@ -66,9 +64,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PatchEducations([FromBody] List<PatchEducation> patches)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (patches is null)
                 throw new ValidationException("Request body cannot be null.");
@@ -76,7 +72,7 @@ namespace Portfolio.WebApi.Controllers
             if (patches.Count == 0)
                 return NoContent();
 
-            var updated = await _educationService.PatchEducationsAsync(userId.Value, patches);
+            var updated = await _educationService.PatchEducationsAsync(userId, patches);
             if (!updated)
                 return NoContent();
 
@@ -88,11 +84,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetEducations()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var educations = await _educationService.GetEducationsByUserIdAsync(userId.Value);
+            var educations = await _educationService.GetEducationsByUserIdAsync(userId);
             return Ok(educations);
         }
     }

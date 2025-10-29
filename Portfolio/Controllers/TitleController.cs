@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Exceptions;
@@ -6,6 +7,7 @@ using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TitleController : ControllerBase
@@ -23,14 +25,12 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddTitle([FromBody] AddResumeTitle title)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (title is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var createdId = await _titleService.AddTitleAsync(userId.Value, title);
+            var createdId = await _titleService.AddTitleAsync(userId, title);
 
             return CreatedAtAction(nameof(GetTitleById), new { id = createdId }, createdId);
         }
@@ -54,9 +54,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PatchTitles([FromBody] List<PatchResumeTitle> patches)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (patches is null)
                 throw new ValidationException("Request body cannot be null.");
@@ -64,7 +62,7 @@ namespace Portfolio.WebApi.Controllers
             if (patches.Count == 0)
                 return NoContent();
 
-            var updated = await _titleService.PatchTitlesAsync(userId.Value, patches);
+            var updated = await _titleService.PatchTitlesAsync(userId, patches);
             if (!updated)
                 return NoContent();
 
@@ -77,14 +75,12 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteTitles([FromBody] List<Guid> titleIds)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (titleIds == null || titleIds.Count == 0)
                 return BadRequest("Title IDs cannot be null or empty.");
 
-            var deleted = await _titleService.DeleteTitlesAsync(userId.Value, titleIds);
+            var deleted = await _titleService.DeleteTitlesAsync(userId, titleIds);
             if (!deleted)
                 return BadRequest("Failed to delete the specified titles.");
 
@@ -96,11 +92,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTitles()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var titles = await _titleService.GetTitlesByUserIdAsync(userId.Value);
+            var titles = await _titleService.GetTitlesByUserIdAsync(userId);
             return Ok(titles);
         }
     }

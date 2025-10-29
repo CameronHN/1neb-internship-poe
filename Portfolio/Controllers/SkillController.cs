@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
@@ -7,6 +8,7 @@ using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SkillController : ControllerBase
@@ -31,11 +33,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddSkills([FromBody] List<AddSkill> skills)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var skillIds = await _skillService.AddSkillsAsync(userId.Value, skills);
+            var skillIds = await _skillService.AddSkillsAsync(userId, skills);
             return Created(string.Empty, skillIds);
         }
 
@@ -46,9 +46,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PatchSkills([FromBody] List<PatchSkill> patches)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (patches is null)
                 throw new ValidationException("Request body cannot be null.");
@@ -56,7 +54,7 @@ namespace Portfolio.WebApi.Controllers
             if (patches.Count == 0)
                 return NoContent();
 
-            var updated = await _skillService.PatchSkillsAsync(userId.Value, patches);
+            var updated = await _skillService.PatchSkillsAsync(userId, patches);
             if (!updated)
                 return NoContent();
 
@@ -69,14 +67,12 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteSkills([FromBody] List<Guid> skillIds)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (skillIds == null || skillIds.Count == 0)
                 return BadRequest("Skill IDs cannot be null or empty.");
 
-            var deleted = await _skillService.DeleteSkillsAsync(userId.Value, skillIds);
+            var deleted = await _skillService.DeleteSkillsAsync(userId, skillIds);
             if (!deleted)
                 return BadRequest("Failed to delete the specified skills.");
 
@@ -88,11 +84,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetSkills()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var skills = await _skillService.GetSkillsByUserIdAsync(userId.Value);
+            var skills = await _skillService.GetSkillsByUserIdAsync(userId);
             return Ok(skills);
         }
     }

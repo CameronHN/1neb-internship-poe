@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
@@ -6,6 +7,7 @@ using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfessionalSummaryController : ControllerBase
@@ -22,11 +24,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddSummary([FromBody] AddSummary summary)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var summaryId = await _summaryService.AddSummaryAsync(userId.Value, summary);
+            var summaryId = await _summaryService.AddSummaryAsync(userId, summary);
             return Created(string.Empty, summaryId);
         }
 
@@ -37,9 +37,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PatchSummaries([FromBody] List<PatchSummary> patches)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (patches is null)
                 throw new ValidationException("Request body cannot be null.");
@@ -47,7 +45,7 @@ namespace Portfolio.WebApi.Controllers
             if (patches.Count == 0)
                 return NoContent();
 
-            var updated = await _summaryService.PatchSummariesAsync(userId.Value, patches);
+            var updated = await _summaryService.PatchSummariesAsync(userId, patches);
             if (!updated)
                 return NoContent();
 
@@ -62,15 +60,13 @@ namespace Portfolio.WebApi.Controllers
             [FromBody] List<Guid> summaryIds
         )
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             if (summaryIds == null || summaryIds.Count == 0)
                 return BadRequest("Summary IDs cannot be null or empty.");
 
             var deleted = await _summaryService.DeleteProfessionalSummariesAsync(
-                userId.Value,
+                userId,
                 summaryIds
             );
             if (!deleted)
@@ -84,11 +80,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetProfessionalSummary()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var summary = await _summaryService.GetSummariesByUserId(userId.Value);
+            var summary = await _summaryService.GetSummariesByUserId(userId);
             return Ok(summary);
         }
     }
