@@ -111,17 +111,16 @@ namespace Portfolio.WebApi.Controllers
             {
                 try
                 {
+                    // --- Get User ID ---
+                    Guid id = userId.Value;
+
                     // Add Title if provided
                     if (!string.IsNullOrWhiteSpace(resumeDto.Title))
                     {
                         var titleService =
                             HttpContext.RequestServices.GetRequiredService<ITitleService>();
-                        var addTitle = new AddResumeTitle
-                        {
-                            UserId = userId.Value,
-                            Title = resumeDto.Title,
-                        };
-                        titleId = await titleService.AddTitleAsync(addTitle);
+                        var addTitle = new AddResumeTitle { Title = resumeDto.Title };
+                        titleId = await titleService.AddTitleAsync(id, addTitle);
                     }
 
                     // Add Contact Info if provided
@@ -139,16 +138,12 @@ namespace Portfolio.WebApi.Controllers
                                     .Socials.Where(s =>
                                         !string.IsNullOrWhiteSpace(s.SocialMediaUrl)
                                     )
-                                    .Select(s => new AddContact
-                                    {
-                                        UserId = userId.Value,
-                                        Social = s.SocialMediaUrl,
-                                    })
+                                    .Select(s => new AddContact { Social = s.SocialMediaUrl })
                                     .ToList()
                             );
                         }
 
-                        contactIds = await contactService.AddContactsAsync(addContacts);
+                        contactIds = await contactService.AddContactsAsync(id, addContacts);
                     }
 
                     // Add Professional Summary if provided
@@ -156,12 +151,9 @@ namespace Portfolio.WebApi.Controllers
                     {
                         var summaryService =
                             HttpContext.RequestServices.GetRequiredService<IProfessionalSummaryService>();
-                        var addSummary = new AddSummary
-                        {
-                            UserId = userId.Value,
-                            Summary = resumeDto.Summary,
-                        };
-                        summaryId = await summaryService.AddSummaryAsync(addSummary);
+                        var addSummary = new AddSummary { Summary = resumeDto.Summary };
+
+                        summaryId = await summaryService.AddSummaryAsync(id, addSummary);
                     }
 
                     // Add Skills if provided
@@ -172,12 +164,12 @@ namespace Portfolio.WebApi.Controllers
                         var addSkills = resumeDto
                             .Skills.Select(s => new AddSkill
                             {
-                                UserId = userId.Value,
                                 Skill = s.Skill,
                                 ProficiencyLevel = s.SkillLevel,
                             })
                             .ToList();
-                        skillIds = await skillService.AddSkillsAsync(addSkills);
+
+                        skillIds = await skillService.AddSkillsAsync(id, addSkills);
                     }
 
                     // Add Experience if provided
@@ -185,11 +177,9 @@ namespace Portfolio.WebApi.Controllers
                     {
                         var experienceService =
                             HttpContext.RequestServices.GetRequiredService<IExperienceService>();
-                        Guid id = userId.Value;
                         var addExperiences = resumeDto
                             .Experience.Select(e => new AddExperience
                             {
-                                UserId = id,
                                 JobTitle = e.JobTitle,
                                 CompanyName = e.Company,
                                 StartDate = e.StartDate,
@@ -202,6 +192,7 @@ namespace Portfolio.WebApi.Controllers
                                     .ToList(),
                             })
                             .ToList();
+
                         experienceIds = await experienceService.AddExperiencesAsync(
                             id,
                             addExperiences
@@ -216,7 +207,6 @@ namespace Portfolio.WebApi.Controllers
                         var addEducations = resumeDto
                             .Education.Select(e => new AddEducation
                             {
-                                UserId = userId.Value,
                                 InstitutionName = e.Institution,
                                 Qualification = e.Qualification,
                                 Major = e.Major,
@@ -224,7 +214,8 @@ namespace Portfolio.WebApi.Controllers
                                 EndDate = e.EndDate,
                             })
                             .ToList();
-                        educationIds = await educationService.AddEducationsAsync(addEducations);
+
+                        educationIds = await educationService.AddEducationsAsync(id, addEducations);
                     }
 
                     // Add Certifications if provided
@@ -235,7 +226,6 @@ namespace Portfolio.WebApi.Controllers
                         var addCerts = resumeDto
                             .Certification.Select(c => new AddCertification
                             {
-                                UserId = userId.Value,
                                 CertificationName = c.Name,
                                 IssuingOrganisation = c.Organisation,
                                 CredentialUrl = c.CredentialUrl,
@@ -243,7 +233,9 @@ namespace Portfolio.WebApi.Controllers
                                 ExpiryDate = c.ExpirationDate,
                             })
                             .ToList();
+
                         certificationIds = await certificationService.AddCertificationAsync(
+                            id,
                             addCerts
                         );
                     }
