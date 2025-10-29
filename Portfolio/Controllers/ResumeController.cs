@@ -256,16 +256,16 @@ namespace Portfolio.WebApi.Controllers
                 TitleId = titleId,
                 ProfessionalSummaryId = summaryId,
                 SkillsIds = skillIds.Count != 0 ? new ItemListRequest { Ids = skillIds } : null,
-                ExperienceIds = experienceIds.Count != 0
-                    ? new ItemListRequest { Ids = experienceIds }
-                    : null,
-                EducationIds = educationIds.Count != 0
-                    ? new ItemListRequest { Ids = educationIds }
-                    : null,
-                CertificationIds = certificationIds.Count != 0
-                    ? new ItemListRequest { Ids = certificationIds }
-                    : null,
-                SocialMediaIds = contactIds.Count != 0 ? new ItemListRequest { Ids = contactIds } : null,
+                ExperienceIds =
+                    experienceIds.Count != 0 ? new ItemListRequest { Ids = experienceIds } : null,
+                EducationIds =
+                    educationIds.Count != 0 ? new ItemListRequest { Ids = educationIds } : null,
+                CertificationIds =
+                    certificationIds.Count != 0
+                        ? new ItemListRequest { Ids = certificationIds }
+                        : null,
+                SocialMediaIds =
+                    contactIds.Count != 0 ? new ItemListRequest { Ids = contactIds } : null,
             };
 
             // Generate PDF using the above endpoint logic
