@@ -22,8 +22,5 @@ namespace Portfolio.Core.DTOs.Experience
 
         [MinLength(1, ErrorMessage = "At least one responsibility is required.")]
         public required List<AddResponsibility> Responsibilities { get; set; }
-
-        [JsonIgnore]
-        public Guid UserId { get; set; }
     }
 }
