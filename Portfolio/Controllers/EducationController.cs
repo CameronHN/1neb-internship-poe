@@ -36,7 +36,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (educationIds == null || !educationIds.Any())
+            if (educationIds == null || educationIds.Count == 0)
                 return BadRequest("Education IDs cannot be null or empty.");
 
             var deleted = await _educationService.DeleteEducationsAsync(userId.Value, educationIds);

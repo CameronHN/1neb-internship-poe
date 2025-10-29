@@ -73,7 +73,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (skillIds == null || !skillIds.Any())
+            if (skillIds == null || skillIds.Count == 0)
                 return BadRequest("Skill IDs cannot be null or empty.");
 
             var deleted = await _skillService.DeleteSkillsAsync(userId.Value, skillIds);

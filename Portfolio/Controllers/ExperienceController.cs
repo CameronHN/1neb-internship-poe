@@ -98,7 +98,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (experienceIds == null || !experienceIds.Any())
+            if (experienceIds == null || experienceIds.Count == 0)
                 return BadRequest("Experience IDs cannot be null or empty.");
 
             var deleted = await _experienceService.DeleteExperiencesAsync(

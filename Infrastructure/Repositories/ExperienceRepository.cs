@@ -228,7 +228,7 @@ namespace Portfolio.Infrastructure.Repositories
                     }
                 }
 
-                if (patch.Responsibilities != null && patch.Responsibilities.Any())
+                if (patch.Responsibilities != null && patch.Responsibilities.Count != 0)
                 {
                     foreach (var respPatch in patch.Responsibilities)
                     {

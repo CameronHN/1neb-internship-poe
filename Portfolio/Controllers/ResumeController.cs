@@ -124,14 +124,14 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Contact Info if provided
-                    if (resumeDto.Socials != null && resumeDto.Socials.Any())
+                    if (resumeDto.Socials != null && resumeDto.Socials.Count != 0)
                     {
                         var contactService =
                             HttpContext.RequestServices.GetRequiredService<IContactService>();
 
                         var addContacts = new List<AddContact>();
 
-                        if (resumeDto.Socials != null && resumeDto.Socials.Any())
+                        if (resumeDto.Socials != null && resumeDto.Socials.Count != 0)
                         {
                             addContacts.AddRange(
                                 resumeDto
@@ -157,7 +157,7 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Skills if provided
-                    if (resumeDto.Skills != null && resumeDto.Skills.Any())
+                    if (resumeDto.Skills != null && resumeDto.Skills.Count != 0)
                     {
                         var skillService =
                             HttpContext.RequestServices.GetRequiredService<ISkillService>();
@@ -173,7 +173,7 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Experience if provided
-                    if (resumeDto.Experience != null && resumeDto.Experience.Any())
+                    if (resumeDto.Experience != null && resumeDto.Experience.Count != 0)
                     {
                         var experienceService =
                             HttpContext.RequestServices.GetRequiredService<IExperienceService>();
@@ -200,7 +200,7 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Education if provided
-                    if (resumeDto.Education != null && resumeDto.Education.Any())
+                    if (resumeDto.Education != null && resumeDto.Education.Count != 0)
                     {
                         var educationService =
                             HttpContext.RequestServices.GetRequiredService<IEducationService>();
@@ -219,7 +219,7 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Certifications if provided
-                    if (resumeDto.Certification != null && resumeDto.Certification.Any())
+                    if (resumeDto.Certification != null && resumeDto.Certification.Count != 0)
                     {
                         var certificationService =
                             HttpContext.RequestServices.GetRequiredService<ICertificationService>();
@@ -255,17 +255,17 @@ namespace Portfolio.WebApi.Controllers
                 UserId = userId.Value,
                 TitleId = titleId,
                 ProfessionalSummaryId = summaryId,
-                SkillsIds = skillIds.Any() ? new ItemListRequest { Ids = skillIds } : null,
-                ExperienceIds = experienceIds.Any()
+                SkillsIds = skillIds.Count != 0 ? new ItemListRequest { Ids = skillIds } : null,
+                ExperienceIds = experienceIds.Count != 0
                     ? new ItemListRequest { Ids = experienceIds }
                     : null,
-                EducationIds = educationIds.Any()
+                EducationIds = educationIds.Count != 0
                     ? new ItemListRequest { Ids = educationIds }
                     : null,
-                CertificationIds = certificationIds.Any()
+                CertificationIds = certificationIds.Count != 0
                     ? new ItemListRequest { Ids = certificationIds }
                     : null,
-                SocialMediaIds = contactIds.Any() ? new ItemListRequest { Ids = contactIds } : null,
+                SocialMediaIds = contactIds.Count != 0 ? new ItemListRequest { Ids = contactIds } : null,
             };
 
             // Generate PDF using the above endpoint logic

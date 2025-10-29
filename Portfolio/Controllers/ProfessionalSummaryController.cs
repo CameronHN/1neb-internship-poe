@@ -66,7 +66,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (summaryIds == null || !summaryIds.Any())
+            if (summaryIds == null || summaryIds.Count == 0)
                 return BadRequest("Summary IDs cannot be null or empty.");
 
             var deleted = await _summaryService.DeleteProfessionalSummariesAsync(

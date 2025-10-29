@@ -84,7 +84,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (certificationIds == null || !certificationIds.Any())
+            if (certificationIds == null || certificationIds.Count == 0)
                 return BadRequest("Certification IDs cannot be null or empty.");
 
             var deleted = await _certificationService.DeleteCertificationsAsync(

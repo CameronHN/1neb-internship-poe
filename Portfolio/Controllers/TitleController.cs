@@ -81,7 +81,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (titleIds == null || !titleIds.Any())
+            if (titleIds == null || titleIds.Count == 0)
                 return BadRequest("Title IDs cannot be null or empty.");
 
             var deleted = await _titleService.DeleteTitlesAsync(userId.Value, titleIds);
