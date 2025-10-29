@@ -9,8 +9,8 @@ namespace Portfolio.Core.Contracts.Repositories
         // -------------------- Create --------------------
         /// <summary>
         /// Adds multiple certifications for a user.
-        /// Returns a list of the IDs for the newly created certifications.
         /// </summary>
+        /// <returns>List of the IDs for the newly created certifications.</returns>
         Task<List<Guid>> AddCertificationsAsync(List<AddCertification> certification);
 
         // -------------------- Read --------------------
