@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
 
 namespace Portfolio.Core.DTOs.Experience
