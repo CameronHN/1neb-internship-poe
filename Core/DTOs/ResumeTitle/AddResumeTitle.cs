@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Portfolio.Core.DTOs.ResumeTitle
 {
@@ -9,8 +8,5 @@ namespace Portfolio.Core.DTOs.ResumeTitle
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [RegularExpression(@"\S.*", ErrorMessage = "Title cannot be whitespace.")]
         public required string Title { get; set; }
-
-        [JsonIgnore]
-        public Guid UserId { get; set; }
     }
 }

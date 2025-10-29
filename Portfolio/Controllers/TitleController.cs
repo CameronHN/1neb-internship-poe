@@ -30,9 +30,7 @@ namespace Portfolio.WebApi.Controllers
             if (title is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            title.UserId = userId.Value;
-
-            var createdId = await _titleService.AddTitleAsync(title);
+            var createdId = await _titleService.AddTitleAsync(userId.Value, title);
 
             return CreatedAtAction(nameof(GetTitleById), new { id = createdId }, createdId);
         }

@@ -24,9 +24,13 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Guid> AddTitleAsync(AddResumeTitle title)
+        public async Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title)
         {
-            var entity = new Title { ResumeTitle = title.Title, UserId = title.UserId };
+            var entity = new Title
+            {
+                ResumeTitle = title.Title,
+                UserId = userId
+            };
 
             await _dbContext.Title.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
