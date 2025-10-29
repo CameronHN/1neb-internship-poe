@@ -16,12 +16,12 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> AddSummaryAsync(AddSummary summary)
+        public async Task<Guid> AddSummaryAsync(Guid userId, AddSummary summary)
         {
             var entity = new ProfessionalSummary
             {
                 Summary = summary.Summary,
-                UserId = summary.UserId,
+                UserId = userId,
             };
 
             await _dbContext.ProfessionalSummary.AddAsync(entity);

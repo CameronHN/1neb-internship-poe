@@ -26,9 +26,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            summary.UserId = userId.Value;
-
-            var summaryId = await _summaryService.AddSummaryAsync(summary);
+            var summaryId = await _summaryService.AddSummaryAsync(userId.Value, summary);
             return Created(string.Empty, summaryId);
         }
 

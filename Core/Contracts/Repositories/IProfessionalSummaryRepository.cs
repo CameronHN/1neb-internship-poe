@@ -4,7 +4,7 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IProfessionalSummaryRepository
     {
-        Task<Guid> AddSummaryAsync(AddSummary summary);
+        Task<Guid> AddSummaryAsync(Guid userId, AddSummary summary);
         Task<string?> GetSummaryById(Guid id);
         Task<List<string>> GetSummariesByUserId(Guid userId);
 

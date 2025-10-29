@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Portfolio.Core.DTOs.ProfessionalSummary
 {
@@ -9,8 +8,5 @@ namespace Portfolio.Core.DTOs.ProfessionalSummary
         [MaxLength(200, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [RegularExpression(@"\S.*", ErrorMessage = "Summary cannot be whitespace.")]
         public required string Summary { get; set; }
-
-        [JsonIgnore]
-        public Guid UserId { get; set; }
     }
 }
