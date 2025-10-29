@@ -15,9 +15,9 @@ namespace Portfolio.Application.Services
             _skillRepository = skillRepository;
         }
 
-        public async Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills)
+        public async Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills)
         {
-            return await _skillRepository.AddSkillsAsync(skills);
+            return await _skillRepository.AddSkillsAsync(userId, skills);
         }
 
         public async Task<bool> DeleteSkillsAsync(Guid userId, List<Guid> skillIds)

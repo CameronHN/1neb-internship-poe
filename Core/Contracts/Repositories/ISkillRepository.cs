@@ -6,7 +6,7 @@ namespace Portfolio.Core.Contracts.Repositories
 {
     public interface ISkillRepository
     {
-        Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills);
+        Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills);
 
         Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);

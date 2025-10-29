@@ -35,12 +35,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            foreach (var skill in skills)
-            {
-                skill.UserId = userId.Value;
-            }
-
-            var skillIds = await _skillService.AddSkillsAsync(skills);
+            var skillIds = await _skillService.AddSkillsAsync(userId.Value, skills);
             return Created(string.Empty, skillIds);
         }
 

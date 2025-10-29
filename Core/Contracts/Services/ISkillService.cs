@@ -6,7 +6,7 @@ namespace Portfolio.Core.Contracts.Services
 {
     public interface ISkillService
     {
-        Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills);
+        Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills);
 
         Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);

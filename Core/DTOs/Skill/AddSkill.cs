@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Portfolio.Core.DTOs.Skill
 {
@@ -12,8 +11,5 @@ namespace Portfolio.Core.DTOs.Skill
 
         [MaxLength(200, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         public string? ProficiencyLevel { get; set; }
-
-        [JsonIgnore]
-        public Guid UserId { get; set; }
     }
 }

@@ -18,14 +18,14 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddSkillsAsync(List<AddSkill> skills)
+        public async Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills)
         {
             var entities = skills
                 .Select(skill => new Skill
                 {
                     SkillName = skill.Skill,
                     ProficiencyLevel = skill.ProficiencyLevel,
-                    UserId = skill.UserId,
+                    UserId = userId,
                 })
                 .ToList();
 
