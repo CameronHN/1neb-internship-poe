@@ -27,6 +27,7 @@ namespace Portfolio.WebApi.Controllers
             _resumeService = resumeService;
         }
 
+        [AllowAnonymous]
         [HttpPost("create-pdf")]
         public IActionResult GenerateResumeWithoutSavingDetails([FromBody] ResumeDto dto)
         {
@@ -37,15 +38,15 @@ namespace Portfolio.WebApi.Controllers
             return File(pdf, "application/pdf", $"{name}resume.pdf");
         }
 
+        [Authorize]
         [HttpGet("get-user-resume-details")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetResumeDtoByUserId()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var resume = await _resumeService.GetResumeByUserId(userId.Value);
+            var resume = await _resumeService.GetResumeByUserId(userId);
             if (resume == null)
                 return NotFound();
 
@@ -56,13 +57,12 @@ namespace Portfolio.WebApi.Controllers
         [HttpPost("get-user-resume")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GenerateResumeByUserID()
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
-            var userInfo = await _resumeService.GetResumeByUserId(userId.Value);
+            var userInfo = await _resumeService.GetResumeByUserId(userId);
             if (userInfo == null)
                 return NotFound("Resume details not found for the user.");
 
@@ -72,11 +72,14 @@ namespace Portfolio.WebApi.Controllers
             return File(pdf, "application/pdf", fileDownloadName);
         }
 
+        [Authorize]
         [HttpPost("get-resume")]
         [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
-            var userInfo = await _resumeService.GetResumeDetailsAsync(resumeRequest);
+            var userId = User.GetUserId()!.Value;
+
+            var userInfo = await _resumeService.GetResumeDetailsAsync(userId, resumeRequest);
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
             if (pdf == null || pdf.Length == 0)
@@ -86,12 +89,12 @@ namespace Portfolio.WebApi.Controllers
             return File(pdf, "application/pdf", fileDownloadName);
         }
 
+        [Authorize]
         [HttpPost("create-resume")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateResume(ResumeDto resumeDto)
         {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
+            var userId = User.GetUserId()!.Value;
 
             // Prepare lists to collect new entity IDs
             Guid? summaryId = null;
@@ -112,7 +115,7 @@ namespace Portfolio.WebApi.Controllers
                 try
                 {
                     // --- Get User ID ---
-                    Guid id = userId.Value;
+                    Guid id = userId;
 
                     // Add Title if provided
                     if (!string.IsNullOrWhiteSpace(resumeDto.Title))
@@ -124,14 +127,13 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Contact Info if provided
-                    if (resumeDto.Socials != null && resumeDto.Socials.Count != 0)
+                    if (resumeDto.Socials != null && resumeDto.Socials.Any())
                     {
                         var contactService =
                             HttpContext.RequestServices.GetRequiredService<IContactService>();
-
                         var addContacts = new List<AddContact>();
 
-                        if (resumeDto.Socials != null && resumeDto.Socials.Count != 0)
+                        if (resumeDto.Socials is { Count: > 0 })
                         {
                             addContacts.AddRange(
                                 resumeDto
@@ -152,12 +154,11 @@ namespace Portfolio.WebApi.Controllers
                         var summaryService =
                             HttpContext.RequestServices.GetRequiredService<IProfessionalSummaryService>();
                         var addSummary = new AddSummary { Summary = resumeDto.Summary };
-
                         summaryId = await summaryService.AddSummaryAsync(id, addSummary);
                     }
 
                     // Add Skills if provided
-                    if (resumeDto.Skills != null && resumeDto.Skills.Count != 0)
+                    if (resumeDto.Skills != null && resumeDto.Skills.Any())
                     {
                         var skillService =
                             HttpContext.RequestServices.GetRequiredService<ISkillService>();
@@ -168,12 +169,11 @@ namespace Portfolio.WebApi.Controllers
                                 ProficiencyLevel = s.SkillLevel,
                             })
                             .ToList();
-
                         skillIds = await skillService.AddSkillsAsync(id, addSkills);
                     }
 
                     // Add Experience if provided
-                    if (resumeDto.Experience != null && resumeDto.Experience.Count != 0)
+                    if (resumeDto.Experience != null && resumeDto.Experience.Any())
                     {
                         var experienceService =
                             HttpContext.RequestServices.GetRequiredService<IExperienceService>();
@@ -192,7 +192,6 @@ namespace Portfolio.WebApi.Controllers
                                     .ToList(),
                             })
                             .ToList();
-
                         experienceIds = await experienceService.AddExperiencesAsync(
                             id,
                             addExperiences
@@ -200,7 +199,7 @@ namespace Portfolio.WebApi.Controllers
                     }
 
                     // Add Education if provided
-                    if (resumeDto.Education != null && resumeDto.Education.Count != 0)
+                    if (resumeDto.Education != null && resumeDto.Education.Any())
                     {
                         var educationService =
                             HttpContext.RequestServices.GetRequiredService<IEducationService>();
@@ -214,12 +213,11 @@ namespace Portfolio.WebApi.Controllers
                                 EndDate = e.EndDate,
                             })
                             .ToList();
-
                         educationIds = await educationService.AddEducationsAsync(id, addEducations);
                     }
 
                     // Add Certifications if provided
-                    if (resumeDto.Certification != null && resumeDto.Certification.Count != 0)
+                    if (resumeDto.Certification != null && resumeDto.Certification.Any())
                     {
                         var certificationService =
                             HttpContext.RequestServices.GetRequiredService<ICertificationService>();
@@ -233,7 +231,6 @@ namespace Portfolio.WebApi.Controllers
                                 ExpiryDate = c.ExpirationDate,
                             })
                             .ToList();
-
                         certificationIds = await certificationService.AddCertificationAsync(
                             id,
                             addCerts
@@ -252,7 +249,6 @@ namespace Portfolio.WebApi.Controllers
             // Map to ResumeRequest
             var resumeRequest = new ResumeRequest
             {
-                UserId = userId.Value,
                 TitleId = titleId,
                 ProfessionalSummaryId = summaryId,
                 SkillsIds = skillIds.Count != 0 ? new ItemListRequest { Ids = skillIds } : null,
@@ -269,7 +265,7 @@ namespace Portfolio.WebApi.Controllers
             };
 
             // Generate PDF using the above endpoint logic
-            var userInfo = await _resumeService.GetResumeDetailsAsync(resumeRequest);
+            var userInfo = await _resumeService.GetResumeDetailsAsync(userId, resumeRequest);
             var pdf = _resumeService.RenderPdf(userInfo ?? new());
 
             if (pdf == null || pdf.Length == 0)

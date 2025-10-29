@@ -4,10 +4,6 @@ namespace Portfolio.Core.DTOs
 {
     public class ResumeRequest
     {
-        //Used to get first name, last name, email, phone number
-        [JsonIgnore]
-        public Guid UserId { get; set; }
-
         //Used to get a single title
         public Guid? TitleId { get; set; }
 

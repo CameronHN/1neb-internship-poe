@@ -38,11 +38,11 @@ namespace Portfolio.Application.Services
             _titleRepository = titleRepository;
         }
 
-        public async Task<ResumeDto> GetResumeDetailsAsync(ResumeRequest resumeRequest)
+        public async Task<ResumeDto> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest)
         {
             var resumeDto = new ResumeDto();
 
-            var user = await _userRepository.GetUserEntityDetailsByUserId(resumeRequest.UserId);
+            var user = await _userRepository.GetUserDetailsByUserId(userId);
 
             resumeDto.Name = $"{user.FirstName} {user.LastName}";
 
