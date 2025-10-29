@@ -18,7 +18,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
+        public async Task<List<Guid>> AddEducationsAsync(Guid userId, List<AddEducation> educations)
         {
             var entities = educations
                 .Select(edu => new Education
@@ -29,7 +29,7 @@ namespace Portfolio.Infrastructure.Repositories
                     EndDate = DateOnly.Parse(edu.EndDate),
                     Major = edu.Major,
                     Achievement = edu.Achievement,
-                    UserId = edu.UserId,
+                    UserId = userId,
                 })
                 .ToList();
 

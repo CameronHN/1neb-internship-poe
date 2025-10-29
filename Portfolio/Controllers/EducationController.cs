@@ -55,12 +55,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            foreach (var education in educations)
-            {
-                education.UserId = userId.Value;
-            }
-
-            var educationIds = await _educationService.AddEducationsAsync(educations);
+            var educationIds = await _educationService.AddEducationsAsync(userId.Value, educations);
             return Created(string.Empty, educationIds);
         }
 

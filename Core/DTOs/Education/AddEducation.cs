@@ -26,8 +26,5 @@ namespace Portfolio.Core.DTOs.Education
 
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         public string? Achievement { get; set; }
-
-        [JsonIgnore]
-        public Guid UserId { get; set; }
     }
 }

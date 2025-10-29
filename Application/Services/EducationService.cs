@@ -15,9 +15,9 @@ namespace Portfolio.Application.Services
             _educationRepository = educationRepository;
         }
 
-        public async Task<List<Guid>> AddEducationsAsync(List<AddEducation> educations)
+        public async Task<List<Guid>> AddEducationsAsync(Guid userId, List<AddEducation> educations)
         {
-            return await _educationRepository.AddEducationsAsync(educations);
+            return await _educationRepository.AddEducationsAsync(userId, educations);
         }
 
         public Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds)
