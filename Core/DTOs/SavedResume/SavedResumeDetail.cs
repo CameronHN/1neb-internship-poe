@@ -1,4 +1,6 @@
-﻿namespace Portfolio.Core.DTOs.SavedResume
+﻿using Portfolio.Core.DTOs.Resume;
+
+namespace Portfolio.Core.DTOs.SavedResume
 {
     public class SavedResumeDetail
     {

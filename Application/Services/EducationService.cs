@@ -2,6 +2,7 @@
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services

@@ -1,5 +1,6 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Repositories

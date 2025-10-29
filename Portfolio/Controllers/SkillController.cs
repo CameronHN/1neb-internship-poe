@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.WebApi.Extensions;
 

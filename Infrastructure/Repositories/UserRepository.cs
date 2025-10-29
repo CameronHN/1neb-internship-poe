@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
-using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.User;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;

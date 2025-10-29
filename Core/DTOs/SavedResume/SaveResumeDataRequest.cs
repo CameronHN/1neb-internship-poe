@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Portfolio.Core.DTOs.Resume;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.Core.DTOs.SavedResume
 {

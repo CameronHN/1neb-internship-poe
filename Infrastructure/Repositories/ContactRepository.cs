@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Contact;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;

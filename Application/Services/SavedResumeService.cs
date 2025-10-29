@@ -2,7 +2,7 @@
 using Portfolio.Application.Documents;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.SavedResume;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;

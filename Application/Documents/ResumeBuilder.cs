@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+﻿using Portfolio.Core.DTOs.Resume;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;

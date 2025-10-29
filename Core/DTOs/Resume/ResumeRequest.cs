@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Core.DTOs
+﻿namespace Portfolio.Core.DTOs.Resume
 {
     public class ResumeRequest
     {

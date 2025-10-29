@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+﻿using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.User;
 
 namespace Portfolio.Core.Contracts.Services

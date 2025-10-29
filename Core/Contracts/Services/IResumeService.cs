@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+﻿using Portfolio.Core.DTOs.Resume;
 
 namespace Portfolio.Core.Contracts.Services
 {

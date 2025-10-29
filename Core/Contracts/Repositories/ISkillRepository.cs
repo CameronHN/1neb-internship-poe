@@ -1,4 +1,5 @@
 ﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.Core.Models;
 
