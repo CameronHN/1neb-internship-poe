@@ -1,0 +1,17 @@
+meta {
+  name: delete -api-Experience-delete
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/Experience/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

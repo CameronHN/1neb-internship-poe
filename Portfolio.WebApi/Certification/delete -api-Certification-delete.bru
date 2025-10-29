@@ -1,0 +1,17 @@
+meta {
+  name: delete -api-Certification-delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/Certification/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

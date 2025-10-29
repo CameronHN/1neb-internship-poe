@@ -1,0 +1,24 @@
+meta {
+  name: post -api-Education-add
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/Education/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "institutionName": "",
+      "qualification": "",
+      "startDate": "",
+      "endDate": "",
+      "major": "",
+      "achievement": ""
+    }
+  ]
+}

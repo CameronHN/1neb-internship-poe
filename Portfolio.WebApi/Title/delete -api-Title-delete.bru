@@ -1,0 +1,17 @@
+meta {
+  name: delete -api-Title-delete
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/Title/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

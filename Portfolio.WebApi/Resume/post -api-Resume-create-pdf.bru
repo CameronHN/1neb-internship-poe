@@ -1,0 +1,60 @@
+meta {
+  name: post -api-Resume-create-pdf
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Resume/create-pdf
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "",
+    "title": "",
+    "email": "",
+    "phoneNumber": "",
+    "summary": "",
+    "skills": [
+      {
+        "skill": "",
+        "skillLevel": ""
+      }
+    ],
+    "socials": [
+      {
+        "socialMediaUrl": ""
+      }
+    ],
+    "experience": [
+      {
+        "company": "",
+        "jobTitle": "",
+        "startDate": "",
+        "endDate": "",
+        "responsibilities": []
+      }
+    ],
+    "education": [
+      {
+        "institution": "",
+        "qualification": "",
+        "startDate": "",
+        "endDate": "",
+        "major": "",
+        "achievement": ""
+      }
+    ],
+    "certification": [
+      {
+        "name": "",
+        "organisation": "",
+        "credentialUrl": "",
+        "issuedDate": "",
+        "expirationDate": ""
+      }
+    ]
+  }
+}

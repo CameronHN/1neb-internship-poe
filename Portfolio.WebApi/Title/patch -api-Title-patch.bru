@@ -1,0 +1,20 @@
+meta {
+  name: patch -api-Title-patch
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/api/Title/patch
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "id": "",
+      "title": ""
+    }
+  ]
+}

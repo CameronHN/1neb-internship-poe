@@ -1,0 +1,17 @@
+meta {
+  name: post -api-Title-add
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Title/add
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": ""
+  }
+}

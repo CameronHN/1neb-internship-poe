@@ -1,0 +1,19 @@
+meta {
+  name: post -api-Contact-add
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Contact/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "social": ""
+    }
+  ]
+}

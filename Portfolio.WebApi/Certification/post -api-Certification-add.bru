@@ -1,0 +1,23 @@
+meta {
+  name: post -api-Certification-add
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Certification/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "certificationName": "",
+      "issuingOrganisation": "",
+      "credentialUrl": "",
+      "issuedDate": "",
+      "expiryDate": ""
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+meta {
+  name: post -api-Auth-register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "phone": "",
+    "password": "",
+    "confirmPassword": ""
+  }
+}

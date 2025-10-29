@@ -1,0 +1,38 @@
+meta {
+  name: post -api-Resume-get-resume
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/Resume/get-resume
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "titleId": "",
+    "professionalSummaryId": "",
+    "socialMediaIds": {
+      "ids": [],
+      "order": ""
+    },
+    "experienceIds": {
+      "ids": [],
+      "order": ""
+    },
+    "educationIds": {
+      "ids": [],
+      "order": ""
+    },
+    "certificationIds": {
+      "ids": [],
+      "order": ""
+    },
+    "skillsIds": {
+      "ids": [],
+      "order": ""
+    }
+  }
+}

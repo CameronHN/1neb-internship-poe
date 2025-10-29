@@ -1,0 +1,29 @@
+meta {
+  name: patch -api-Experience-patch
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/Experience/patch
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "id": "",
+      "jobTitle": "",
+      "companyName": "",
+      "startDate": "",
+      "endDate": "",
+      "responsibilities": [
+        {
+          "responsibility": "",
+          "id": ""
+        }
+      ]
+    }
+  ]
+}

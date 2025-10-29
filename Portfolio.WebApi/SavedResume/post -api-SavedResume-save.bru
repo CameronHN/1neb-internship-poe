@@ -1,0 +1,64 @@
+meta {
+  name: post -api-SavedResume-save
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/SavedResume/save
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "savedResumeName": "",
+    "resumeData": {
+      "name": "",
+      "title": "",
+      "email": "",
+      "phoneNumber": "",
+      "summary": "",
+      "skills": [
+        {
+          "skill": "",
+          "skillLevel": ""
+        }
+      ],
+      "socials": [
+        {
+          "socialMediaUrl": ""
+        }
+      ],
+      "experience": [
+        {
+          "company": "",
+          "jobTitle": "",
+          "startDate": "",
+          "endDate": "",
+          "responsibilities": []
+        }
+      ],
+      "education": [
+        {
+          "institution": "",
+          "qualification": "",
+          "startDate": "",
+          "endDate": "",
+          "major": "",
+          "achievement": ""
+        }
+      ],
+      "certification": [
+        {
+          "name": "",
+          "organisation": "",
+          "credentialUrl": "",
+          "issuedDate": "",
+          "expirationDate": ""
+        }
+      ]
+    },
+    "templateType": ""
+  }
+}

@@ -1,0 +1,27 @@
+meta {
+  name: post -api-Experience-add
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/Experience/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "jobTitle": "",
+      "companyName": "",
+      "startDate": "",
+      "endDate": "",
+      "responsibilities": [
+        {
+          "responsibility": ""
+        }
+      ]
+    }
+  ]
+}

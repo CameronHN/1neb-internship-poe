@@ -1,0 +1,21 @@
+meta {
+  name: patch -api-Skill-patch
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/Skill/patch
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "id": "",
+      "skill": "",
+      "proficiencyLevel": ""
+    }
+  ]
+}

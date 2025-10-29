@@ -1,0 +1,17 @@
+meta {
+  name: delete -api-Skill-delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/Skill/delete
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

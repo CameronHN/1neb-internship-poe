@@ -1,0 +1,15 @@
+meta {
+  name: get -api-SavedResume--id-pdf
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/SavedResume/:id/pdf
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

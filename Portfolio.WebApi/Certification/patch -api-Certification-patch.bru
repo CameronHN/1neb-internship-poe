@@ -1,0 +1,24 @@
+meta {
+  name: patch -api-Certification-patch
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/Certification/patch
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "id": "",
+      "certificationName": "",
+      "issuingOrganisation": "",
+      "credentialUrl": "",
+      "issuedDate": "",
+      "expiryDate": ""
+    }
+  ]
+}

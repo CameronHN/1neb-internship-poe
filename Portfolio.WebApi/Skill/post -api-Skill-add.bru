@@ -1,0 +1,20 @@
+meta {
+  name: post -api-Skill-add
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/Skill/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "skill": "",
+      "proficiencyLevel": ""
+    }
+  ]
+}
