@@ -1,6 +1,7 @@
 ﻿using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.User;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
@@ -18,6 +19,6 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId);
 
-        Task<UserEntityDetailsDto> GetUserEntityDetailsByUserId(Guid id);
+        Task<UserModel> GetUserDetailsByUserId(Guid id);
     }
 }

@@ -4,6 +4,7 @@ using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.User;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -146,11 +147,11 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<UserEntityDetailsDto> GetUserEntityDetailsByUserId(Guid id)
+        public async Task<UserModel> GetUserDetailsByUserId(Guid id)
         {
-            UserEntityDetailsDto? user = await _dbContext
+            UserModel? user = await _dbContext
                 .User.Where(u => u.Id == id)
-                .Select(u => new UserEntityDetailsDto
+                .Select(u => new UserModel
                 {
                     FirstName = u.FirstName,
                     LastName = u.LastName,
