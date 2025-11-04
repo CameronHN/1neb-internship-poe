@@ -11,6 +11,7 @@ namespace Portfolio.Core.Entities
         [Column(TypeName = "varchar(100)")]
         public required string JobTitle { get; set; }
 
+        [Column(TypeName = "varchar(100)")]
         public string? CompanyName { get; set; }
 
         public DateOnly StartDate { get; set; }
