@@ -52,7 +52,6 @@ namespace Portfolio.Application.Services
                 ResumeData = resumeDto,
                 TemplateType = savedResume.TemplateType,
                 CreatedAt = savedResume.CreatedAt,
-                UpdatedAt = savedResume.UpdatedAt,
             };
         }
 
@@ -67,7 +66,6 @@ namespace Portfolio.Application.Services
                     Name = sr.Name,
                     TemplateType = sr.TemplateType,
                     CreatedAt = sr.CreatedAt,
-                    UpdatedAt = sr.UpdatedAt,
                 })
                 .ToList();
         }

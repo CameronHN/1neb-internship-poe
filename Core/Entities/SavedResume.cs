@@ -19,8 +19,6 @@ namespace Portfolio.Core.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public DateTime? UpdatedAt { get; set; }
-
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
