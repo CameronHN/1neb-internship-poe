@@ -322,7 +322,7 @@ namespace Portfolio.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
@@ -404,9 +404,6 @@ namespace Portfolio.Infrastructure.Migrations
                     b.Property<string>("TemplateType")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
