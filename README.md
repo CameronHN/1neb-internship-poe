@@ -180,4 +180,93 @@ Use the included **Bruno (.bru)** files for API testing:
 
 ### Database
 
-![Entity Relationship Diagram](/POE_ERD.png "Entity Relationship Diagram")
+```mermaid
+erDiagram
+    User {
+        UID Id PK
+        VARCHAR(100) FirstName
+        VARCHAR(100) LastName
+        NVARCHAR(MAX) PhoneNumber
+        NVARCHAR(MAX) Email
+    }
+    
+    Contact {
+        UID Id PK
+        VARCHAR(100) ContactUrl
+        UID UserId FK
+    }
+    
+    SavedResume {
+        UID Id PK
+        VARCHAR(100) Name
+        VARCHAR(MAX) Data
+        VARCHAR(100) TemplateType
+        DATETIME2(7) CreatedAt
+        UID UserId FK
+    }
+    
+    ProfessionalSummary {
+        UID Id PK
+        VARCHAR(200) Summary
+        UID UserId FK
+    }
+    
+    Title {
+        UID Id PK
+        VARCHAR(100) ResumeTitle
+        UID UserId FK
+    }
+    
+    Skills {
+        UID Id PK
+        VARCHAR(100) SkillName
+        VARCHAR(100) SkillLevel
+        UID UserId FK
+    }
+    
+    Certification {
+        UID Id PK
+        VARCHAR(100) CertificationName
+        VARCHAR(100) IssuingOrganisation
+        VARCHAR(100) CredentialUrl
+        DATE IssueDate
+        DATE ExpiryDate
+        UID UserId FK
+    }
+    
+    Experience {
+        UID Id PK
+        VARCHAR(100) JobTitle
+        VARCHAR(100) CompanyName
+        DATE StartDate
+        DATE EndDate
+        UID UserId FK
+    }
+    
+    ExperienceResponsibility {
+        UID Id PK
+        VARCHAR(255) Responsibility
+        UID ExperienceId FK
+    }
+    
+    Education {
+        UID Id PK
+        VARCHAR(100) InstitutionName
+        VARCHAR(100) Qualification
+        DATE StartDate
+        DATE EndDate
+        VARCHAR(100) Major
+        VARCHAR(100) Achievement
+        UID UserId FK
+    }
+
+    User ||--o{ Contact : "has"
+    User ||--o{ SavedResume : "creates"
+    User ||--o{ ProfessionalSummary : "has"
+    User ||--o{ Title : "has"
+    User ||--o{ Skills : "has"
+    User ||--o{ Certification : "has"
+    User ||--o{ Experience : "has"
+    User ||--o{ Education : "has"
+    Experience ||--o{ ExperienceResponsibility : "contains"
+```
