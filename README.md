@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Ostentans** (Latin for showing off) is a **resume management system** built with .NET Core and Entity Framework, designed to create, manage, and generate professional resumes.
+**Ostentans** (Latin for "showing off") is a **resume management system** built with .NET Core and Entity Framework, designed to create, manage, and generate professional resumes.
 
 ## Purpose
 
