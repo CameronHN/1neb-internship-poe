@@ -1,5 +1,21 @@
 # Ostentans Resume Creator
 
+> ## Quick links
+>
+> - [Overview](#overview)
+  - 
+> - [Purpose](#purpose)
+>
+> - [Technologies and Tools](#technologies-and-tools)
+>
+> - [Database Schema](#database-schema)
+>
+> - [Configuration and Setup](#configuration-and-setup)
+>
+> - [Project Structure](#project-structure)
+>
+> - [Diagrams](#diagrams)
+
 ## Overview
 
 **Ostentans** (Latin for "showing off") is a **resume management system** built with .NET Core and Entity Framework, designed to create, manage, and generate professional resumes.
@@ -61,7 +77,7 @@ The application uses **SQL Server** with the following main entities:
 - **Title** - Resume titles/headings
 - **SavedResume** - Saved resume data
 
-## Configuration & Setup
+## Configuration and Setup
 
 ### Prerequisites
 
@@ -189,13 +205,13 @@ erDiagram
         NVARCHAR(MAX) PhoneNumber
         NVARCHAR(MAX) Email
     }
-    
+
     Contact {
         UID Id PK
         VARCHAR(100) ContactUrl
         UID UserId FK
     }
-    
+
     SavedResume {
         UID Id PK
         VARCHAR(100) Name
@@ -204,26 +220,26 @@ erDiagram
         DATETIME2(7) CreatedAt
         UID UserId FK
     }
-    
+
     ProfessionalSummary {
         UID Id PK
         VARCHAR(200) Summary
         UID UserId FK
     }
-    
+
     Title {
         UID Id PK
         VARCHAR(100) ResumeTitle
         UID UserId FK
     }
-    
+
     Skills {
         UID Id PK
         VARCHAR(100) SkillName
         VARCHAR(100) SkillLevel
         UID UserId FK
     }
-    
+
     Certification {
         UID Id PK
         VARCHAR(100) CertificationName
@@ -233,7 +249,7 @@ erDiagram
         DATE ExpiryDate
         UID UserId FK
     }
-    
+
     Experience {
         UID Id PK
         VARCHAR(100) JobTitle
@@ -242,13 +258,13 @@ erDiagram
         DATE EndDate
         UID UserId FK
     }
-    
+
     ExperienceResponsibility {
         UID Id PK
         VARCHAR(255) Responsibility
         UID ExperienceId FK
     }
-    
+
     Education {
         UID Id PK
         VARCHAR(100) InstitutionName
@@ -270,3 +286,5 @@ erDiagram
     User ||--o{ Education : "has"
     Experience ||--o{ ExperienceResponsibility : "contains"
 ```
+
+Link to Lucidchart with ERD explaining the reasons for the diagram's design: [Link](https://lucid.app/documents/embedded/2edd52d2-97af-4fc6-89e5-b229b23abee1)
