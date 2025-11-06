@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.Entities;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -12,14 +15,17 @@ namespace Portfolio.WebApi.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager
+            SignInManager<ApplicationUser> signInManager,
+            IUserService userService
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         [HttpPost("register")]
@@ -121,6 +127,26 @@ namespace Portfolio.WebApi.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.GetUserId()!.Value;
+
+            var user = await _userService.GetUserDetails(userId);
+
+            return Ok(
+                new
+                {
+                    id = userId,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    email = user.Email,
+                    phoneNumber = user.PhoneNumber,
+                }
+            );
         }
     }
 
