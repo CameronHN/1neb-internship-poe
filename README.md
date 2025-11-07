@@ -3,7 +3,7 @@
 > ## Quick links
 >
 > - [Overview](#overview)
-  - 
+>
 > - [Purpose](#purpose)
 >
 > - [Technologies and Tools](#technologies-and-tools)
