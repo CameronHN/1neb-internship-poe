@@ -37,7 +37,7 @@ namespace Portfolio.WebApi.Controllers
         [HttpGet("get-user-resume-details")]
         [ProducesResponseType(200, Type = typeof(ResumeDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetResumeDtoByUserId()
+        public async Task<IActionResult> GetAllResumeDetailsByUserId()
         {
             var userId = User.GetUserId()!.Value;
 
@@ -46,25 +46,6 @@ namespace Portfolio.WebApi.Controllers
                 return NotFound();
 
             return Ok(resume);
-        }
-
-        [Authorize]
-        [HttpPost("get-user-resume")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GenerateResumeByUserID()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var userInfo = await _resumeService.GetResumeByUserId(userId);
-            if (userInfo == null)
-                return NotFound("Resume details not found for the user.");
-
-            var pdf = _resumeService.RenderPdf(userInfo ?? new());
-
-            string fileDownloadName = FileNameHelper.FileNameFormatter(userInfo?.Name);
-            return File(pdf, "application/pdf", fileDownloadName);
         }
 
         [Authorize]

@@ -105,9 +105,9 @@ namespace Portfolio.Application.Services
             return resumeDto;
         }
 
-        public async Task<ResumeDto?> GetResumeByUserId(Guid userId)
+        public async Task<GetAllResumeDetails?> GetResumeByUserId(Guid userId)
         {
-            return await _userRepository.GetResumeDtoByUserId(userId);
+            return await _userRepository.GetAllResumeDetailsByUserId(userId);
         }
 
         public byte[] RenderPdf(ResumeDto dto)

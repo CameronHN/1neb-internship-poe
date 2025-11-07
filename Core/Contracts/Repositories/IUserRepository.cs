@@ -13,7 +13,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task DeleteUser(Guid id);
 
-        Task<ResumeDto?> GetResumeDtoByUserId(Guid userId);
+        Task<GetAllResumeDetails?> GetAllResumeDetailsByUserId(Guid userId);
 
         Task<List<string>> GetAllSkillsByUserId(Guid userId);
 

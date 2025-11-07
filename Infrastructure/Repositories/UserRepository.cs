@@ -55,57 +55,88 @@ namespace Portfolio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<ResumeDto?> GetResumeDtoByUserId(Guid userId)
+        public async Task<GetAllResumeDetails?> GetAllResumeDetailsByUserId(Guid userId)
         {
-            var resume = await _dbContext
+            var user = await _dbContext
                 .User.Where(u => u.Id == userId)
-                .Select(u => new ResumeDto
-                {
-                    Name = u.FirstName + " " + u.LastName,
-                    Title = u.Titles.FirstOrDefault().ResumeTitle,
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
-                    Socials = u
-                        .Contacts.OrderBy(c => c.ContactUrl)
-                        .Select(c => new SocialMediaItem { SocialMediaUrl = c.ContactUrl })
-                        .ToList(),
-                    Summary = u.ProfessionalSummaries.FirstOrDefault().Summary,
-                    Skills = u
-                        .Skills.OrderBy(s => s.SkillName)
-                        .Select(s => new SkillsItem
+                .AsSplitQuery()
+                .Include(u => u.Titles)
+                .Include(u => u.ProfessionalSummaries)
+                .Include(u => u.Contacts)
+                .Include(u => u.Skills)
+                .Include(u => u.Experiences)
+                .ThenInclude(e => e.Responsibilities)
+                .Include(u => u.Educations)
+                .Include(u => u.Certifications)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+                return null;
+
+            return new GetAllResumeDetails
+            {
+                Name = user.FirstName + " " + user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Title =
+                    user.Titles?.Select(t => new TitleItems { Id = t.Id, Title = t.ResumeTitle })
+                        .ToList() ?? new List<TitleItems>(),
+                Summaries =
+                    user.ProfessionalSummaries?.Select(s => new SummaryItems
                         {
+                            Id = s.Id,
+                            Summary = s.Summary,
+                        })
+                        .ToList() ?? new List<SummaryItems>(),
+                Socials =
+                    user.Contacts?.OrderBy(c => c.ContactUrl)
+                        .Select(c => new SocialMediaItems
+                        {
+                            Id = c.Id,
+                            SocialMediaUrl = c.ContactUrl,
+                        })
+                        .ToList() ?? new List<SocialMediaItems>(),
+                Skills =
+                    user.Skills?.OrderBy(s => s.SkillName)
+                        .Select(s => new SkillsItems
+                        {
+                            Id = s.Id,
                             Skill = s.SkillName,
                             SkillLevel = s.ProficiencyLevel,
                         })
-                        .ToList(),
-                    Experience = u
-                        .Experiences.OrderByDescending(e => e.EndDate)
-                        .Select(e => new ExperienceItem
+                        .ToList() ?? new List<SkillsItems>(),
+                Experience =
+                    user.Experiences?.OrderByDescending(e => e.EndDate)
+                        .Select(e => new ExperienceItems
                         {
+                            Id = e.Id,
                             Company = e.CompanyName,
                             JobTitle = e.JobTitle,
                             StartDate = e.StartDate.ToString("MMMM yyyy"),
                             EndDate = e.EndDate.ToString("MMMM yyyy"),
-                            Responsibilities = e
-                                .Responsibilities.Select(r => r.Responsibility)
-                                .ToList(),
+                            Responsibilities =
+                                e.Responsibilities?.Select(r => r.Responsibility).ToList()
+                                ?? new List<string>(),
                         })
-                        .ToList(),
-                    Education = u
-                        .Educations.OrderByDescending(ed => ed.EndDate)
-                        .Select(ed => new EducationItem
+                        .ToList() ?? new List<ExperienceItems>(),
+                Education =
+                    user.Educations?.OrderByDescending(ed => ed.EndDate)
+                        .Select(ed => new EducationItems
                         {
+                            Id = ed.Id,
                             Institution = ed.InstitutionName,
                             Qualification = ed.Qualification,
                             StartDate = ed.StartDate.ToString("MMMM yyyy"),
                             EndDate = ed.EndDate.ToString("MMMM yyyy"),
                             Major = ed.Major,
+                            Achievement = ed.Achievement,
                         })
-                        .ToList(),
-                    Certification = u
-                        .Certifications.OrderByDescending(ce => ce.IssuedDate)
-                        .Select(ce => new CertificationItem
+                        .ToList() ?? new List<EducationItems>(),
+                Certification =
+                    user.Certifications?.OrderByDescending(ce => ce.IssuedDate)
+                        .Select(ce => new CertificationItems
                         {
+                            Id = ce.Id,
                             Name = ce.CertificationName,
                             Organisation = ce.IssuingOrganisation,
                             CredentialUrl = ce.CredentialUrl,
@@ -116,11 +147,8 @@ namespace Portfolio.Infrastructure.Repositories
                                 ? ce.ExpiryDate.Value.ToString("MMMM yyyy")
                                 : null,
                         })
-                        .ToList(),
-                })
-                .FirstOrDefaultAsync();
-
-            return resume;
+                        .ToList() ?? new List<CertificationItems>(),
+            };
         }
 
         public async Task<List<string>> GetAllSkillsByUserId(Guid userId)
@@ -153,10 +181,10 @@ namespace Portfolio.Infrastructure.Repositories
                 .User.Where(u => u.Id == id)
                 .Select(u => new UserModel
                 {
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
+                    FirstName = u.FirstName ?? string.Empty,
+                    LastName = u.LastName ?? string.Empty,
+                    Email = u.Email ?? string.Empty,
+                    PhoneNumber = u.PhoneNumber ?? string.Empty,
                 })
                 .FirstOrDefaultAsync();
 

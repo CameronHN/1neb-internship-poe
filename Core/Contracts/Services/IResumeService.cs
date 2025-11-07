@@ -6,7 +6,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         byte[] RenderPdf(ResumeDto dto);
 
-        Task<ResumeDto?> GetResumeByUserId(Guid userId);
+        Task<GetAllResumeDetails?> GetResumeByUserId(Guid userId);
 
         Task<ResumeDto> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest);
     }
