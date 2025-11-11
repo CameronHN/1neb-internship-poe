@@ -5,6 +5,7 @@ using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
@@ -105,6 +106,26 @@ namespace Portfolio.Infrastructure.Repositories
                     EndDate = ed.EndDate.ToString("MMMM yyyy"),
                 })
                 .ToList();
+        }
+
+        public async Task<EducationModel> GetEducationById(Guid id)
+        {
+            var education =
+                await _dbContext
+                    .Education.Where(edu => edu.Id == id)
+                    .Select(ce => new EducationModel
+                    {
+                        InstitutionName = ce.InstitutionName,
+                        Qualification = ce.Qualification,
+                        StartDate = ce.StartDate,
+                        EndDate = ce.EndDate,
+                        Major = ce.Major,
+                        Achievement = ce.Achievement,
+                    })
+                    .FirstOrDefaultAsync()
+                ?? throw new NotFoundException("Education does not exist");
+
+            return education;
         }
 
         public async Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId)

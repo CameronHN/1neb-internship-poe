@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
 using Portfolio.Core.DTOs.Resume;
+using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
@@ -56,6 +58,19 @@ namespace Portfolio.WebApi.Controllers
 
             var educationIds = await _educationService.AddEducationsAsync(userId, educations);
             return Created(string.Empty, educationIds);
+        }
+
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(EducationModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetEducationById([FromRoute] Guid id)
+        {
+            var title = await _educationService.GetEducationByIdAsync(id);
+            if (title is null)
+                return BadRequest();
+
+            return Ok(title);
         }
 
         [HttpPatch("patch")]
