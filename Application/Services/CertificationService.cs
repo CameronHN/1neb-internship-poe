@@ -37,7 +37,7 @@ namespace Portfolio.Application.Services
             return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
         }
 
-        public async Task<CertificationItem> GetCertificationByIdAsync(Guid id)
+        public async Task<CertificationModel> GetCertificationByIdAsync(Guid id)
         {
             return await _certificationRepository.GetCertificationByIdAsync(id);
         }

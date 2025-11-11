@@ -5,6 +5,7 @@ using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
 using Portfolio.Core.DTOs.Resume;
+using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
@@ -93,7 +94,7 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CertificationModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCertificationById([FromRoute] Guid id)

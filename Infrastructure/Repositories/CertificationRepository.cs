@@ -123,22 +123,18 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<CertificationItem> GetCertificationByIdAsync(Guid id)
+        public async Task<CertificationModel> GetCertificationByIdAsync(Guid id)
         {
             var certification =
                 await _dbContext
                     .Certification.Where(cert => cert.Id == id)
-                    .Select(ce => new CertificationItem
+                    .Select(ce => new CertificationModel
                     {
-                        Name = ce.CertificationName,
-                        Organisation = ce.IssuingOrganisation,
+                        CertificationName = ce.CertificationName,
+                        IssuingOrganisation = ce.IssuingOrganisation,
                         CredentialUrl = ce.CredentialUrl,
-                        IssuedDate = ce.IssuedDate.HasValue
-                            ? ce.IssuedDate.Value.ToString("MMMM yyyy")
-                            : null,
-                        ExpirationDate = ce.ExpiryDate.HasValue
-                            ? ce.ExpiryDate.Value.ToString("MMMM yyyy")
-                            : null,
+                        IssuedDate = ce.IssuedDate,
+                        ExpiryDate = ce.ExpiryDate,
                     })
                     .FirstOrDefaultAsync()
                 ?? throw new NotFoundException("Certification does not exist");

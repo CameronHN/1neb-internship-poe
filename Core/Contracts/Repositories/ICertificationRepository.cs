@@ -18,7 +18,7 @@ namespace Portfolio.Core.Contracts.Repositories
         /// <summary>
         /// Retrieves a single certification by its unique identifier.
         /// </summary>
-        Task<CertificationItem> GetCertificationByIdAsync(Guid id);
+        Task<CertificationModel> GetCertificationByIdAsync(Guid id);
 
         /// <summary>
         /// Gets all certifications associated with a specific user.
