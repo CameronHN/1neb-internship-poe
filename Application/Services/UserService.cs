@@ -16,24 +16,17 @@ namespace Portfolio.Application.Services
 
         public async Task<GetUserDetailsDTO> GetUserDetails(Guid id)
         {
-            try
-            {
-                var userDetails = await _userRepository.GetUserById(id);
+            var userDetails = await _userRepository.GetUserById(id);
 
-                var user = new GetUserDetailsDTO
-                {
-                    FirstName = userDetails.FirstName,
-                    LastName = userDetails.LastName,
-                    Email = userDetails.Email,
-                    PhoneNumber = userDetails.PhoneNumber,
-                };
-
-                return user;
-            }
-            catch (Exception)
+            var user = new GetUserDetailsDTO
             {
-                throw;
-            }
+                FirstName = userDetails.FirstName,
+                LastName = userDetails.LastName,
+                Email = userDetails.Email,
+                PhoneNumber = userDetails.PhoneNumber,
+            };
+
+            return user;
         }
 
         public async Task UpdateUser(UpdateUserDTO updateUserDTO)
