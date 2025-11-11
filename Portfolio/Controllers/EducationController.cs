@@ -55,6 +55,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
+            if (educations is null)
+                throw new ValidationException("Request body cannot be null.");
+
             var educationIds = await _educationService.AddEducationsAsync(userId, educations);
             return Created(string.Empty, educationIds);
         }

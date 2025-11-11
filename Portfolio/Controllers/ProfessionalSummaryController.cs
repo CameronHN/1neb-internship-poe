@@ -26,6 +26,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
+            if (summary is null)
+                throw new ValidationException("Request body cannot be null.");
+
             var summaryId = await _summaryService.AddSummaryAsync(userId, summary);
             return Created(string.Empty, summaryId);
         }

@@ -29,6 +29,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
+            if (contacts is null)
+                throw new ValidationException("Request body cannot be null.");
+
             var addedIds = await _contactService.AddContactsAsync(userId, contacts);
             return Created(string.Empty, addedIds);
         }

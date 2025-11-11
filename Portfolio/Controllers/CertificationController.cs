@@ -31,6 +31,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
+            if (certification is null)
+                throw new ValidationException("Request body cannot be null.");
+
             var certificationIds = await _certificationService.AddCertificationAsync(
                 userId,
                 certification

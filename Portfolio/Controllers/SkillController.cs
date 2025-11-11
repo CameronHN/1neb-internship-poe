@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Portfolio.Application.Services;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Resume;
@@ -37,6 +36,9 @@ namespace Portfolio.WebApi.Controllers
         public async Task<IActionResult> AddSkills([FromBody] List<AddSkill> skills)
         {
             var userId = User.GetUserId()!.Value;
+
+            if (skills is null)
+                throw new ValidationException("Request body cannot be null.");
 
             var skillIds = await _skillService.AddSkillsAsync(userId, skills);
             return Created(string.Empty, skillIds);
