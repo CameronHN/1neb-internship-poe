@@ -5,6 +5,7 @@ using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
@@ -157,6 +158,21 @@ namespace Portfolio.Infrastructure.Repositories
 
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public async Task<SkillModel> GetSkillById(Guid id)
+        {
+            var skill =
+                await _dbContext
+                    .Skill.Where(s => s.Id == id)
+                    .Select(s => new SkillModel
+                    {
+                        SkillName = s.SkillName,
+                        ProficiencyLevel = s.ProficiencyLevel,
+                    })
+                    .FirstOrDefaultAsync() ?? throw new NotFoundException("Skill does not exist");
+
+            return skill;
         }
     }
 }
