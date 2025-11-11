@@ -168,7 +168,7 @@ namespace Portfolio.WebApi.Controllers
                 catch
                 {
                     await transaction.RollbackAsync();
-                    return StatusCode(500, "Failed to build resume. No data was saved.");
+                    throw;
                 }
             }
 
