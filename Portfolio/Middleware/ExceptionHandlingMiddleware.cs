@@ -18,7 +18,7 @@ namespace Portfolio.WebApi.Middleware
             _logger = logger;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -26,50 +26,57 @@ namespace Portfolio.WebApi.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
+                // Log the exception with more context
+                _logger.LogError(
+                    ex,
+                    "Exception occurred for {Method} {Path}. Message: {Message}",
+                    context.Request.Method,
+                    context.Request.Path,
+                    ex.Message
+                );
+
                 await HandleExceptionAsync(context, ex);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            HttpStatusCode status;
-            string message = exception.Message;
+            // Determine status code and message
+            var (statusCode, message) = GetStatusCodeAndMessage(exception);
 
-            switch (exception)
-            {
-                case ValidationException:
-                    status = HttpStatusCode.BadRequest; // 400
-                    break;
-                case UnauthorizedAccessAppException:
-                    status = HttpStatusCode.Unauthorized; // 401
-                    break;
-                case NotFoundException:
-                    status = HttpStatusCode.NotFound; // 404
-                    break;
-                case ConflictException:
-                    status = HttpStatusCode.Conflict; // 409
-                    break;
-                case BusinessRuleViolationException:
-                    status = HttpStatusCode.UnprocessableEntity; // 422
-                    break;
-                default:
-                    status = HttpStatusCode.InternalServerError; // 500
-                    break;
-            }
+            // Create simple response object
+            var response = new { error = new { message = message, statusCode = (int)statusCode } };
 
-            var problemDetails = new
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)statusCode;
+
+            var json = JsonSerializer.Serialize(
+                response,
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+            );
+
+            await context.Response.WriteAsync(json);
+        }
+
+        private static (HttpStatusCode statusCode, string message) GetStatusCodeAndMessage(
+            Exception exception
+        )
+        {
+            return exception switch
             {
-                status = (int)status,
-                title = status.ToString(),
-                detail = message,
+                ValidationException => (HttpStatusCode.BadRequest, exception.Message),
+                UnauthorizedAccessAppException => (HttpStatusCode.Unauthorized, "Access denied"),
+                NotFoundException => (HttpStatusCode.NotFound, exception.Message),
+                ConflictException => (HttpStatusCode.Conflict, exception.Message),
+                BusinessRuleViolationException => (
+                    HttpStatusCode.UnprocessableEntity,
+                    exception.Message
+                ),
+                _ => (
+                    HttpStatusCode.InternalServerError,
+                    "An error occurred while processing your request"
+                ),
             };
-
-            context.Response.ContentType = "application/json; charset=utf-8";
-            context.Response.StatusCode = (int)status;
-
-            var result = JsonSerializer.Serialize(problemDetails);
-            return context.Response.WriteAsync(result);
         }
     }
 }
