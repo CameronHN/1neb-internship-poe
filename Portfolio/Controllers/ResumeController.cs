@@ -78,11 +78,11 @@ namespace Portfolio.WebApi.Controllers
             // Prepare lists to collect new entity IDs
             Guid? summaryId = null;
             Guid? titleId = null;
-            List<Guid> contactIds = new();
-            List<Guid> skillIds = new();
-            List<Guid> experienceIds = new();
-            List<Guid> educationIds = new();
-            List<Guid> certificationIds = new();
+            List<Guid> contactIds = [];
+            List<Guid> skillIds = [];
+            List<Guid> experienceIds = [];
+            List<Guid> educationIds = [];
+            List<Guid> certificationIds = [];
 
             // Use a transaction
             using (

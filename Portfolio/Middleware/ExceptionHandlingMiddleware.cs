@@ -72,6 +72,10 @@ namespace Portfolio.WebApi.Middleware
                     HttpStatusCode.UnprocessableEntity,
                     exception.Message
                 ),
+                TemplateTypeNotImplementedException => (
+                    HttpStatusCode.NotImplemented,
+                    exception.Message
+                ),
                 _ => (
                     HttpStatusCode.InternalServerError,
                     "An error occurred while processing your request"
