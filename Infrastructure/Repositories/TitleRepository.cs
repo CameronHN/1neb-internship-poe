@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -26,11 +27,7 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title)
         {
-            var entity = new Title
-            {
-                ResumeTitle = title.Title,
-                UserId = userId
-            };
+            var entity = new Title { ResumeTitle = title.Title, UserId = userId };
 
             await _dbContext.Title.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -97,6 +94,17 @@ namespace Portfolio.Infrastructure.Repositories
 
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public async Task<string> GetResumeTitleById(Guid id)
+        {
+            var title =
+                await _dbContext
+                    .Title.Where(t => t.Id == id)
+                    .Select(t => t.ResumeTitle)
+                    .FirstOrDefaultAsync()
+                ?? throw new NotFoundException("Resume title does not exist.");
+            return title;
         }
     }
 }

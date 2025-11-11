@@ -5,7 +5,11 @@ namespace Portfolio.Core.Contracts.Services
     public interface ITitleService
     {
         Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title);
+
         Task<string?> GetTitleById(Guid id);
+
+        Task<string> GetResumeTitleById(Guid id);
+
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
 
         Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);

@@ -32,17 +32,18 @@ namespace Portfolio.WebApi.Controllers
 
             var createdId = await _titleService.AddTitleAsync(userId, title);
 
-            return CreatedAtAction(nameof(GetTitleById), new { id = createdId }, createdId);
+            return CreatedAtAction(nameof(GetResumeTitleById), new { id = createdId }, createdId);
         }
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTitleById([FromRoute] Guid id)
+        public async Task<IActionResult> GetResumeTitleById([FromRoute] Guid id)
         {
-            var title = await _titleService.GetTitleById(id);
+            var title = await _titleService.GetResumeTitleById(id);
             if (title is null)
-                return NotFound();
+                return BadRequest();
 
             return Ok(title);
         }
