@@ -5,6 +5,7 @@ using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
@@ -19,7 +20,10 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddCertificationsAsync(Guid userId, List<AddCertification> certifications)
+        public async Task<List<Guid>> AddCertificationsAsync(
+            Guid userId,
+            List<AddCertification> certifications
+        )
         {
             var entities = certifications
                 .Select(cert => new Certification
@@ -119,9 +123,27 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)
+        public async Task<CertificationItem> GetCertificationByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var certification =
+                await _dbContext
+                    .Certification.Where(cert => cert.Id == id)
+                    .Select(ce => new CertificationItem
+                    {
+                        Name = ce.CertificationName,
+                        Organisation = ce.IssuingOrganisation,
+                        CredentialUrl = ce.CredentialUrl,
+                        IssuedDate = ce.IssuedDate.HasValue
+                            ? ce.IssuedDate.Value.ToString("MMMM yyyy")
+                            : null,
+                        ExpirationDate = ce.ExpiryDate.HasValue
+                            ? ce.ExpiryDate.Value.ToString("MMMM yyyy")
+                            : null,
+                    })
+                    .FirstOrDefaultAsync()
+                ?? throw new NotFoundException("Certification does not exist");
+
+            return certification;
         }
 
         public async Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId)

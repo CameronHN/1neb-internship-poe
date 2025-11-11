@@ -16,14 +16,12 @@ namespace Portfolio.Application.Services
             _certificationRepository = certificationRepository;
         }
 
-        public async Task<List<Guid>> AddCertificationAsync(Guid userId, List<AddCertification> certification)
+        public async Task<List<Guid>> AddCertificationAsync(
+            Guid userId,
+            List<AddCertification> certification
+        )
         {
             return await _certificationRepository.AddCertificationsAsync(userId, certification);
-        }
-
-        public Task DeleteCertificationAsync(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteCertificationsAsync(Guid userId, List<Guid> certificationIds)
@@ -39,9 +37,9 @@ namespace Portfolio.Application.Services
             return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
         }
 
-        public Task<CertificationItem?> GetCertificationByIdAsync(Guid id)
+        public async Task<CertificationItem> GetCertificationByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _certificationRepository.GetCertificationByIdAsync(id);
         }
 
         public async Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId)

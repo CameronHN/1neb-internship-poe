@@ -92,6 +92,19 @@ namespace Portfolio.WebApi.Controllers
             return Ok(true);
         }
 
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCertificationById([FromRoute] Guid id)
+        {
+            var title = await _certificationService.GetCertificationByIdAsync(id);
+            if (title is null)
+                return BadRequest();
+
+            return Ok(title);
+        }
+
         [HttpGet("certifications")]
         [ProducesResponseType(typeof(List<CertificationItem>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
