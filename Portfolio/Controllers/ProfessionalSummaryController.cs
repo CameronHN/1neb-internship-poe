@@ -52,6 +52,19 @@ namespace Portfolio.WebApi.Controllers
             return Ok(true);
         }
 
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSummaryById([FromRoute] Guid id)
+        {
+            var summary = await _summaryService.GetProfessionalSummaryById(id);
+            if (summary is null)
+                return BadRequest();
+
+            return Ok(summary);
+        }
+
         [HttpDelete("delete")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

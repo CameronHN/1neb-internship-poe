@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -18,11 +19,7 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<Guid> AddSummaryAsync(Guid userId, AddSummary summary)
         {
-            var entity = new ProfessionalSummary
-            {
-                Summary = summary.Summary,
-                UserId = userId,
-            };
+            var entity = new ProfessionalSummary { Summary = summary.Summary, UserId = userId };
 
             await _dbContext.ProfessionalSummary.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -48,6 +45,16 @@ namespace Portfolio.Infrastructure.Repositories
 
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public async Task<string> GetProfessionalSummaryById(Guid id)
+        {
+            var summary =
+                await _dbContext
+                    .ProfessionalSummary.Where(s => s.Id == id)
+                    .Select(s => s.Summary)
+                    .FirstOrDefaultAsync() ?? throw new NotFoundException("Summary does not exist");
+            return summary;
         }
 
         public async Task<List<string>> GetSummariesByUserId(Guid userId)

@@ -22,7 +22,15 @@ namespace Portfolio.Application.Services
 
         public async Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds)
         {
-            return await _professionalSummaryRepository.DeleteProfessionalSummariesAsync(userId, summaryIds);
+            return await _professionalSummaryRepository.DeleteProfessionalSummariesAsync(
+                userId,
+                summaryIds
+            );
+        }
+
+        public async Task<string> GetProfessionalSummaryById(Guid id)
+        {
+            return await _professionalSummaryRepository.GetProfessionalSummaryById(id);
         }
 
         public async Task<List<string>> GetSummariesByUserId(Guid userId)
