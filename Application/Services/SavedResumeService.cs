@@ -22,6 +22,14 @@ namespace Portfolio.Application.Services
 
         public async Task<Guid> SaveResumeAsync(Guid userId, SaveResumeDataRequest request)
         {
+            // Validate template type before saving
+            if (!request.TemplateType.Equals(TemplateTypes.Classic))
+            {
+                throw new TemplateTypeNotImplementedException(
+                    $"Template type '{request.TemplateType}' is not supported. "
+                );
+            }
+
             var savedResume = new SavedResume
             {
                 Name = request.SavedResumeName,
@@ -87,18 +95,20 @@ namespace Portfolio.Application.Services
             if (resumeDto == null)
                 throw new InvalidOperationException("Failed to deserialize resume data.");
 
-            var document = GetBuilderForTemplate(savedResume.TemplateType, resumeDto);
+            var document = GetBuilderForTemplate(resumeDto, savedResume.TemplateType);
 
             return document.GeneratePdf();
         }
 
-        private IDocument GetBuilderForTemplate(string templateType, ResumeDto resumeDto)
+        private IDocument GetBuilderForTemplate(ResumeDto resumeDto, string templateType)
         {
             return templateType.ToLowerInvariant() switch
             {
-                "classic" or "resumebuilder" => new ResumeBuilder(resumeDto),
+                "classic" => new ResumeBuilder(resumeDto),
                 // Add more templates here
-                _ => throw new ArgumentException($"Unknown template type: {templateType}"),
+                _ => throw new TemplateTypeNotImplementedException(
+                    $"Unknown template type: {templateType}"
+                ),
             };
         }
     }
