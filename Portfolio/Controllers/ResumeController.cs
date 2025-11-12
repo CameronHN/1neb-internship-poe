@@ -120,7 +120,10 @@ namespace Portfolio.WebApi.Controllers
                         var summaryService =
                             HttpContext.RequestServices.GetRequiredService<IProfessionalSummaryService>();
                         var addSummary = new AddSummary { Summary = request.Summary };
-                        var summaryIds = await summaryService.AddSummariesAsync(userId, [addSummary]);
+                        var summaryIds = await summaryService.AddSummariesAsync(
+                            userId,
+                            [addSummary]
+                        );
                         summaryId = summaryIds.FirstOrDefault();
                     }
 

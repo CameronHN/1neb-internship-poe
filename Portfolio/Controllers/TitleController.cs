@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ResumeTitle;
 using Portfolio.WebApi.Extensions;
-using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
