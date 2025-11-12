@@ -24,6 +24,7 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddContacts([FromBody] List<AddContact> contacts)
         {
