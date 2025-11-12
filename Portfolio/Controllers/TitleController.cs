@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ResumeTitle;
-using Portfolio.Core.Exceptions;
 using Portfolio.WebApi.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -20,19 +20,19 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("add")]
-        [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddTitle([FromBody] AddResumeTitle title)
+        public async Task<IActionResult> AddTitles([FromBody] List<AddResumeTitle> titles)
         {
             var userId = User.GetUserId()!.Value;
 
-            if (title is null)
+            if (titles is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var createdId = await _titleService.AddTitleAsync(userId, title);
+            var createdIds = await _titleService.AddTitlesAsync(userId, titles);
 
-            return CreatedAtAction(nameof(GetResumeTitleById), new { id = createdId }, createdId);
+            return Created(string.Empty, createdIds);
         }
 
         [HttpGet("{id:guid}")]

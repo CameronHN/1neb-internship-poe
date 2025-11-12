@@ -5,7 +5,7 @@ namespace Portfolio.Core.Contracts.Repositories
     public interface ITitleRepository
     {
         // Add
-        Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title);
+        Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles);
 
         // Get
         Task<string?> GetTitleById(Guid id); // Used for resume service

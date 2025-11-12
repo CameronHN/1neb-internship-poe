@@ -99,7 +99,8 @@ namespace Portfolio.WebApi.Controllers
                         var titleService =
                             HttpContext.RequestServices.GetRequiredService<ITitleService>();
                         var addTitle = new AddResumeTitle { Title = request.Title };
-                        titleId = await titleService.AddTitleAsync(userId, addTitle);
+                        var titleIds = await titleService.AddTitlesAsync(userId, [addTitle]);
+                        titleId = titleIds.FirstOrDefault();
                     }
 
                     // Add Contact Info if provided
@@ -119,7 +120,8 @@ namespace Portfolio.WebApi.Controllers
                         var summaryService =
                             HttpContext.RequestServices.GetRequiredService<IProfessionalSummaryService>();
                         var addSummary = new AddSummary { Summary = request.Summary };
-                        summaryId = await summaryService.AddSummaryAsync(userId, addSummary);
+                        var summaryIds = await summaryService.AddSummariesAsync(userId, [addSummary]);
+                        summaryId = summaryIds.FirstOrDefault();
                     }
 
                     // Add Skills if provided

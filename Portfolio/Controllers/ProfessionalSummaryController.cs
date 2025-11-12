@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.WebApi.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -20,17 +20,17 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("add")]
-        [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddSummary([FromBody] AddSummary summary)
+        public async Task<IActionResult> AddSummaries([FromBody] List<AddSummary> summaries)
         {
             var userId = User.GetUserId()!.Value;
 
-            if (summary is null)
+            if (summaries is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var summaryId = await _summaryService.AddSummaryAsync(userId, summary);
-            return Created(string.Empty, summaryId);
+            var summaryIds = await _summaryService.AddSummariesAsync(userId, summaries);
+            return Created(string.Empty, summaryIds);
         }
 
         [HttpPatch("patch")]
@@ -43,7 +43,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (patches is null)
-                throw new ValidationException("Request body cannot be null.");
+                throw new Portfolio.Core.Exceptions.ValidationException("Request body cannot be null.");
 
             if (patches.Count == 0)
                 return NoContent();

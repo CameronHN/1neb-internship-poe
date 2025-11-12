@@ -13,9 +13,9 @@ namespace Portfolio.Application.Services
             _titleRepository = titleRepository;
         }
 
-        public async Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title)
+        public async Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles)
         {
-            return await _titleRepository.AddTitleAsync(userId, title);
+            return await _titleRepository.AddTitlesAsync(userId, titles);
         }
 
         public async Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds)

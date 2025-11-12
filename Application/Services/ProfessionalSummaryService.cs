@@ -15,9 +15,9 @@ namespace Portfolio.Application.Services
             _professionalSummaryRepository = professionalSummaryRepository;
         }
 
-        public async Task<Guid> AddSummaryAsync(Guid userId, AddSummary summary)
+        public async Task<List<Guid>> AddSummariesAsync(Guid userId, List<AddSummary> summaries)
         {
-            return await _professionalSummaryRepository.AddSummaryAsync(userId, summary);
+            return await _professionalSummaryRepository.AddSummariesAsync(userId, summaries);
         }
 
         public async Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds)

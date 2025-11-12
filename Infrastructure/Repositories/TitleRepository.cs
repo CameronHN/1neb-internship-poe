@@ -25,14 +25,16 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Guid> AddTitleAsync(Guid userId, AddResumeTitle title)
+        public async Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles)
         {
-            var entity = new Title { ResumeTitle = title.Title, UserId = userId };
+            var entities = titles
+                .Select(title => new Title { ResumeTitle = title.Title, UserId = userId })
+                .ToList();
 
-            await _dbContext.Title.AddAsync(entity);
+            await _dbContext.Title.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
 
-            return entity.Id;
+            return entities.Select(e => e.Id).ToList();
         }
 
         public async Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds)
