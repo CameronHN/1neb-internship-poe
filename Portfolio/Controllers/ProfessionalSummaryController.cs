@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ProfessionalSummary;
 using Portfolio.WebApi.Extensions;
-using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -21,6 +21,7 @@ namespace Portfolio.WebApi.Controllers
 
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddSummaries([FromBody] List<AddSummary> summaries)
         {
@@ -43,7 +44,9 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (patches is null)
-                throw new Portfolio.Core.Exceptions.ValidationException("Request body cannot be null.");
+                throw new Portfolio.Core.Exceptions.ValidationException(
+                    "Request body cannot be null."
+                );
 
             if (patches.Count == 0)
                 return NoContent();
