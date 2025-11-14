@@ -130,6 +130,7 @@ namespace Portfolio.Infrastructure.Repositories
                     .Certification.Where(cert => cert.Id == id)
                     .Select(ce => new CertificationModel
                     {
+                        Id = ce.Id,
                         CertificationName = ce.CertificationName,
                         IssuingOrganisation = ce.IssuingOrganisation,
                         CredentialUrl = ce.CredentialUrl,

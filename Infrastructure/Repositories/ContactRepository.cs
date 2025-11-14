@@ -31,11 +31,11 @@ namespace Portfolio.Infrastructure.Repositories
             return entities.Select(e => e.Id).ToList();
         }
 
-        public async Task<SocialMediaItem?> GetContactByIdAsync(Guid id)
+        public async Task<ContactModel?> GetContactByIdAsync(Guid id)
         {
             var contact = await _dbContext
                 .Contact.Where(c => c.Id == id)
-                .Select(c => new SocialMediaItem { SocialMediaUrl = c.ContactUrl })
+                .Select(c => new ContactModel { Id = c.Id, ContactUrl = c.ContactUrl })
                 .FirstOrDefaultAsync();
 
             return contact;

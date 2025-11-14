@@ -2,6 +2,8 @@
 {
     public class CertificationModel
     {
+        public Guid Id { get; set; }
+
         public required string CertificationName { get; set; }
 
         public string? IssuingOrganisation { get; set; }

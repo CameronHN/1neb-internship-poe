@@ -2,12 +2,14 @@
 {
     public class ExperienceModel
     {
+        public Guid Id { get; set; }
+
         public required string JobTitle { get; set; }
 
         public string? CompanyName { get; set; }
 
-        public DateOnly StartDate { get; set; }
+        public required string StartDate { get; set; }
 
-        public DateOnly EndDate { get; set; }
+        public required string EndDate { get; set; }
     }
 }

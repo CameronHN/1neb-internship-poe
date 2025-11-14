@@ -21,7 +21,7 @@ namespace Portfolio.Application.Services
             return await _contactRepository.AddContactsAsync(userId, contacts);
         }
 
-        public async Task<SocialMediaItem?> GetContactByIdAsync(Guid id)
+        public async Task<ContactModel?> GetContactByIdAsync(Guid id)
         {
             return await _contactRepository.GetContactByIdAsync(id);
         }

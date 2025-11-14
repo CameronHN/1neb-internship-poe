@@ -30,8 +30,8 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     CompanyName = e.CompanyName,
                     JobTitle = e.JobTitle,
-                    StartDate = e.StartDate,
-                    EndDate = e.EndDate,
+                    StartDate = e.StartDate.ToString("MMMM yyyy"),
+                    EndDate = e.EndDate.ToString("MMMM yyyy"),
                 })
                 .ToListAsync();
         }
@@ -49,14 +49,14 @@ namespace Portfolio.Infrastructure.Repositories
                     Id = e.Id,
                     CompanyName = e.CompanyName,
                     JobTitle = e.JobTitle,
-                    StartDate = e.StartDate,
-                    EndDate = e.EndDate,
+                    StartDate = e.StartDate.ToString("MMMM yyyy"),
+                    EndDate = e.EndDate.ToString("MMMM yyyy"),
                     Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList(),
                 })
                 .ToListAsync();
         }
 
-        public async Task<ExperienceItem?> GetExperienceById(Guid id)
+        public async Task<ExperienceWithResponsibilitiesModel?> GetExperienceById(Guid id)
         {
             var experience = await _dbContext
                 .Experience.Include(e => e.Responsibilities)
@@ -67,15 +67,13 @@ namespace Portfolio.Infrastructure.Repositories
                 throw new NotFoundException("Experience not found.");
             }
 
-            return new ExperienceItem
+            return new ExperienceWithResponsibilitiesModel
             {
-                Company = experience.CompanyName,
+                Id = experience.Id,
+                CompanyName = experience.CompanyName,
                 JobTitle = experience.JobTitle,
                 StartDate = experience.StartDate.ToString("MMMM yyyy"),
-                EndDate =
-                    experience.EndDate == default
-                        ? "Present"
-                        : experience.EndDate.ToString("MMMM yyyy"),
+                EndDate = experience.EndDate.ToString("MMMM yyyy"),
                 Responsibilities = experience
                     .Responsibilities.Select(r => r.Responsibility)
                     .ToList(),

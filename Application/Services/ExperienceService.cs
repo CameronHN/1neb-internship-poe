@@ -21,7 +21,7 @@ namespace Portfolio.Application.Services
             return _experienceRepository.GetAllExperiencesByIds(ids);
         }
 
-        public async Task<ExperienceItem> GetExperienceById(Guid id)
+        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id)
         {
             var experience = await _experienceRepository.GetExperienceById(id);
             if (experience == null)

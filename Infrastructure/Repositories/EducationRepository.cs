@@ -113,14 +113,15 @@ namespace Portfolio.Infrastructure.Repositories
             var education =
                 await _dbContext
                     .Education.Where(edu => edu.Id == id)
-                    .Select(ce => new EducationModel
+                    .Select(ed => new EducationModel
                     {
-                        InstitutionName = ce.InstitutionName,
-                        Qualification = ce.Qualification,
-                        StartDate = ce.StartDate,
-                        EndDate = ce.EndDate,
-                        Major = ce.Major,
-                        Achievement = ce.Achievement,
+                        Id = ed.Id,
+                        InstitutionName = ed.InstitutionName,
+                        Qualification = ed.Qualification,
+                        StartDate = ed.StartDate.ToString("MMMM yyyy"),
+                        EndDate = ed.EndDate.ToString("MMMM yyyy"),
+                        Major = ed.Major,
+                        Achievement = ed.Achievement,
                     })
                     .FirstOrDefaultAsync()
                 ?? throw new NotFoundException("Education does not exist");
@@ -136,8 +137,8 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     InstitutionName = edu.InstitutionName,
                     Qualification = edu.Qualification,
-                    StartDate = edu.StartDate,
-                    EndDate = edu.EndDate,
+                    StartDate = edu.StartDate.ToString("MMMM yyyy"),
+                    EndDate = edu.EndDate.ToString("MMMM yyyy"),
                     Major = edu.Major,
                     Achievement = edu.Achievement,
                 })

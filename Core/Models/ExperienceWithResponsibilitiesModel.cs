@@ -8,9 +8,9 @@
 
         public string? CompanyName { get; set; }
 
-        public DateOnly StartDate { get; set; }
+        public required string StartDate { get; set; }
 
-        public DateOnly EndDate { get; set; }
+        public required string EndDate { get; set; }
 
         public List<string>? Responsibilities { get; set; }
     }
