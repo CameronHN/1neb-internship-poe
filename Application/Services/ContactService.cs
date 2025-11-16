@@ -36,9 +36,9 @@ namespace Portfolio.Application.Services
             return _contactRepository.GetContactsByIdsAsync(request);
         }
 
-        public async Task<bool> PatchContactsAsync(Guid userId, List<PatchContact> patches)
+        public async Task<bool> PatchContactAsync(Guid userId, PatchContact patch)
         {
-            return await _contactRepository.PatchContactsAsync(userId, patches);
+            return await _contactRepository.PatchContactAsync(userId, patch);
         }
 
         public async Task<bool> DeleteContactsAsync(Guid userId, List<Guid> contactIds)

@@ -20,7 +20,11 @@ namespace Portfolio.Infrastructure.Repositories
         public async Task<List<Guid>> AddSummariesAsync(Guid userId, List<AddSummary> summaries)
         {
             var entities = summaries
-                .Select(summary => new ProfessionalSummary { Summary = summary.Summary, UserId = userId })
+                .Select(summary => new ProfessionalSummary
+                {
+                    Summary = summary.Summary,
+                    UserId = userId,
+                })
                 .ToList();
 
             await _dbContext.ProfessionalSummary.AddRangeAsync(entities);
@@ -75,32 +79,24 @@ namespace Portfolio.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches)
+        public async Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var summary = await _dbContext.ProfessionalSummary.FirstOrDefaultAsync(s =>
+                s.UserId == userId && s.Id == patch.Id
+            );
 
-            var summaries = await _dbContext
-                .ProfessionalSummary.Where(s => s.UserId == userId && ids.Contains(s.Id))
-                .ToListAsync();
-
-            if (summaries.Count == 0)
+            if (summary == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var summary in summaries)
+            if (patch.Summary != null && patch.Summary != summary.Summary)
             {
-                var patch = patchMap[summary.Id];
-
-                if (patch.Summary != null && patch.Summary != summary.Summary)
-                {
-                    summary.Summary = patch.Summary;
-                    anyChange = true;
-                }
+                summary.Summary = patch.Summary;
+                anyChange = true;
             }
 
             if (!anyChange)

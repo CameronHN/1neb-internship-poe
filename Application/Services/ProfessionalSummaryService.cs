@@ -38,9 +38,9 @@ namespace Portfolio.Application.Services
             return await _professionalSummaryRepository.GetSummariesByUserId(userId);
         }
 
-        public async Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches)
+        public async Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch)
         {
-            return await _professionalSummaryRepository.PatchSummariesAsync(userId, patches);
+            return await _professionalSummaryRepository.PatchSummaryAsync(userId, patch);
         }
     }
 }

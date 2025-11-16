@@ -158,92 +158,80 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> PatchCertificationsAsync(
-            Guid userId,
-            List<PatchCertification> patches
-        )
+        public async Task<bool> PatchCertificationAsync(Guid userId, PatchCertification patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var cert = await _dbContext.Certification.FirstOrDefaultAsync(c =>
+                c.UserId == userId && c.Id == patch.Id
+            );
 
-            var certs = await _dbContext
-                .Set<Certification>()
-                .Where(c => c.UserId == userId && ids.Contains(c.Id))
-                .ToListAsync();
-
-            if (certs.Count == 0)
+            if (cert == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var cert in certs)
+            if (
+                patch.CertificationName != null
+                && patch.CertificationName != cert.CertificationName
+            )
             {
-                var patch = patchMap[cert.Id];
+                cert.CertificationName = patch.CertificationName;
+                anyChange = true;
+            }
 
-                if (
-                    patch.CertificationName != null
-                    && patch.CertificationName != cert.CertificationName
-                )
+            if (patch.IssuingOrganisation != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.IssuingOrganisation)
+                    ? null
+                    : patch.IssuingOrganisation;
+                if (newValue != cert.IssuingOrganisation)
                 {
-                    cert.CertificationName = patch.CertificationName;
+                    cert.IssuingOrganisation = newValue;
                     anyChange = true;
                 }
+            }
 
-                if (patch.IssuingOrganisation != null)
+            if (patch.CredentialUrl != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.CredentialUrl)
+                    ? null
+                    : patch.CredentialUrl;
+                if (newValue != cert.CredentialUrl)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.IssuingOrganisation)
-                        ? null
-                        : patch.IssuingOrganisation;
-                    if (newValue != cert.IssuingOrganisation)
-                    {
-                        cert.IssuingOrganisation = newValue;
-                        anyChange = true;
-                    }
+                    cert.CredentialUrl = newValue;
+                    anyChange = true;
                 }
+            }
 
-                if (patch.CredentialUrl != null)
+            if (patch.IssuedDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.IssuedDate)
+                    ? null
+                    : patch.IssuedDate;
+                DateOnly? newIssuedDate = !string.IsNullOrWhiteSpace(newValue)
+                    ? DateOnly.Parse(newValue)
+                    : null;
+                if (newIssuedDate != cert.IssuedDate)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.CredentialUrl)
-                        ? null
-                        : patch.CredentialUrl;
-                    if (newValue != cert.CredentialUrl)
-                    {
-                        cert.CredentialUrl = newValue;
-                        anyChange = true;
-                    }
+                    cert.IssuedDate = newIssuedDate;
+                    anyChange = true;
                 }
+            }
 
-                if (patch.IssuedDate != null)
+            if (patch.ExpiryDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.ExpiryDate)
+                    ? null
+                    : patch.ExpiryDate;
+                DateOnly? newExpiryDate = !string.IsNullOrWhiteSpace(newValue)
+                    ? DateOnly.Parse(newValue)
+                    : null;
+                if (newExpiryDate != cert.ExpiryDate)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.IssuedDate)
-                        ? null
-                        : patch.IssuedDate;
-                    DateOnly? newIssuedDate = !string.IsNullOrWhiteSpace(newValue)
-                        ? DateOnly.Parse(newValue)
-                        : null;
-                    if (newIssuedDate != cert.IssuedDate)
-                    {
-                        cert.IssuedDate = newIssuedDate;
-                        anyChange = true;
-                    }
-                }
-
-                if (patch.ExpiryDate != null)
-                {
-                    var newValue = string.IsNullOrWhiteSpace(patch.ExpiryDate)
-                        ? null
-                        : patch.ExpiryDate;
-                    DateOnly? newExpiryDate = !string.IsNullOrWhiteSpace(newValue)
-                        ? DateOnly.Parse(newValue)
-                        : null;
-                    if (newExpiryDate != cert.ExpiryDate)
-                    {
-                        cert.ExpiryDate = newExpiryDate;
-                        anyChange = true;
-                    }
+                    cert.ExpiryDate = newExpiryDate;
+                    anyChange = true;
                 }
             }
 

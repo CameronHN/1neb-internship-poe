@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.Core.DTOs.Skill
 {
-    public class PatchSkill
+    public class PatchSkills
     {
         [Required]
         public Guid Id { get; set; }

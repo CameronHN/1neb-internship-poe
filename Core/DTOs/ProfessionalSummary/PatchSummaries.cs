@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Portfolio.Core.DTOs.ProfessionalSummary
 {
-    public class PatchSummary
+    public class PatchSummaries
     {
         [Required]
         public Guid Id { get; set; }

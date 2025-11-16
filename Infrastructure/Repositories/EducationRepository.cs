@@ -145,88 +145,77 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches)
+        public async Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var edu = await _dbContext.Education.FirstOrDefaultAsync(e =>
+                e.UserId == userId && e.Id == patch.Id
+            );
 
-            var educations = await _dbContext
-                .Set<Education>()
-                .Where(e => e.UserId == userId && ids.Contains(e.Id))
-                .ToListAsync();
-
-            if (educations.Count == 0)
+            if (edu == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var edu in educations)
+            if (patch.InstitutionName != null && patch.InstitutionName != edu.InstitutionName)
             {
-                var patch = patchMap[edu.Id];
+                edu.InstitutionName = patch.InstitutionName;
+                anyChange = true;
+            }
 
-                if (patch.InstitutionName != null && patch.InstitutionName != edu.InstitutionName)
+            if (patch.Qualification != null && patch.Qualification != edu.Qualification)
+            {
+                edu.Qualification = patch.Qualification;
+                anyChange = true;
+            }
+
+            if (patch.StartDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.StartDate) ? null : patch.StartDate;
+                DateOnly? newStartDate = !string.IsNullOrWhiteSpace(newValue)
+                    ? DateOnly.Parse(newValue)
+                    : null;
+                if (newStartDate != edu.StartDate)
                 {
-                    edu.InstitutionName = patch.InstitutionName;
+                    edu.StartDate = newStartDate ?? edu.StartDate;
                     anyChange = true;
                 }
+            }
 
-                if (patch.Qualification != null && patch.Qualification != edu.Qualification)
+            if (patch.EndDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
+                DateOnly? newEndDate = !string.IsNullOrWhiteSpace(newValue)
+                    ? DateOnly.Parse(newValue)
+                    : null;
+                if (newEndDate != edu.EndDate)
                 {
-                    edu.Qualification = patch.Qualification;
+                    edu.EndDate = newEndDate ?? edu.EndDate;
                     anyChange = true;
                 }
+            }
 
-                if (patch.StartDate != null)
+            if (patch.Major != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.Major) ? null : patch.Major;
+                if (newValue != edu.Major)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.StartDate)
-                        ? null
-                        : patch.StartDate;
-                    DateOnly? newStartDate = !string.IsNullOrWhiteSpace(newValue)
-                        ? DateOnly.Parse(newValue)
-                        : null;
-                    if (newStartDate != edu.StartDate)
-                    {
-                        edu.StartDate = newStartDate ?? edu.StartDate;
-                        anyChange = true;
-                    }
+                    edu.Major = newValue;
+                    anyChange = true;
                 }
+            }
 
-                if (patch.EndDate != null)
+            if (patch.Achievement != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.Achievement)
+                    ? null
+                    : patch.Achievement;
+                if (newValue != edu.Achievement)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
-                    DateOnly? newEndDate = !string.IsNullOrWhiteSpace(newValue)
-                        ? DateOnly.Parse(newValue)
-                        : null;
-                    if (newEndDate != edu.EndDate)
-                    {
-                        edu.EndDate = newEndDate ?? edu.EndDate;
-                        anyChange = true;
-                    }
-                }
-
-                if (patch.Major != null)
-                {
-                    var newValue = string.IsNullOrWhiteSpace(patch.Major) ? null : patch.Major;
-                    if (newValue != edu.Major)
-                    {
-                        edu.Major = newValue;
-                        anyChange = true;
-                    }
-                }
-
-                if (patch.Achievement != null)
-                {
-                    var newValue = string.IsNullOrWhiteSpace(patch.Achievement)
-                        ? null
-                        : patch.Achievement;
-                    if (newValue != edu.Achievement)
-                    {
-                        edu.Achievement = newValue;
-                        anyChange = true;
-                    }
+                    edu.Achievement = newValue;
+                    anyChange = true;
                 }
             }
 

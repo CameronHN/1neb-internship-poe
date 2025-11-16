@@ -47,9 +47,9 @@ namespace Portfolio.Application.Services
             return await _certificationRepository.GetCertificationsByUserIdAsync(userId);
         }
 
-        public Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches)
+        public Task<bool> PatchCertificationAsync(Guid userId, PatchCertification patch)
         {
-            return _certificationRepository.PatchCertificationsAsync(userId, patches);
+            return _certificationRepository.PatchCertificationAsync(userId, patch);
         }
     }
 }

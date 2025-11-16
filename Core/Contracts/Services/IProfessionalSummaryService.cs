@@ -10,7 +10,8 @@ namespace Portfolio.Core.Contracts.Services
 
         Task<string> GetProfessionalSummaryById(Guid id);
 
-        Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches);
+        // Update
+        Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch);
 
         Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds);
     }

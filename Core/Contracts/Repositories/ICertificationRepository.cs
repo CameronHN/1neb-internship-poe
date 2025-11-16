@@ -34,7 +34,7 @@ namespace Portfolio.Core.Contracts.Repositories
         /// <summary>
         /// Applies partial updates to multiple certifications for a user.
         /// </summary>
-        Task<bool> PatchCertificationsAsync(Guid userId, List<PatchCertification> patches);
+        Task<bool> PatchCertificationAsync(Guid userId, PatchCertification patch);
 
         // -------------------- Delete --------------------
         /// <summary>

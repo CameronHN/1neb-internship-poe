@@ -10,7 +10,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<List<string>> GetSummariesByUserId(Guid userId);
 
-        Task<bool> PatchSummariesAsync(Guid userId, List<PatchSummary> patches);
+        Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch);
 
         Task<bool> DeleteProfessionalSummariesAsync(Guid userId, List<Guid> summaryIds);
     }

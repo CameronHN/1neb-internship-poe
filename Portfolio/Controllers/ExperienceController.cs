@@ -66,17 +66,14 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> PatchExperiences([FromBody] List<PatchExperience> patches)
+        public async Task<IActionResult> PatchExperience([FromBody] PatchExperience patch)
         {
             var userId = User.GetUserId()!.Value;
 
-            if (patches is null)
+            if (patch is null)
                 return BadRequest();
 
-            if (patches.Count == 0)
-                return NoContent();
-
-            var updated = await _experienceService.PatchExperiencesAsync(userId, patches);
+            var updated = await _experienceService.PatchExperienceAsync(userId, patch);
             if (!updated)
                 return NoContent();
 

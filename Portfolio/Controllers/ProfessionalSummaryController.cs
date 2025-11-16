@@ -39,19 +39,16 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> PatchSummaries([FromBody] List<PatchSummary> patches)
+        public async Task<IActionResult> PatchSummary([FromBody] PatchSummary patch)
         {
             var userId = User.GetUserId()!.Value;
 
-            if (patches is null)
+            if (patch is null)
                 throw new Portfolio.Core.Exceptions.ValidationException(
                     "Request body cannot be null."
                 );
 
-            if (patches.Count == 0)
-                return NoContent();
-
-            var updated = await _summaryService.PatchSummariesAsync(userId, patches);
+            var updated = await _summaryService.PatchSummaryAsync(userId, patch);
             if (!updated)
                 return NoContent();
 

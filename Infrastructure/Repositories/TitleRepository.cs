@@ -63,32 +63,24 @@ namespace Portfolio.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches)
+        public async Task<bool> PatchTitleAsync(Guid userId, PatchResumeTitle patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var title = await _dbContext.Title.FirstOrDefaultAsync(t =>
+                t.UserId == userId && t.Id == patch.Id
+            );
 
-            var titles = await _dbContext
-                .Title.Where(t => t.UserId == userId && ids.Contains(t.Id))
-                .ToListAsync();
-
-            if (titles.Count == 0)
+            if (title == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var title in titles)
+            if (patch.Title != null && patch.Title != title.ResumeTitle)
             {
-                var patch = patchMap[title.Id];
-
-                if (patch.Title != null && patch.Title != title.ResumeTitle)
-                {
-                    title.ResumeTitle = patch.Title;
-                    anyChange = true;
-                }
+                title.ResumeTitle = patch.Title;
+                anyChange = true;
             }
 
             if (!anyChange)

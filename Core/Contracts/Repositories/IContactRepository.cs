@@ -16,7 +16,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request);
 
         // Update
-        Task<bool> PatchContactsAsync(Guid userId, List<PatchContact> patches);
+        Task<bool> PatchContactAsync(Guid userId, PatchContact patch);
 
         // Delete
         Task<bool> DeleteContactsAsync(Guid userId, List<Guid> contactIds);

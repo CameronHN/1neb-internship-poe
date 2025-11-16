@@ -157,92 +157,79 @@ namespace Portfolio.Infrastructure.Repositories
             return entities.Select(e => e.Id).ToList();
         }
 
-        public async Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        public async Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var exp = await _dbContext.Experience.FirstOrDefaultAsync(e =>
+                e.UserId == userId && e.Id == patch.Id
+            );
 
-            var experiences = await _dbContext
-                .Set<Experience>()
-                .Where(e => e.UserId == userId && ids.Contains(e.Id))
-                .ToListAsync();
-
-            if (experiences.Count == 0)
+            if (exp == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            var experienceIds = experiences.Select(e => e.Id).ToList();
             var responsibilities = await _dbContext
-                .Set<ExperienceResponsibility>()
-                .Where(r => experienceIds.Contains(r.ExperienceId))
+                .ExperienceResponsibility.Where(r => r.ExperienceId == exp.Id)
                 .ToListAsync();
 
-            foreach (var exp in experiences)
+            if (patch.JobTitle != null && patch.JobTitle != exp.JobTitle)
             {
-                var patch = patchMap[exp.Id];
+                exp.JobTitle = patch.JobTitle;
+                anyChange = true;
+            }
 
-                if (patch.JobTitle != null && patch.JobTitle != exp.JobTitle)
-                {
-                    exp.JobTitle = patch.JobTitle;
-                    anyChange = true;
-                }
+            if (patch.CompanyName != null && patch.CompanyName != exp.CompanyName)
+            {
+                exp.CompanyName = patch.CompanyName;
+                anyChange = true;
+            }
 
-                if (patch.CompanyName != null && patch.CompanyName != exp.CompanyName)
+            if (patch.StartDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.StartDate) ? null : patch.StartDate;
+                if (newValue != null)
                 {
-                    exp.CompanyName = patch.CompanyName;
-                    anyChange = true;
-                }
-
-                if (patch.StartDate != null)
-                {
-                    var newValue = string.IsNullOrWhiteSpace(patch.StartDate)
-                        ? null
-                        : patch.StartDate;
-                    if (newValue != null)
+                    var newStart = DateOnly.Parse(newValue);
+                    if (newStart != exp.StartDate)
                     {
-                        var newStart = DateOnly.Parse(newValue);
-                        if (newStart != exp.StartDate)
-                        {
-                            exp.StartDate = newStart;
-                            anyChange = true;
-                        }
+                        exp.StartDate = newStart;
+                        anyChange = true;
                     }
                 }
+            }
 
-                if (patch.EndDate != null)
+            if (patch.EndDate != null)
+            {
+                var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
+                if (newValue != null)
                 {
-                    var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
-                    if (newValue != null)
+                    var newEnd = DateOnly.Parse(newValue);
+                    if (newEnd != exp.EndDate)
                     {
-                        var newEnd = DateOnly.Parse(newValue);
-                        if (newEnd != exp.EndDate)
-                        {
-                            exp.EndDate = newEnd;
-                            anyChange = true;
-                        }
+                        exp.EndDate = newEnd;
+                        anyChange = true;
                     }
                 }
+            }
 
-                if (patch.Responsibilities != null && patch.Responsibilities.Count != 0)
+            if (patch.Responsibilities != null && patch.Responsibilities.Count != 0)
+            {
+                foreach (var respPatch in patch.Responsibilities)
                 {
-                    foreach (var respPatch in patch.Responsibilities)
+                    var respEntity = responsibilities.FirstOrDefault(r =>
+                        r.Id == respPatch.Id && r.ExperienceId == exp.Id
+                    );
+                    if (
+                        respEntity != null
+                        && respPatch.Responsibility != null
+                        && respPatch.Responsibility != respEntity.Responsibility
+                    )
                     {
-                        var respEntity = responsibilities.FirstOrDefault(r =>
-                            r.Id == respPatch.Id && r.ExperienceId == exp.Id
-                        );
-                        if (
-                            respEntity != null
-                            && respPatch.Responsibility != null
-                            && respPatch.Responsibility != respEntity.Responsibility
-                        )
-                        {
-                            respEntity.Responsibility = respPatch.Responsibility;
-                            anyChange = true;
-                        }
+                        respEntity.Responsibility = respPatch.Responsibility;
+                        anyChange = true;
                     }
                 }
             }

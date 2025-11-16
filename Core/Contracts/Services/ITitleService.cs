@@ -12,7 +12,8 @@ namespace Portfolio.Core.Contracts.Services
 
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
 
-        Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);
+        // Update
+        Task<bool> PatchTitleAsync(Guid userId, PatchResumeTitle patch);
 
         Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds);
     }

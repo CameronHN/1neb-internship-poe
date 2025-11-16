@@ -41,9 +41,9 @@ namespace Portfolio.Application.Services
             return await _educationRepository.GetEducationsByUserIdAsync(userId);
         }
 
-        public Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches)
+        public Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch)
         {
-            return _educationRepository.PatchEducationsAsync(userId, patches);
+            return _educationRepository.PatchEducationAsync(userId, patch);
         }
     }
 }

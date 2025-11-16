@@ -2,7 +2,7 @@
 
 namespace Portfolio.Core.DTOs.Experience.ExperienceResponsibility
 {
-    public class PatchResponsibility
+    public class PatchResponsibilities
     {
         [MaxLength(255, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [RegularExpression(@"\S.*", ErrorMessage = "Responsibility cannot be whitespace.")]

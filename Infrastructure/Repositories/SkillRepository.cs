@@ -110,46 +110,37 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches)
+        public async Task<bool> PatchSkillAsync(Guid userId, PatchSkill patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var skill = await _dbContext.Skill.FirstOrDefaultAsync(s =>
+                s.UserId == userId && s.Id == patch.Id
+            );
 
-            // Load only skills owned by the user and included in the patch list
-            var skills = await _dbContext
-                .Skill.Where(s => s.UserId == userId && ids.Contains(s.Id))
-                .ToListAsync();
-
-            if (skills.Count == 0)
+            if (skill == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var skill in skills)
+            // Update name if provided or different
+            if (patch.Skill != null && patch.Skill != skill.SkillName)
             {
-                var patch = patchMap[skill.Id];
+                skill.SkillName = patch.Skill;
+                anyChange = true;
+            }
 
-                // Update name if provided or different
-                if (patch.Skill != null && patch.Skill != skill.SkillName)
+            // Update proficiency if provided
+            if (patch.ProficiencyLevel != null)
+            {
+                var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel)
+                    ? null
+                    : patch.ProficiencyLevel;
+                if (newLevel != skill.ProficiencyLevel)
                 {
-                    skill.SkillName = patch.Skill;
+                    skill.ProficiencyLevel = newLevel;
                     anyChange = true;
-                }
-
-                // Update proficiency if provided
-                if (patch.ProficiencyLevel != null)
-                {
-                    var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel)
-                        ? null
-                        : patch.ProficiencyLevel;
-                    if (newLevel != skill.ProficiencyLevel)
-                    {
-                        skill.ProficiencyLevel = newLevel;
-                        anyChange = true;
-                    }
                 }
             }
 

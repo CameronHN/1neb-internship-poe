@@ -13,7 +13,8 @@ namespace Portfolio.Core.Contracts.Services
         Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
         Task<EducationModel> GetEducationByIdAsync(Guid userId);
 
-        Task<bool> PatchEducationsAsync(Guid userId, List<PatchEducation> patches);
+        // Update
+        Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch);
 
         Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds);
     }

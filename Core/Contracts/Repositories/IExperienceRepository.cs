@@ -19,7 +19,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);
 
-        Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches);
+        Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch);
 
         Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds);
     }

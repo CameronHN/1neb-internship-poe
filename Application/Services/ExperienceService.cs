@@ -29,7 +29,9 @@ namespace Portfolio.Application.Services
             return experience;
         }
 
-        public Task<List<ExperienceWithResponsibilitiesModel>> GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id)
+        public Task<
+            List<ExperienceWithResponsibilitiesModel>
+        > GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id)
         {
             return _experienceRepository.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
                 id
@@ -46,9 +48,9 @@ namespace Portfolio.Application.Services
             return _experienceRepository.AddExperiencesAsync(userId, experiences);
         }
 
-        public Task<bool> PatchExperiencesAsync(Guid userId, List<PatchExperience> patches)
+        public Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch)
         {
-            return _experienceRepository.PatchExperiencesAsync(userId, patches);
+            return _experienceRepository.PatchExperienceAsync(userId, patch);
         }
 
         public Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds)

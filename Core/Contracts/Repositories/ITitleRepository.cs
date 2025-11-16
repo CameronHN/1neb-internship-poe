@@ -13,7 +13,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<string> GetResumeTitleById(Guid id); // Throws NotFound exception
 
         // Patch
-        Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches);
+        Task<bool> PatchTitleAsync(Guid userId, PatchResumeTitle patch);
 
         // Delete
         Task<bool> DeleteTitlesAsync(Guid userId, List<Guid> titleIds);

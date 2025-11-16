@@ -73,32 +73,24 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<bool> PatchContactsAsync(Guid userId, List<PatchContact> patches)
+        public async Task<bool> PatchContactAsync(Guid userId, PatchContact patch)
         {
-            if (patches == null || patches.Count == 0)
+            if (patch == null)
                 return false;
 
-            var ids = patches.Select(p => p.Id).Distinct().ToList();
+            var contact = await _dbContext.Contact.FirstOrDefaultAsync(c =>
+                c.UserId == userId && c.Id == patch.Id
+            );
 
-            var contacts = await _dbContext
-                .Contact.Where(c => c.UserId == userId && ids.Contains(c.Id))
-                .ToListAsync();
-
-            if (contacts.Count == 0)
+            if (contact == null)
                 return false;
 
-            var patchMap = patches.ToDictionary(p => p.Id, p => p);
             var anyChange = false;
 
-            foreach (var contact in contacts)
+            if (patch.Social != null && patch.Social != contact.ContactUrl)
             {
-                var patch = patchMap[contact.Id];
-
-                if (patch.Social != null && patch.Social != contact.ContactUrl)
-                {
-                    contact.ContactUrl = patch.Social;
-                    anyChange = true;
-                }
+                contact.ContactUrl = patch.Social;
+                anyChange = true;
             }
 
             if (!anyChange)

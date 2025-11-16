@@ -38,9 +38,9 @@ namespace Portfolio.Application.Services
             return await _titleRepository.GetTitlesByUserIdAsync(userId);
         }
 
-        public async Task<bool> PatchTitlesAsync(Guid userId, List<PatchResumeTitle> patches)
+        public Task<bool> PatchTitleAsync(Guid userId, PatchResumeTitle patch)
         {
-            return await _titleRepository.PatchTitlesAsync(userId, patches);
+            return _titleRepository.PatchTitleAsync(userId, patch);
         }
     }
 }

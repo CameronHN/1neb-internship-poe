@@ -13,7 +13,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);
         Task<SkillModel> GetSkillById(Guid id);
 
-        Task<bool> PatchSkillsAsync(Guid userId, List<PatchSkill> patches);
+        Task<bool> PatchSkillAsync(Guid userId, PatchSkill patch);
 
         Task<bool> DeleteSkillsAsync(Guid userId, List<Guid> skillIds);
     }
