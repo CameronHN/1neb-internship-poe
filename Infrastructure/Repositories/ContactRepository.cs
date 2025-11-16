@@ -87,9 +87,9 @@ namespace Portfolio.Infrastructure.Repositories
 
             var anyChange = false;
 
-            if (patch.Social != null && patch.Social != contact.ContactUrl)
+            if (patch.ContactUrl != null && patch.ContactUrl != contact.ContactUrl)
             {
-                contact.ContactUrl = patch.Social;
+                contact.ContactUrl = patch.ContactUrl;
                 anyChange = true;
             }
 
