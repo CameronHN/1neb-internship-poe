@@ -75,7 +75,7 @@ namespace Portfolio.WebApi.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                return Ok(new { Message = "Login successful", UserId = user.Id });
+                return Ok(new { Message = "Login successful", UserId = user?.Id });
             }
 
             if (result.IsLockedOut)
