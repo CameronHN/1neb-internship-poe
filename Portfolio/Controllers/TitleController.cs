@@ -41,7 +41,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetResumeTitleById([FromRoute] Guid id)
         {
-            var title = await _titleService.GetResumeTitleById(id);
+            var userId = User.GetUserId()!.Value;
+
+            var title = await _titleService.GetResumeTitleById(id, userId);
             if (title is null)
                 return BadRequest();
 

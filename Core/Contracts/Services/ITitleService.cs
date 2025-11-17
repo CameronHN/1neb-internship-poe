@@ -8,7 +8,7 @@ namespace Portfolio.Core.Contracts.Services
 
         Task<string?> GetTitleById(Guid id);
 
-        Task<string> GetResumeTitleById(Guid id);
+        Task<string> GetResumeTitleById(Guid id, Guid userId);
 
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
 

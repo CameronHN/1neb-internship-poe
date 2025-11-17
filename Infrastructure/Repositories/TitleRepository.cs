@@ -90,11 +90,11 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string> GetResumeTitleById(Guid id)
+        public async Task<string> GetResumeTitleById(Guid id, Guid userId)
         {
             var title =
                 await _dbContext
-                    .Title.Where(t => t.Id == id)
+                    .Title.Where(t => t.Id == id && t.UserId == userId)
                     .Select(t => t.ResumeTitle)
                     .FirstOrDefaultAsync()
                 ?? throw new NotFoundException("Resume title does not exist.");
