@@ -5,16 +5,14 @@ using QuestPDF.Infrastructure;
 
 namespace Portfolio.Application.Documents
 {
-    public class ResumeBuilder : IDocument
+    public class ResumePdfGenerator : IDocument
     {
         private readonly ResumeDto _m;
 
-        public ResumeBuilder(ResumeDto model)
+        public ResumePdfGenerator(ResumeDto model)
         {
-            _m = model ?? new ResumeDto { Email = string.Empty, PhoneNumber = string.Empty };
+            _m = model;
         }
-
-        public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
 
         private readonly string bulletpoint = "•\t\t\t\t\t";
 

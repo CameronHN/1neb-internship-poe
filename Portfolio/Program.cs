@@ -124,7 +124,8 @@ builder.Services.AddScoped<ISavedResumeRepository, SavedResumeRepository>();
 builder.Services.AddScoped<ISavedResumeService, SavedResumeService>();
 
 // Resume
-builder.Services.AddScoped<IResumeService, ResumeService>();
+builder.Services.AddScoped<IResumeDataService, ResumeDataService>();
+builder.Services.AddScoped<IResumeGenerationService, ResumeGenerationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

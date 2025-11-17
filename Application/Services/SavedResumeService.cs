@@ -104,7 +104,7 @@ namespace Portfolio.Application.Services
         {
             return templateType.ToLowerInvariant() switch
             {
-                "classic" => new ResumeBuilder(resumeDto),
+                "classic" => new ResumePdfGenerator(resumeDto),
                 // Add more templates here
                 _ => throw new TemplateTypeNotImplementedException(
                     $"Unknown template type: {templateType}"

@@ -11,18 +11,20 @@ namespace Portfolio.WebApi.Controllers
     [Route("api/[controller]")]
     public class ResumeController : ControllerBase
     {
-        private readonly IResumeService _resumeService;
+        private readonly IResumeDataService _resumeService;
+        private readonly IResumeGenerationService _resumeGenerationService;
 
-        public ResumeController(IResumeService resumeService)
+        public ResumeController(IResumeDataService resumeService, IResumeGenerationService resumeGenerationService)
         {
             _resumeService = resumeService;
+            _resumeGenerationService = resumeGenerationService;
         }
 
         [AllowAnonymous]
         [HttpPost("create-pdf")]
-        public IActionResult GenerateResumeWithoutSavingDetails([FromBody] ResumeDto dto)
+        public async Task<IActionResult> GenerateResumeWithoutSavingDetails([FromBody] ResumeDto dto)
         {
-            var pdf = _resumeService.RenderPdf(dto ?? new());
+            var pdf = await _resumeGenerationService.GenerateResumePdfAsync(dto);
 
             string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
 
@@ -46,13 +48,12 @@ namespace Portfolio.WebApi.Controllers
 
         [Authorize]
         [HttpPost("get-resume")]
-        [Produces("application/pdf")]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
             var userId = User.GetUserId()!.Value;
 
             var userInfo = await _resumeService.GetResumeDetailsAsync(userId, resumeRequest);
-            var pdf = _resumeService.RenderPdf(userInfo ?? new());
+            var pdf = await _resumeGenerationService.GenerateResumePdfAsync(userInfo);
 
             if (pdf == null || pdf.Length == 0)
                 return BadRequest("PDF generation failed.");

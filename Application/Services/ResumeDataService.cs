@@ -6,7 +6,7 @@ using QuestPDF.Fluent;
 
 namespace Portfolio.Application.Services
 {
-    public class ResumeService : IResumeService
+    public class ResumeDataService : IResumeDataService
     {
         private readonly IUserRepository _userRepository;
         private readonly ICertificationRepository _certificationRepository;
@@ -17,7 +17,7 @@ namespace Portfolio.Application.Services
         private readonly IContactRepository _contactRepository;
         private readonly ITitleRepository _titleRepository;
 
-        public ResumeService(
+        public ResumeDataService(
             IUserRepository userRepository,
             ICertificationRepository certificationRepository,
             IEducationRepository educationRepository,
@@ -108,19 +108,6 @@ namespace Portfolio.Application.Services
         public async Task<GetAllResumeDetails?> GetResumeByUserId(Guid userId)
         {
             return await _userRepository.GetAllResumeDetailsByUserId(userId);
-        }
-
-        public byte[] RenderPdf(ResumeDto dto)
-        {
-            try
-            {
-                var document = new ResumeBuilder(dto ?? new());
-                return document.GeneratePdf();
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"PDF generation failed: {ex.Message}", ex);
-            }
         }
     }
 }
