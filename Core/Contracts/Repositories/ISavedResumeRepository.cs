@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Portfolio.Core.DTOs.SavedResume;
+using Portfolio.Core.Models;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
@@ -9,18 +10,18 @@ namespace Portfolio.Core.Contracts.Repositories
         /// Adds a record of a saved resume for a user.
         /// </summary>
         /// <returns>ID for the newly created saved resume.</returns>
-        Task<Guid> CreateAsync(SavedResume savedResume);
+        Task<Guid> CreateAsync(Guid userId, AddSavedResume savedResume);
 
         // -------------------- Read --------------------
         /// <summary>
         /// Retrieves a single saved resume by its unique identifier.
         /// </summary>
-        Task<SavedResume?> GetByIdAsync(Guid id, Guid userId);
+        Task<SavedResumeModel?> GetByIdAsync(Guid userId, Guid id);
 
         /// <summary>
         /// Gets all saved resumes associated with a specific user.
         /// </summary>
-        Task<List<SavedResume>> GetAllByUserIdAsync(Guid userId);
+        Task<List<SavedResumeItem>> GetAllByUserIdAsync(Guid userId);
 
         // -------------------- Delete --------------------
         /// <summary>

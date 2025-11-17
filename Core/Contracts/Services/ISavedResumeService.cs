@@ -22,7 +22,7 @@ namespace Portfolio.Core.Contracts.Services
         /// Retrieves all saved resumes for a specific user.
         /// </summary>
         /// <returns>A list of saved resume details (excluding the data) for the user.</returns>
-        Task<List<SavedResumeListItem>> GetAllSavedResumesByUserIdAsync(Guid userId);
+        Task<List<SavedResumeItem>> GetAllSavedResumesByUserIdAsync(Guid userId);
 
         /// <summary>
         /// Deletes a saved resume for a user.

@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.DTOs.SavedResume;
 using Portfolio.Core.Entities;
+using Portfolio.Core.Exceptions;
+using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
@@ -14,25 +17,50 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> CreateAsync(SavedResume savedResume)
+        public async Task<Guid> CreateAsync(Guid userId, AddSavedResume savedResume)
         {
-            await _dbContext.SavedResume.AddAsync(savedResume);
+            var entity = new SavedResume
+            {
+                Name = savedResume.Name,
+                Data = savedResume.Data,
+                TemplateType = savedResume.TemplateType,
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId,
+            };
+
+            await _dbContext.SavedResume.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
-            return savedResume.Id;
+            return entity.Id;
         }
 
-        public async Task<SavedResume?> GetByIdAsync(Guid id, Guid userId)
+        public async Task<SavedResumeModel?> GetByIdAsync(Guid id, Guid userId)
         {
-            return await _dbContext.SavedResume.FirstOrDefaultAsync(sr =>
-                sr.Id == id && sr.UserId == userId
-            );
+            return await _dbContext
+                    .SavedResume.Where(sr => sr.Id == id && sr.UserId == userId)
+                    .Select(sr => new SavedResumeModel
+                    {
+                        Id = sr.Id,
+                        Name = sr.Name,
+                        Data = sr.Data,
+                        TemplateType = sr.TemplateType,
+                        CreatedAt = sr.CreatedAt.ToString("MMMM yyyy"),
+                    })
+                    .FirstOrDefaultAsync()
+                ?? throw new NotFoundException("Saved resume does not exist");
         }
 
-        public async Task<List<SavedResume>> GetAllByUserIdAsync(Guid userId)
+        public async Task<List<SavedResumeItem>> GetAllByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .SavedResume.Where(sr => sr.UserId == userId)
                 .OrderByDescending(sr => sr.CreatedAt)
+                .Select(sr => new SavedResumeItem
+                {
+                    Id = sr.Id,
+                    Name = sr.Name,
+                    TemplateType = sr.TemplateType,
+                    CreatedAt = sr.CreatedAt,
+                })
                 .ToListAsync();
         }
 

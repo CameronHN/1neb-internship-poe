@@ -4,7 +4,6 @@ using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.SavedResume;
-using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -30,15 +29,14 @@ namespace Portfolio.Application.Services
                 );
             }
 
-            var savedResume = new SavedResume
+            var savedResume = new AddSavedResume
             {
                 Name = request.SavedResumeName,
                 Data = JsonSerializer.Serialize(request.ResumeData),
                 TemplateType = request.TemplateType,
-                UserId = userId,
             };
 
-            return await _savedResumeRepository.CreateAsync(savedResume);
+            return await _savedResumeRepository.CreateAsync(userId, savedResume);
         }
 
         public async Task<SavedResumeDetail?> GetSavedResumeByIdAsync(Guid id, Guid userId)
@@ -63,19 +61,9 @@ namespace Portfolio.Application.Services
             };
         }
 
-        public async Task<List<SavedResumeListItem>> GetAllSavedResumesByUserIdAsync(Guid userId)
+        public async Task<List<SavedResumeItem>> GetAllSavedResumesByUserIdAsync(Guid userId)
         {
-            var savedResumes = await _savedResumeRepository.GetAllByUserIdAsync(userId);
-
-            return savedResumes
-                .Select(sr => new SavedResumeListItem
-                {
-                    Id = sr.Id,
-                    Name = sr.Name,
-                    TemplateType = sr.TemplateType,
-                    CreatedAt = sr.CreatedAt,
-                })
-                .ToList();
+            return await _savedResumeRepository.GetAllByUserIdAsync(userId);
         }
 
         public async Task<bool> DeleteSavedResumeAsync(Guid id, Guid userId)

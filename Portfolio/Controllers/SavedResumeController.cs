@@ -45,7 +45,7 @@ namespace Portfolio.WebApi.Controllers
         /// Get all saved resumes for the current user
         /// </summary>
         [HttpGet("list")]
-        [ProducesResponseType(typeof(List<SavedResumeListItem>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<SavedResumeItem>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAllSavedResumes()
         {
