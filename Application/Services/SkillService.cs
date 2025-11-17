@@ -31,9 +31,9 @@ namespace Portfolio.Application.Services
             return _skillRepository.GetAllSkillsByIds(request);
         }
 
-        public Task<SkillModel> GetSkillByIdAsync(Guid id)
+        public Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId)
         {
-            return _skillRepository.GetSkillById(id);
+            return _skillRepository.GetSkillById(id, userId);
         }
 
         public async Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId)

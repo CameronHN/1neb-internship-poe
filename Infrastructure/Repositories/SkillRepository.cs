@@ -151,11 +151,11 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<SkillModel> GetSkillById(Guid id)
+        public async Task<SkillModel> GetSkillById(Guid id, Guid userId)
         {
             var skill =
                 await _dbContext
-                    .Skill.Where(s => s.Id == id)
+                    .Skill.Where(s => s.Id == id && s.UserId == userId)
                     .Select(s => new SkillModel
                     {
                         SkillName = s.SkillName,

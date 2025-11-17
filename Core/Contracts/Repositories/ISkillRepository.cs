@@ -11,7 +11,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);
-        Task<SkillModel> GetSkillById(Guid id);
+        Task<SkillModel> GetSkillById(Guid id, Guid userId);
 
         Task<bool> PatchSkillAsync(Guid userId, PatchSkill patch);
 

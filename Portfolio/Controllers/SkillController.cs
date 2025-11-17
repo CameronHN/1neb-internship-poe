@@ -41,7 +41,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSkillById([FromRoute] Guid id)
         {
-            var skill = await _skillService.GetSkillByIdAsync(id);
+            var userId = User.GetUserId()!.Value;
+
+            var skill = await _skillService.GetSkillByIdAsync(id, userId);
             if (skill is null)
                 return BadRequest();
 
