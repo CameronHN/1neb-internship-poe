@@ -11,7 +11,7 @@ namespace Portfolio.Core.Contracts.Services
         Task<List<Guid>> AddCertificationAsync(Guid userId, List<AddCertification> certification);
 
         // Read
-        Task<CertificationModel> GetCertificationByIdAsync(Guid id);
+        Task<CertificationModel> GetCertificationByIdAsync(Guid id, Guid userId);
         Task<List<CertificationModel>> GetCertificationsByUserIdAsync(Guid userId);
         Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest certificationRequest);
 

@@ -123,11 +123,11 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<CertificationModel> GetCertificationByIdAsync(Guid id)
+        public async Task<CertificationModel> GetCertificationByIdAsync(Guid id, Guid userId)
         {
             var certification =
                 await _dbContext
-                    .Certification.Where(cert => cert.Id == id)
+                    .Certification.Where(cert => cert.Id == id && cert.UserId == userId)
                     .Select(ce => new CertificationModel
                     {
                         Id = ce.Id,
