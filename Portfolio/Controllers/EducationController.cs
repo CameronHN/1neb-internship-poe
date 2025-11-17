@@ -59,7 +59,8 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEducationById([FromRoute] Guid id)
         {
-            var title = await _educationService.GetEducationByIdAsync(id);
+            var userId = User.GetUserId()!.Value;
+            var title = await _educationService.GetEducationByIdAsync(id, userId);
             if (title is null)
                 return BadRequest();
 

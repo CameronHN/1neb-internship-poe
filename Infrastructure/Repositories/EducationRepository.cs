@@ -108,11 +108,11 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<EducationModel> GetEducationById(Guid id)
+        public async Task<EducationModel> GetEducationById(Guid id, Guid userId)
         {
             var education =
                 await _dbContext
-                    .Education.Where(edu => edu.Id == id)
+                    .Education.Where(edu => edu.Id == id && edu.UserId == userId)
                     .Select(ed => new EducationModel
                     {
                         Id = ed.Id,

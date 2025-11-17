@@ -11,7 +11,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
         Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
-        Task<EducationModel> GetEducationById(Guid id);
+        Task<EducationModel> GetEducationById(Guid id, Guid userId);
 
         Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch);
 

@@ -31,9 +31,9 @@ namespace Portfolio.Application.Services
             return _educationRepository.GetAllEducationsByIds(request);
         }
 
-        public async Task<EducationModel> GetEducationByIdAsync(Guid id)
+        public async Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId)
         {
-            return await _educationRepository.GetEducationById(id);
+            return await _educationRepository.GetEducationById(id, userId);
         }
 
         public async Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId)
