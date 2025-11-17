@@ -1,8 +1,6 @@
-﻿using Portfolio.Application.Documents;
-using Portfolio.Core.Contracts.Repositories;
+﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Resume;
-using QuestPDF.Fluent;
 
 namespace Portfolio.Application.Services
 {
