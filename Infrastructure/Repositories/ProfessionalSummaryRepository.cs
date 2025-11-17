@@ -53,11 +53,11 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string> GetProfessionalSummaryById(Guid id)
+        public async Task<string> GetProfessionalSummaryById(Guid id, Guid userId)
         {
             var summary =
                 await _dbContext
-                    .ProfessionalSummary.Where(s => s.Id == id)
+                    .ProfessionalSummary.Where(s => s.Id == id && s.UserId == userId)
                     .Select(s => s.Summary)
                     .FirstOrDefaultAsync() ?? throw new NotFoundException("Summary does not exist");
             return summary;

@@ -28,9 +28,9 @@ namespace Portfolio.Application.Services
             );
         }
 
-        public async Task<string> GetProfessionalSummaryById(Guid id)
+        public async Task<string> GetProfessionalSummaryById(Guid id, Guid userId)
         {
-            return await _professionalSummaryRepository.GetProfessionalSummaryById(id);
+            return await _professionalSummaryRepository.GetProfessionalSummaryById(id, userId);
         }
 
         public async Task<List<string>> GetSummariesByUserId(Guid userId)

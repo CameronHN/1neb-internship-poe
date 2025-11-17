@@ -44,7 +44,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (patch is null)
-                throw new Portfolio.Core.Exceptions.ValidationException(
+                throw new ValidationException(
                     "Request body cannot be null."
                 );
 
@@ -61,7 +61,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSummaryById([FromRoute] Guid id)
         {
-            var summary = await _summaryService.GetProfessionalSummaryById(id);
+            var userId = User.GetUserId()!.Value;
+
+            var summary = await _summaryService.GetProfessionalSummaryById(id, userId);
             if (summary is null)
                 return BadRequest();
 
