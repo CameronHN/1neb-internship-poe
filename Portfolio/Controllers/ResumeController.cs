@@ -31,7 +31,7 @@ namespace Portfolio.WebApi.Controllers
         {
             var pdf = await _resumeGenerationService.GenerateResumePdfAsync(dto);
 
-            string? name = !string.IsNullOrEmpty(dto?.Name) ? dto.Name.Replace(' ', '_') + "_" : "";
+            string? name = FileNameHelper.FileNameFormatter(dto?.Name);
 
             return File(pdf, "application/pdf", $"{name}resume.pdf");
         }
