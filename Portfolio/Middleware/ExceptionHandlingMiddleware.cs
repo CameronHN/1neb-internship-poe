@@ -64,7 +64,11 @@ namespace Portfolio.WebApi.Middleware
         {
             return exception switch
             {
-                ValidationException => (HttpStatusCode.BadRequest, exception.Message),
+                ArgumentNullException or ValidationException => (
+                    HttpStatusCode.BadRequest,
+                    exception.Message
+                ),
+                JsonException => (HttpStatusCode.BadRequest, "Invalid JSON format in request body"),
                 UnauthorizedAccessAppException => (HttpStatusCode.Unauthorized, "Access denied"),
                 NotFoundException => (HttpStatusCode.NotFound, exception.Message),
                 ConflictException => (HttpStatusCode.Conflict, exception.Message),
@@ -72,7 +76,7 @@ namespace Portfolio.WebApi.Middleware
                     HttpStatusCode.UnprocessableEntity,
                     exception.Message
                 ),
-                TemplateTypeNotImplementedException => (
+                TemplateTypeNotImplementedException or NotSupportedException => (
                     HttpStatusCode.NotImplemented,
                     exception.Message
                 ),
