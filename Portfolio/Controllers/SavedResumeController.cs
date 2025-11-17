@@ -61,27 +61,6 @@ namespace Portfolio.WebApi.Controllers
         }
 
         /// <summary>
-        /// Get a specific saved resume with full data
-        /// </summary>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(SavedResumeDetail), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetSavedResumeById(Guid id)
-        {
-            var userId = User.GetUserId();
-            if (userId == null)
-                return Unauthorized();
-
-            var savedResume = await _savedResumeService.GetSavedResumeByIdAsync(id, userId.Value);
-
-            if (savedResume == null)
-                return NotFound("Saved resume not found.");
-
-            return Ok(savedResume);
-        }
-
-        /// <summary>
         /// Generate PDF from a saved resume snapshot
         /// </summary>
         [HttpGet("{id}/pdf")]
