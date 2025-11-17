@@ -11,7 +11,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts);
 
         // Read
-        Task<ContactModel?> GetContactByIdAsync(Guid id);
+        Task<ContactModel?> GetContactByIdAsync(Guid id, Guid userId);
         Task<List<ContactModel>> GetContactsByUserIdAsync(Guid userId);
         Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request);
 

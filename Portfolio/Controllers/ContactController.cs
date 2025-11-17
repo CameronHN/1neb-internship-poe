@@ -40,7 +40,8 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetContactById([FromRoute] Guid id)
         {
-            var contact = await _contactService.GetContactByIdAsync(id);
+            var userId = User.GetUserId()!.Value;
+            var contact = await _contactService.GetContactByIdAsync(id, userId);
             if (contact == null)
                 return NotFound();
 
