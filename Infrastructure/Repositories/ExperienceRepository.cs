@@ -56,28 +56,29 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ExperienceWithResponsibilitiesModel?> GetExperienceById(Guid id)
+        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(
+            Guid id,
+            Guid userId
+        )
         {
-            var experience = await _dbContext
-                .Experience.Include(e => e.Responsibilities)
-                .FirstOrDefaultAsync(e => e.Id == id);
+            var experience =
+                await _dbContext
+                    .Experience.Where(e => e.Id == id && e.UserId == userId)
+                    .Select(edu => new ExperienceWithResponsibilitiesModel
+                    {
+                        Id = edu.Id,
+                        CompanyName = edu.CompanyName,
+                        JobTitle = edu.JobTitle,
+                        StartDate = edu.StartDate.ToString("MMMM yyyy"),
+                        EndDate = edu.EndDate.ToString("MMMM yyyy"),
+                        Responsibilities = edu
+                            .Responsibilities.Select(r => r.Responsibility)
+                            .ToList(),
+                    })
+                    .Include(e => e.Responsibilities)
+                    .FirstOrDefaultAsync() ?? throw new NotFoundException("Experience not found.");
 
-            if (experience == null)
-            {
-                throw new NotFoundException("Experience not found.");
-            }
-
-            return new ExperienceWithResponsibilitiesModel
-            {
-                Id = experience.Id,
-                CompanyName = experience.CompanyName,
-                JobTitle = experience.JobTitle,
-                StartDate = experience.StartDate.ToString("MMMM yyyy"),
-                EndDate = experience.EndDate.ToString("MMMM yyyy"),
-                Responsibilities = experience
-                    .Responsibilities.Select(r => r.Responsibility)
-                    .ToList(),
-            };
+            return experience;
         }
 
         public async Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)

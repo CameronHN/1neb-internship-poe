@@ -8,7 +8,7 @@ namespace Portfolio.Core.Contracts.Services
     public interface IExperienceService
     {
         Task<List<Guid>> AddExperiencesAsync(Guid userId, List<AddExperience> experiences);
-        Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id);
+        Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id, Guid userId);
         Task<
             List<ExperienceWithResponsibilitiesModel>
         > GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id);

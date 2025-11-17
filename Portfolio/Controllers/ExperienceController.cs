@@ -19,7 +19,9 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetExperienceById(Guid id)
         {
-            var experience = await _experienceService.GetExperienceById(id);
+            var userId = User.GetUserId()!.Value;
+
+            var experience = await _experienceService.GetExperienceById(id, userId);
             return Ok(experience);
         }
 

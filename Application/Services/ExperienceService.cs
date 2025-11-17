@@ -21,12 +21,12 @@ namespace Portfolio.Application.Services
             return _experienceRepository.GetAllExperiencesByIds(ids);
         }
 
-        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id)
+        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(
+            Guid id,
+            Guid userId
+        )
         {
-            var experience = await _experienceRepository.GetExperienceById(id);
-            if (experience == null)
-                throw new ArgumentException($"Experience with id {id} not found.");
-            return experience;
+            return await _experienceRepository.GetExperienceById(id, userId);
         }
 
         public Task<
