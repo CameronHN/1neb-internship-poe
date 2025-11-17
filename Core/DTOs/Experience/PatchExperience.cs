@@ -1,10 +1,5 @@
-﻿using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Portfolio.Core.DTOs.Experience.ExperienceResponsibility;
 
 namespace Portfolio.Core.DTOs.Experience
 {
