@@ -11,18 +11,23 @@ namespace Portfolio.WebApi.Controllers
     [Route("api/[controller]")]
     public class ResumeController : ControllerBase
     {
-        private readonly IResumeDataService _resumeService;
+        private readonly IResumeDataService _resumeDataService;
         private readonly IResumeGenerationService _resumeGenerationService;
 
-        public ResumeController(IResumeDataService resumeService, IResumeGenerationService resumeGenerationService)
+        public ResumeController(
+            IResumeDataService resumeDataService,
+            IResumeGenerationService resumeGenerationService
+        )
         {
-            _resumeService = resumeService;
+            _resumeDataService = resumeDataService;
             _resumeGenerationService = resumeGenerationService;
         }
 
         [AllowAnonymous]
         [HttpPost("create-pdf")]
-        public async Task<IActionResult> GenerateResumeWithoutSavingDetails([FromBody] ResumeDto dto)
+        public async Task<IActionResult> GenerateResumeWithoutSavingDetails(
+            [FromBody] ResumeDto dto
+        )
         {
             var pdf = await _resumeGenerationService.GenerateResumePdfAsync(dto);
 
@@ -39,7 +44,7 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
-            var resume = await _resumeService.GetResumeByUserId(userId);
+            var resume = await _resumeDataService.GetResumeByUserId(userId);
             if (resume == null)
                 return NotFound();
 
@@ -52,7 +57,7 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
-            var userInfo = await _resumeService.GetResumeDetailsAsync(userId, resumeRequest);
+            var userInfo = await _resumeDataService.GetResumeDetailsAsync(userId, resumeRequest);
             var pdf = await _resumeGenerationService.GenerateResumePdfAsync(userInfo);
 
             if (pdf == null || pdf.Length == 0)
