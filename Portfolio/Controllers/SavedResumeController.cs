@@ -88,13 +88,13 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GeneratePdfFromSavedResume(Guid id)
+        public async Task<IActionResult> GetSavedResumePdfById(Guid id)
         {
             var userId = User.GetUserId();
             if (userId == null)
                 return Unauthorized();
 
-            var pdf = await _savedResumeService.GeneratePdfFromSavedResumeAsync(id, userId.Value);
+            var pdf = await _savedResumeService.GetSavedResumePdfFromId(id, userId.Value);
 
             var savedResume = await _savedResumeService.GetSavedResumeByIdAsync(id, userId.Value);
             string fileDownloadName =
