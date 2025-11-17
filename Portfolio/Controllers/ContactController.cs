@@ -49,25 +49,6 @@ namespace Portfolio.WebApi.Controllers
             return Ok(contact);
         }
 
-        [HttpGet("contacts")]
-        [ProducesResponseType(typeof(List<ContactModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetContacts()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var contacts = await _contactService.GetContactsByUserIdAsync(userId);
-            return Ok(contacts);
-        }
-
-        [HttpPost("contacts")]
-        [ProducesResponseType(typeof(List<SocialMediaItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllContactsByIds([FromBody] ItemListRequest request)
-        {
-            var contacts = await _contactService.GetContactsByIdsAsync(request);
-            return Ok(contacts);
-        }
-
         [HttpPatch("patch")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -42,14 +42,6 @@ namespace Portfolio.WebApi.Controllers
             return Created(string.Empty, certificationIds);
         }
 
-        [HttpPost("certifications")]
-        [ProducesResponseType(typeof(List<CertificationItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllCertsByIds([FromBody] ItemListRequest request)
-        {
-            var experiences = await _certificationService.GetAllCertsByIds(request);
-            return Ok(experiences);
-        }
-
         [HttpPatch("patch")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -103,17 +95,6 @@ namespace Portfolio.WebApi.Controllers
                 return BadRequest();
 
             return Ok(title);
-        }
-
-        [HttpGet("certifications")]
-        [ProducesResponseType(typeof(List<CertificationItem>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetCertifications()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var certifications = await _certificationService.GetCertificationsByUserIdAsync(userId);
-            return Ok(certifications);
         }
     }
 }

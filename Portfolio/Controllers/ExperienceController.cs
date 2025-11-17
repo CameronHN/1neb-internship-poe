@@ -24,28 +24,6 @@ namespace Portfolio.WebApi.Controllers
             return Ok(experience);
         }
 
-        [HttpGet("experiences")]
-        [ProducesResponseType(typeof(List<ExperienceItem>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetExperienceItemsByUserId()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var experiences =
-                await _experienceService.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
-                    userId
-                );
-            return Ok(experiences);
-        }
-
-        [HttpPost("experiences")]
-        [ProducesResponseType(typeof(List<ExperienceItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllExperiencesByIds([FromBody] ItemListRequest request)
-        {
-            var experiences = await _experienceService.GetAllExperiencesByIds(request);
-            return Ok(experiences);
-        }
-
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

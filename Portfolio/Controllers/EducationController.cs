@@ -22,14 +22,6 @@ namespace Portfolio.WebApi.Controllers
             _educationService = educationService;
         }
 
-        [HttpPost("educations")]
-        [ProducesResponseType(typeof(List<EducationItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllEducationsByIds([FromBody] ItemListRequest request)
-        {
-            var educations = await _educationService.GetAllEducationsByIds(request);
-            return Ok(educations);
-        }
-
         [HttpDelete("delete")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,17 +85,6 @@ namespace Portfolio.WebApi.Controllers
                 return NoContent();
 
             return Ok(true);
-        }
-
-        [HttpGet("educations")]
-        [ProducesResponseType(typeof(List<EducationItem>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetEducations()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var educations = await _educationService.GetEducationsByUserIdAsync(userId);
-            return Ok(educations);
         }
     }
 }

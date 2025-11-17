@@ -90,16 +90,5 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
-
-        [HttpGet("summary")]
-        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetProfessionalSummary()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var summary = await _summaryService.GetSummariesByUserId(userId);
-            return Ok(summary);
-        }
     }
 }

@@ -84,16 +84,5 @@ namespace Portfolio.WebApi.Controllers
 
             return Ok(true);
         }
-
-        [HttpGet("titles")]
-        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetTitles()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var titles = await _titleService.GetTitlesByUserIdAsync(userId);
-            return Ok(titles);
-        }
     }
 }

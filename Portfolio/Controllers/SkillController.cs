@@ -22,14 +22,6 @@ namespace Portfolio.WebApi.Controllers
             _skillService = skillService;
         }
 
-        [HttpPost("skills")]
-        [ProducesResponseType(typeof(List<SkillsItem>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllSkillsByIds([FromBody] ItemListRequest request)
-        {
-            var skills = await _skillService.GetAllSkillsByIds(request);
-            return Ok(skills);
-        }
-
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,17 +85,6 @@ namespace Portfolio.WebApi.Controllers
                 return BadRequest("Failed to delete the specified skills.");
 
             return Ok(true);
-        }
-
-        [HttpGet("skills")]
-        [ProducesResponseType(typeof(List<SkillsItem>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetSkills()
-        {
-            var userId = User.GetUserId()!.Value;
-
-            var skills = await _skillService.GetSkillsByUserIdAsync(userId);
-            return Ok(skills);
         }
     }
 }
