@@ -60,11 +60,11 @@ namespace Portfolio.WebApi.Controllers
         public async Task<IActionResult> GetEducationById([FromRoute] Guid id)
         {
             var userId = User.GetUserId()!.Value;
-            var title = await _educationService.GetEducationByIdAsync(id, userId);
-            if (title is null)
-                return BadRequest();
+            var education = await _educationService.GetEducationByIdAsync(id, userId);
+            if (education is null)
+                return NotFound();
 
-            return Ok(title);
+            return Ok(education);
         }
 
         [HttpPatch("patch")]

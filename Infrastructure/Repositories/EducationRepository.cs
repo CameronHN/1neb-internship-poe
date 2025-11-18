@@ -59,7 +59,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
+        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request)
         {
             var ids = request.Ids;
             if (ids.Count == 0)
@@ -108,7 +108,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<EducationModel> GetEducationById(Guid id, Guid userId)
+        public async Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId)
         {
             var education =
                 await _dbContext

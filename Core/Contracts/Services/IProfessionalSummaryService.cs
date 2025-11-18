@@ -6,9 +6,9 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddSummariesAsync(Guid userId, List<AddSummary> summaries);
 
-        Task<List<string>> GetSummariesByUserId(Guid userId);
+        Task<List<string>> GetSummariesByUserIdAsync(Guid userId);
 
-        Task<string> GetProfessionalSummaryById(Guid id, Guid userId);
+        Task<string> GetProfessionalSummaryByIdAsync(Guid id, Guid userId);
 
         // Update
         Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch);

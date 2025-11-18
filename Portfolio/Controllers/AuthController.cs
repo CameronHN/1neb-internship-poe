@@ -29,6 +29,8 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
@@ -60,6 +62,9 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
@@ -87,6 +92,7 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -94,6 +100,10 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("change-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
         {
             if (!ModelState.IsValid)
@@ -130,12 +140,14 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpGet("me")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.GetUserId()!.Value;
 
-            var user = await _userService.GetUserDetails(userId);
+            var user = await _userService.GetUserDetailsAsync(userId);
 
             return Ok(
                 new

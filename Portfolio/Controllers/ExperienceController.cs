@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Experience;
-using Portfolio.Core.DTOs.Resume;
+using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
@@ -15,13 +16,17 @@ namespace Portfolio.WebApi.Controllers
         private readonly IExperienceService _experienceService = experienceService;
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ExperienceItem), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExperienceWithResponsibilitiesModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetExperienceById(Guid id)
         {
             var userId = User.GetUserId()!.Value;
 
-            var experience = await _experienceService.GetExperienceById(id, userId);
+            var experience = await _experienceService.GetExperienceByIdAsync(id, userId);
+            if (experience == null)
+                return NotFound();
+
             return Ok(experience);
         }
 
@@ -34,7 +39,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (experiences is null || experiences.Count == 0)
-                return BadRequest("At least one experience is required.");
+                throw new ValidationException("At least one experience is required.");
 
             var experienceIds = await _experienceService.AddExperiencesAsync(userId, experiences);
             return Created(string.Empty, experienceIds);
@@ -50,7 +55,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (patch is null)
-                return BadRequest();
+                throw new ValidationException("Request body cannot be null.");
 
             var updated = await _experienceService.PatchExperienceAsync(userId, patch);
             if (!updated)
@@ -68,7 +73,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (experienceIds == null || experienceIds.Count == 0)
-                return BadRequest("Experience IDs cannot be null or empty.");
+                throw new ValidationException("Experience IDs cannot be null or empty.");
 
             var deleted = await _experienceService.DeleteExperiencesAsync(userId, experienceIds);
             if (!deleted)

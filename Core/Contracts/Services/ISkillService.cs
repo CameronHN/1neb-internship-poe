@@ -9,7 +9,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills);
 
-        Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request);
+        Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request);
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);
         Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId);
 

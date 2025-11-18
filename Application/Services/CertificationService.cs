@@ -32,7 +32,7 @@ namespace Portfolio.Application.Services
             );
         }
 
-        public async Task<List<CertificationItem>> GetAllCertsByIds(ItemListRequest request)
+        public async Task<List<CertificationItem>> GetAllCertsByIdsAsync(ItemListRequest request)
         {
             return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
         }

@@ -34,6 +34,6 @@ namespace Portfolio.Core.Contracts.Services
         /// Generates a PDF document from a saved resume.
         /// </summary>
         /// <returns>A byte array containing the generated PDF document.</returns>
-        Task<byte[]> GetSavedResumePdfFromId(Guid id, Guid userId);
+        Task<byte[]> GetSavedResumePdfFromIdAsync(Guid id, Guid userId);
     }
 }

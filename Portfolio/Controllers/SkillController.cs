@@ -45,7 +45,7 @@ namespace Portfolio.WebApi.Controllers
 
             var skill = await _skillService.GetSkillByIdAsync(id, userId);
             if (skill is null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(skill);
         }
@@ -78,7 +78,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (skillIds == null || skillIds.Count == 0)
-                return BadRequest("Skill IDs cannot be null or empty.");
+                throw new ValidationException("Skill IDs cannot be null or empty.");
 
             var deleted = await _skillService.DeleteSkillsAsync(userId, skillIds);
             if (!deleted)

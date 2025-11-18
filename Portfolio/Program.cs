@@ -89,7 +89,6 @@ builder.Services.AddAuthorization();
 // Your existing service registrations
 // User
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 // Experience
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();

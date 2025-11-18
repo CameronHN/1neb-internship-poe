@@ -55,7 +55,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string?> GetTitleById(Guid id)
+        public async Task<string?> GetTitleByIdAsync(Guid id)
         {
             return await _dbContext
                 .Title.Where(t => t.Id == id)
@@ -90,7 +90,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string> GetResumeTitleById(Guid id, Guid userId)
+        public async Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId)
         {
             var title =
                 await _dbContext

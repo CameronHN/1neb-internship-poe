@@ -26,14 +26,14 @@ namespace Portfolio.Application.Services
             return await _skillRepository.DeleteSkillsAsync(userId, skillIds);
         }
 
-        public Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
+        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request)
         {
-            return _skillRepository.GetAllSkillsByIds(request);
+            return await _skillRepository.GetAllSkillsByIdsAsync(request);
         }
 
-        public Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId)
+        public async Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId)
         {
-            return _skillRepository.GetSkillById(id, userId);
+            return await _skillRepository.GetSkillByIdAsync(id, userId);
         }
 
         public async Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId)
@@ -41,9 +41,9 @@ namespace Portfolio.Application.Services
             return await _skillRepository.GetSkillsByUserIdAsync(userId);
         }
 
-        public Task<bool> PatchSkillAsync(Guid userId, PatchSkill patch)
+        public async Task<bool> PatchSkillAsync(Guid userId, PatchSkill patch)
         {
-            return _skillRepository.PatchSkillAsync(userId, patch);
+            return await _skillRepository.PatchSkillAsync(userId, patch);
         }
     }
 }

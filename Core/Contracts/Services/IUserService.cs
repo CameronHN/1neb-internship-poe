@@ -1,14 +1,9 @@
-﻿using Portfolio.Core.DTOs.Resume;
-using Portfolio.Core.DTOs.User;
+﻿using Portfolio.Core.DTOs.User;
 
 namespace Portfolio.Core.Contracts.Services
 {
     public interface IUserService
     {
-        Task<GetUserDetailsDTO> GetUserDetails(Guid id);
-
-        Task<List<string>> GetAllSkillsByUserId(Guid userId);
-
-        Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId);
+        Task<GetUserDetailsDTO> GetUserDetailsAsync(Guid id);
     }
 }

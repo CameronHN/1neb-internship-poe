@@ -43,9 +43,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
-            var title = await _titleService.GetResumeTitleById(id, userId);
+            var title = await _titleService.GetResumeTitleByIdAsync(id, userId);
             if (title is null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(title);
         }
@@ -78,7 +78,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (titleIds == null || titleIds.Count == 0)
-                return BadRequest("Title IDs cannot be null or empty.");
+                throw new ValidationException("Title IDs cannot be null or empty.");
 
             var deleted = await _titleService.DeleteTitlesAsync(userId, titleIds);
             if (!deleted)

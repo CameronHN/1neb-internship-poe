@@ -9,9 +9,9 @@ namespace Portfolio.Core.Contracts.Repositories
     {
         Task<List<Guid>> AddEducationsAsync(Guid userId, List<AddEducation> educations);
 
-        Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
+        Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request);
         Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
-        Task<EducationModel> GetEducationById(Guid id, Guid userId);
+        Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId);
 
         Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch);
 

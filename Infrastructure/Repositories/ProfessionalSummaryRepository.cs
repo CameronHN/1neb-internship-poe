@@ -53,7 +53,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string> GetProfessionalSummaryById(Guid id, Guid userId)
+        public async Task<string> GetProfessionalSummaryByIdAsync(Guid id, Guid userId)
         {
             var summary =
                 await _dbContext
@@ -63,7 +63,7 @@ namespace Portfolio.Infrastructure.Repositories
             return summary;
         }
 
-        public async Task<List<string>> GetSummariesByUserId(Guid userId)
+        public async Task<List<string>> GetSummariesByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .ProfessionalSummary.Where(s => s.UserId == userId)
@@ -71,7 +71,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<string?> GetSummaryById(Guid id)
+        public async Task<string?> GetSummaryByIdAsync(Guid id)
         {
             return await _dbContext
                 .ProfessionalSummary.Where(s => s.Id == id)

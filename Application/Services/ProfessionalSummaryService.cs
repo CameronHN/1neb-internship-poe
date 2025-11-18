@@ -28,14 +28,14 @@ namespace Portfolio.Application.Services
             );
         }
 
-        public async Task<string> GetProfessionalSummaryById(Guid id, Guid userId)
+        public async Task<string> GetProfessionalSummaryByIdAsync(Guid id, Guid userId)
         {
-            return await _professionalSummaryRepository.GetProfessionalSummaryById(id, userId);
+            return await _professionalSummaryRepository.GetProfessionalSummaryByIdAsync(id, userId);
         }
 
-        public async Task<List<string>> GetSummariesByUserId(Guid userId)
+        public async Task<List<string>> GetSummariesByUserIdAsync(Guid userId)
         {
-            return await _professionalSummaryRepository.GetSummariesByUserId(userId);
+            return await _professionalSummaryRepository.GetSummariesByUserIdAsync(userId);
         }
 
         public async Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch)

@@ -9,11 +9,11 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddExperiencesAsync(Guid userId, List<AddExperience> experiences);
 
-        Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id, Guid userId);
+        Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(Guid id, Guid userId);
 
-        Task<List<ExperienceModel>> GetAllExperiencesByIds(List<Guid> ids);
+        Task<List<ExperienceModel>> GetAllExperiencesByIdsAsync(List<Guid> ids);
 
-        Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);
+        Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request);
 
         Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch);
 

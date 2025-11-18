@@ -40,7 +40,7 @@ namespace Portfolio.Application.Services
         {
             var resumeDto = new ResumeDto();
 
-            var user = await _userRepository.GetUserDetailsByUserId(userId);
+            var user = await _userRepository.GetUserDetailsByUserIdAsync(userId);
 
             resumeDto.Name = $"{user.FirstName} {user.LastName}";
 
@@ -49,13 +49,13 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.TitleId.HasValue)
             {
-                var title = await _titleRepository.GetTitleById(resumeRequest.TitleId.Value);
+                var title = await _titleRepository.GetTitleByIdAsync(resumeRequest.TitleId.Value);
                 resumeDto.Title = title;
             }
 
             if (resumeRequest.ProfessionalSummaryId.HasValue)
             {
-                var summary = await _professionalSummaryRepository.GetSummaryById(
+                var summary = await _professionalSummaryRepository.GetSummaryByIdAsync(
                     resumeRequest.ProfessionalSummaryId.Value
                 );
                 resumeDto.Summary = summary;
@@ -71,13 +71,13 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.SkillsIds != null)
             {
-                var skills = await _skillRepository.GetAllSkillsByIds(resumeRequest.SkillsIds);
+                var skills = await _skillRepository.GetAllSkillsByIdsAsync(resumeRequest.SkillsIds);
                 resumeDto.Skills = skills;
             }
 
             if (resumeRequest.EducationIds != null)
             {
-                var educationItems = await _educationRepository.GetAllEducationsByIds(
+                var educationItems = await _educationRepository.GetAllEducationsByIdsAsync(
                     resumeRequest.EducationIds
                 );
                 resumeDto.Education = educationItems;
@@ -85,7 +85,7 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.ExperienceIds != null)
             {
-                var experienceItems = await _experienceRepository.GetAllExperiencesByIds(
+                var experienceItems = await _experienceRepository.GetAllExperiencesByIdsAsync(
                     resumeRequest.ExperienceIds
                 );
                 resumeDto.Experience = experienceItems;
@@ -103,9 +103,9 @@ namespace Portfolio.Application.Services
             return resumeDto;
         }
 
-        public async Task<GetAllResumeDetails?> GetResumeByUserId(Guid userId)
+        public async Task<GetAllResumeDetails?> GetResumeByUserIdAsync(Guid userId)
         {
-            return await _userRepository.GetAllResumeDetailsByUserId(userId);
+            return await _userRepository.GetAllResumeDetailsByUserIdAsync(userId);
         }
     }
 }

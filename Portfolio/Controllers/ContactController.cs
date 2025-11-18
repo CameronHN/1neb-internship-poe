@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Contact;
-using Portfolio.Core.DTOs.Resume;
+using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
@@ -36,7 +36,8 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(SocialMediaItem), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ContactModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetContactById([FromRoute] Guid id)
         {
@@ -76,7 +77,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (contactIds == null || !contactIds.Any())
-                return BadRequest("Contact IDs cannot be null or empty.");
+                throw new ValidationException("Contact IDs cannot be null or empty.");
 
             var deleted = await _contactService.DeleteContactsAsync(userId, contactIds);
             if (!deleted)

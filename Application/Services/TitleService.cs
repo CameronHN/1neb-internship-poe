@@ -23,14 +23,14 @@ namespace Portfolio.Application.Services
             return await _titleRepository.DeleteTitlesAsync(userId, titleIds);
         }
 
-        public async Task<string> GetResumeTitleById(Guid id, Guid userId)
+        public async Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId)
         {
-            return await _titleRepository.GetResumeTitleById(id, userId);
+            return await _titleRepository.GetResumeTitleByIdAsync(id, userId);
         }
 
-        public async Task<string?> GetTitleById(Guid id)
+        public async Task<string?> GetTitleByIdAsync(Guid id)
         {
-            return await _titleRepository.GetTitleById(id);
+            return await _titleRepository.GetTitleByIdAsync(id);
         }
 
         public async Task<List<string>> GetTitlesByUserIdAsync(Guid userId)

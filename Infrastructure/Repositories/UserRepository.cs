@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.Resume;
-using Portfolio.Core.DTOs.User;
-using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
 using Portfolio.Infrastructure.Persistence;
@@ -18,44 +16,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<ApplicationUser?> GetUserById(Guid id)
-        {
-            ApplicationUser? user = await _dbContext.User.FindAsync(id);
-
-            if (user == null)
-            {
-                throw new NotFoundException("User does not exist.");
-            }
-
-            return user;
-        }
-
-        public async Task UpdateUser(UpdateUserDTO updateUserDTO)
-        {
-            var existingUser = await _dbContext.User.FindAsync(updateUserDTO.UserId);
-            if (existingUser == null)
-            {
-                throw new NotFoundException("User does not exist.");
-            }
-
-            existingUser.PhoneNumber = updateUserDTO.PhoneNumber;
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task DeleteUser(Guid id)
-        {
-            var user = await _dbContext.User.FindAsync(id);
-            if (user == null)
-            {
-                throw new NotFoundException("User does not exist.");
-            }
-
-            _dbContext.User.Remove(user);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<GetAllResumeDetails?> GetAllResumeDetailsByUserId(Guid userId)
+        public async Task<GetAllResumeDetails?> GetAllResumeDetailsByUserIdAsync(Guid userId)
         {
             var user = await _dbContext
                 .User.Where(u => u.Id == userId)
@@ -151,31 +112,7 @@ namespace Portfolio.Infrastructure.Repositories
             };
         }
 
-        public async Task<List<string>> GetAllSkillsByUserId(Guid userId)
-        {
-            return await _dbContext
-                .Skill.Where(s => s.UserId == userId)
-                .Select(s => s.SkillName)
-                .ToListAsync();
-        }
-
-        public async Task<List<EducationItem>> GetAllEducationItemsByUserId(Guid userId)
-        {
-            return await _dbContext
-                .Education.Where(e => e.UserId == userId)
-                .OrderBy(e => e.EndDate)
-                .Select(e => new EducationItem
-                {
-                    Institution = e.InstitutionName,
-                    Qualification = e.Qualification,
-                    StartDate = e.StartDate.ToString("MMMM yyyy"),
-                    EndDate = e.EndDate == default ? "Present" : e.EndDate.ToString("MMMM yyyy"),
-                    Major = e.Major,
-                })
-                .ToListAsync();
-        }
-
-        public async Task<UserModel> GetUserDetailsByUserId(Guid id)
+        public async Task<UserModel> GetUserDetailsByUserIdAsync(Guid id)
         {
             UserModel? user = await _dbContext
                 .User.Where(u => u.Id == id)

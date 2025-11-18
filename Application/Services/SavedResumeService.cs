@@ -71,7 +71,7 @@ namespace Portfolio.Application.Services
             return await _savedResumeRepository.DeleteAsync(id, userId);
         }
 
-        public async Task<byte[]> GetSavedResumePdfFromId(Guid id, Guid userId)
+        public async Task<byte[]> GetSavedResumePdfFromIdAsync(Guid id, Guid userId)
         {
             var savedResume = await _savedResumeRepository.GetByIdAsync(id, userId);
 

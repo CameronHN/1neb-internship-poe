@@ -6,9 +6,9 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles);
 
-        Task<string?> GetTitleById(Guid id);
+        Task<string?> GetTitleByIdAsync(Guid id);
 
-        Task<string> GetResumeTitleById(Guid id, Guid userId);
+        Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId);
 
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
 

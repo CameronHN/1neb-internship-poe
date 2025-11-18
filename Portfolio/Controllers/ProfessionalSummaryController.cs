@@ -44,9 +44,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (patch is null)
-                throw new ValidationException(
-                    "Request body cannot be null."
-                );
+                throw new ValidationException("Request body cannot be null.");
 
             var updated = await _summaryService.PatchSummaryAsync(userId, patch);
             if (!updated)
@@ -63,9 +61,9 @@ namespace Portfolio.WebApi.Controllers
         {
             var userId = User.GetUserId()!.Value;
 
-            var summary = await _summaryService.GetProfessionalSummaryById(id, userId);
+            var summary = await _summaryService.GetProfessionalSummaryByIdAsync(id, userId);
             if (summary is null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(summary);
         }
@@ -81,7 +79,7 @@ namespace Portfolio.WebApi.Controllers
             var userId = User.GetUserId()!.Value;
 
             if (summaryIds == null || summaryIds.Count == 0)
-                return BadRequest("Summary IDs cannot be null or empty.");
+                throw new ValidationException("Summary IDs cannot be null or empty.");
 
             var deleted = await _summaryService.DeleteProfessionalSummariesAsync(
                 userId,

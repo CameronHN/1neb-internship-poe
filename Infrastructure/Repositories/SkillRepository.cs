@@ -67,7 +67,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<SkillsItem>> GetAllSkillsByIds(ItemListRequest request)
+        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request)
         {
             var ids = request.Ids;
             if (ids.Count == 0)
@@ -147,7 +147,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<SkillModel> GetSkillById(Guid id, Guid userId)
+        public async Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId)
         {
             var skill =
                 await _dbContext

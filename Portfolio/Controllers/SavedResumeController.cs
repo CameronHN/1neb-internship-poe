@@ -73,7 +73,7 @@ namespace Portfolio.WebApi.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var pdf = await _savedResumeService.GetSavedResumePdfFromId(id, userId.Value);
+            var pdf = await _savedResumeService.GetSavedResumePdfFromIdAsync(id, userId.Value);
 
             var savedResume = await _savedResumeService.GetSavedResumeByIdAsync(id, userId.Value);
             string fileDownloadName =

@@ -21,19 +21,19 @@ namespace Portfolio.Application.Services
             return await _educationRepository.AddEducationsAsync(userId, educations);
         }
 
-        public Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds)
+        public async Task<bool> DeleteEducationsAsync(Guid userId, List<Guid> educationIds)
         {
-            return _educationRepository.DeleteEducationsAsync(userId, educationIds);
+            return await _educationRepository.DeleteEducationsAsync(userId, educationIds);
         }
 
-        public Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request)
+        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request)
         {
-            return _educationRepository.GetAllEducationsByIds(request);
+            return await _educationRepository.GetAllEducationsByIdsAsync(request);
         }
 
         public async Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId)
         {
-            return await _educationRepository.GetEducationById(id, userId);
+            return await _educationRepository.GetEducationByIdAsync(id, userId);
         }
 
         public async Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId)
@@ -41,9 +41,9 @@ namespace Portfolio.Application.Services
             return await _educationRepository.GetEducationsByUserIdAsync(userId);
         }
 
-        public Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch)
+        public async Task<bool> PatchEducationAsync(Guid userId, PatchEducation patch)
         {
-            return _educationRepository.PatchEducationAsync(userId, patch);
+            return await _educationRepository.PatchEducationAsync(userId, patch);
         }
     }
 }

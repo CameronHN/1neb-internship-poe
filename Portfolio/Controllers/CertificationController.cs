@@ -89,11 +89,11 @@ namespace Portfolio.WebApi.Controllers
         public async Task<IActionResult> GetCertificationById([FromRoute] Guid id)
         {
             var userId = User.GetUserId()!.Value;
-            var title = await _certificationService.GetCertificationByIdAsync(id, userId);
-            if (title is null)
-                return BadRequest();
+            var certification = await _certificationService.GetCertificationByIdAsync(id, userId);
+            if (certification is null)
+                return NotFound();
 
-            return Ok(title);
+            return Ok(certification);
         }
     }
 }

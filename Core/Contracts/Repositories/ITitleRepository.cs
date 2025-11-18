@@ -8,9 +8,9 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles);
 
         // Get
-        Task<string?> GetTitleById(Guid id); // Used for resume service
+        Task<string?> GetTitleByIdAsync(Guid id); // Used for resume service
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
-        Task<string> GetResumeTitleById(Guid id, Guid userId); // Throws NotFound exception
+        Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId); // Throws NotFound exception
 
         // Patch
         Task<bool> PatchTitleAsync(Guid userId, PatchResumeTitle patch);

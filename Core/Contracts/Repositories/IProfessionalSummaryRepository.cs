@@ -5,10 +5,10 @@ namespace Portfolio.Core.Contracts.Repositories
     public interface IProfessionalSummaryRepository
     {
         Task<List<Guid>> AddSummariesAsync(Guid userId, List<AddSummary> summaries);
-        Task<string?> GetSummaryById(Guid id);
-        Task<string> GetProfessionalSummaryById(Guid id, Guid userId);
+        Task<string?> GetSummaryByIdAsync(Guid id);
+        Task<string> GetProfessionalSummaryByIdAsync(Guid id, Guid userId);
 
-        Task<List<string>> GetSummariesByUserId(Guid userId);
+        Task<List<string>> GetSummariesByUserIdAsync(Guid userId);
 
         Task<bool> PatchSummaryAsync(Guid userId, PatchSummary patch);
 

@@ -9,7 +9,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddEducationsAsync(Guid userId, List<AddEducation> educations);
 
-        Task<List<EducationItem>> GetAllEducationsByIds(ItemListRequest request);
+        Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request);
         Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
         Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId);
 

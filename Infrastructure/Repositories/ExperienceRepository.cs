@@ -20,7 +20,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<ExperienceModel>> GetAllExperiencesByIds(List<Guid> ids)
+        public async Task<List<ExperienceModel>> GetAllExperiencesByIdsAsync(List<Guid> ids)
         {
             return await _dbContext
                 .Experience.Where(e => ids.Contains(e.Id))
@@ -36,7 +36,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(
+        public async Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(
             Guid id,
             Guid userId
         )
@@ -65,7 +65,7 @@ namespace Portfolio.Infrastructure.Repositories
             return experience;
         }
 
-        public async Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
+        public async Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request)
         {
             var ids = request.Ids;
             if (ids.Count == 0)

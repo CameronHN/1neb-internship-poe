@@ -24,6 +24,8 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("create-pdf")]
         public async Task<IActionResult> GenerateResumeWithoutSavingDetails(
             [FromBody] ResumeDto dto
@@ -38,13 +40,14 @@ namespace Portfolio.WebApi.Controllers
 
         [Authorize]
         [HttpGet("get-user-resume-details")]
-        [ProducesResponseType(200, Type = typeof(ResumeDto))]
+        [ProducesResponseType(200, Type = typeof(GetAllResumeDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllResumeDetailsByUserId()
         {
             var userId = User.GetUserId()!.Value;
 
-            var resume = await _resumeDataService.GetResumeByUserId(userId);
+            var resume = await _resumeDataService.GetResumeByUserIdAsync(userId);
             if (resume == null)
                 return NotFound();
 
@@ -53,6 +56,10 @@ namespace Portfolio.WebApi.Controllers
 
         [Authorize]
         [HttpPost("get-resume")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
             var userId = User.GetUserId()!.Value;
