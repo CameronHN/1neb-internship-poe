@@ -11,10 +11,6 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<ExperienceWithResponsibilitiesModel> GetExperienceById(Guid id, Guid userId);
 
-        Task<
-            List<ExperienceWithResponsibilitiesModel>
-        > GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id);
-
         Task<List<ExperienceModel>> GetAllExperiencesByIds(List<Guid> ids);
 
         Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request);

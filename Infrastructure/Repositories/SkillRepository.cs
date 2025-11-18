@@ -131,17 +131,13 @@ namespace Portfolio.Infrastructure.Repositories
                 anyChange = true;
             }
 
-            // Update proficiency if provided
-            if (patch.ProficiencyLevel != null)
+            var profLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel)
+                ? null
+                : patch.ProficiencyLevel;
+            if (profLevel != skill.ProficiencyLevel)
             {
-                var newLevel = string.IsNullOrWhiteSpace(patch.ProficiencyLevel)
-                    ? null
-                    : patch.ProficiencyLevel;
-                if (newLevel != skill.ProficiencyLevel)
-                {
-                    skill.ProficiencyLevel = newLevel;
-                    anyChange = true;
-                }
+                skill.ProficiencyLevel = profLevel;
+                anyChange = true;
             }
 
             if (!anyChange)

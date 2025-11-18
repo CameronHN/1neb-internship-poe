@@ -118,8 +118,8 @@ namespace Portfolio.Infrastructure.Repositories
                         Id = ed.Id,
                         InstitutionName = ed.InstitutionName,
                         Qualification = ed.Qualification,
-                        StartDate = ed.StartDate.ToString("MMMM yyyy"),
-                        EndDate = ed.EndDate.ToString("MMMM yyyy"),
+                        StartDate = ed.StartDate.ToString("dd MMMM yyyy"),
+                        EndDate = ed.EndDate.ToString("dd MMMM yyyy"),
                         Major = ed.Major,
                         Achievement = ed.Achievement,
                     })
@@ -197,26 +197,20 @@ namespace Portfolio.Infrastructure.Repositories
                 }
             }
 
-            if (patch.Major != null)
+            var major = string.IsNullOrWhiteSpace(patch.Major) ? null : patch.Major;
+            if (major != edu.Major)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.Major) ? null : patch.Major;
-                if (newValue != edu.Major)
-                {
-                    edu.Major = newValue;
-                    anyChange = true;
-                }
+                edu.Major = major;
+                anyChange = true;
             }
 
-            if (patch.Achievement != null)
+            var achievement = string.IsNullOrWhiteSpace(patch.Achievement)
+                ? null
+                : patch.Achievement;
+            if (achievement != edu.Achievement)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.Achievement)
-                    ? null
-                    : patch.Achievement;
-                if (newValue != edu.Achievement)
-                {
-                    edu.Achievement = newValue;
-                    anyChange = true;
-                }
+                edu.Achievement = achievement;
+                anyChange = true;
             }
 
             if (!anyChange)

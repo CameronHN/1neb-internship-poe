@@ -36,26 +36,6 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<
-            List<ExperienceWithResponsibilitiesModel>
-        > GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id)
-        {
-            return await _dbContext
-                .Experience.Where(e => e.UserId == id)
-                .Include(e => e.Responsibilities)
-                .OrderBy(e => e.EndDate)
-                .Select(e => new ExperienceWithResponsibilitiesModel
-                {
-                    Id = e.Id,
-                    CompanyName = e.CompanyName,
-                    JobTitle = e.JobTitle,
-                    StartDate = e.StartDate.ToString("MMMM yyyy"),
-                    EndDate = e.EndDate.ToString("MMMM yyyy"),
-                    Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList(),
-                })
-                .ToListAsync();
-        }
-
         public async Task<ExperienceWithResponsibilitiesModel> GetExperienceById(
             Guid id,
             Guid userId
@@ -64,18 +44,22 @@ namespace Portfolio.Infrastructure.Repositories
             var experience =
                 await _dbContext
                     .Experience.Where(e => e.Id == id && e.UserId == userId)
+                    .Include(e => e.Responsibilities)
                     .Select(edu => new ExperienceWithResponsibilitiesModel
                     {
                         Id = edu.Id,
                         CompanyName = edu.CompanyName,
                         JobTitle = edu.JobTitle,
-                        StartDate = edu.StartDate.ToString("MMMM yyyy"),
-                        EndDate = edu.EndDate.ToString("MMMM yyyy"),
+                        StartDate = edu.StartDate.ToString("dd MMMM yyyy"),
+                        EndDate = edu.EndDate.ToString("dd MMMM yyyy"),
                         Responsibilities = edu
-                            .Responsibilities.Select(r => r.Responsibility)
+                            .Responsibilities.Select(r => new Responsibilities
+                            {
+                                Id = r.Id,
+                                Responsibility = r.Responsibility,
+                            })
                             .ToList(),
                     })
-                    .Include(e => e.Responsibilities)
                     .FirstOrDefaultAsync() ?? throw new NotFoundException("Experience not found.");
 
             return experience;
@@ -182,7 +166,7 @@ namespace Portfolio.Infrastructure.Repositories
                 anyChange = true;
             }
 
-            if (patch.CompanyName != null && patch.CompanyName != exp.CompanyName)
+            if (patch.CompanyName != exp.CompanyName)
             {
                 exp.CompanyName = patch.CompanyName;
                 anyChange = true;

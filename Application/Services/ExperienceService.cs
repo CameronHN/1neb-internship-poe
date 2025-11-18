@@ -29,15 +29,6 @@ namespace Portfolio.Application.Services
             return await _experienceRepository.GetExperienceById(id, userId);
         }
 
-        public Task<
-            List<ExperienceWithResponsibilitiesModel>
-        > GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(Guid id)
-        {
-            return _experienceRepository.GetAllExperiencesIncludingResponsibilitiesByUserIdAsync(
-                id
-            );
-        }
-
         public Task<List<ExperienceItem>> GetAllExperiencesByIds(ItemListRequest request)
         {
             return _experienceRepository.GetAllExperiencesByIds(request);

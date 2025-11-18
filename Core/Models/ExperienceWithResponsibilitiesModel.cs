@@ -12,6 +12,13 @@
 
         public required string EndDate { get; set; }
 
-        public List<string>? Responsibilities { get; set; }
+        public List<Responsibilities>? Responsibilities { get; set; }
+    }
+
+    public class Responsibilities
+    {
+        public Guid Id { get; set; }
+
+        public required string Responsibility { get; set; }
     }
 }

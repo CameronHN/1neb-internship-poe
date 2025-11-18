@@ -181,58 +181,42 @@ namespace Portfolio.Infrastructure.Repositories
                 anyChange = true;
             }
 
-            if (patch.IssuingOrganisation != null)
+            var issueOrg = string.IsNullOrWhiteSpace(patch.IssuingOrganisation)
+                ? null
+                : patch.IssuingOrganisation;
+            if (issueOrg != cert.IssuingOrganisation)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.IssuingOrganisation)
-                    ? null
-                    : patch.IssuingOrganisation;
-                if (newValue != cert.IssuingOrganisation)
-                {
-                    cert.IssuingOrganisation = newValue;
-                    anyChange = true;
-                }
+                cert.IssuingOrganisation = issueOrg;
+                anyChange = true;
             }
 
-            if (patch.CredentialUrl != null)
+            var credUrl = string.IsNullOrWhiteSpace(patch.CredentialUrl)
+                ? null
+                : patch.CredentialUrl;
+            if (credUrl != cert.CredentialUrl)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.CredentialUrl)
-                    ? null
-                    : patch.CredentialUrl;
-                if (newValue != cert.CredentialUrl)
-                {
-                    cert.CredentialUrl = newValue;
-                    anyChange = true;
-                }
+                cert.CredentialUrl = credUrl;
+                anyChange = true;
             }
 
-            if (patch.IssuedDate != null)
+            var issueDate = string.IsNullOrWhiteSpace(patch.IssuedDate) ? null : patch.IssuedDate;
+            DateOnly? newIssuedDate = !string.IsNullOrWhiteSpace(issueDate)
+                ? DateOnly.Parse(issueDate)
+                : null;
+            if (newIssuedDate != cert.IssuedDate)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.IssuedDate)
-                    ? null
-                    : patch.IssuedDate;
-                DateOnly? newIssuedDate = !string.IsNullOrWhiteSpace(newValue)
-                    ? DateOnly.Parse(newValue)
-                    : null;
-                if (newIssuedDate != cert.IssuedDate)
-                {
-                    cert.IssuedDate = newIssuedDate;
-                    anyChange = true;
-                }
+                cert.IssuedDate = newIssuedDate;
+                anyChange = true;
             }
 
-            if (patch.ExpiryDate != null)
+            var expiryDate = string.IsNullOrWhiteSpace(patch.ExpiryDate) ? null : patch.ExpiryDate;
+            DateOnly? newExpiryDate = !string.IsNullOrWhiteSpace(expiryDate)
+                ? DateOnly.Parse(expiryDate)
+                : null;
+            if (newExpiryDate != cert.ExpiryDate)
             {
-                var newValue = string.IsNullOrWhiteSpace(patch.ExpiryDate)
-                    ? null
-                    : patch.ExpiryDate;
-                DateOnly? newExpiryDate = !string.IsNullOrWhiteSpace(newValue)
-                    ? DateOnly.Parse(newValue)
-                    : null;
-                if (newExpiryDate != cert.ExpiryDate)
-                {
-                    cert.ExpiryDate = newExpiryDate;
-                    anyChange = true;
-                }
+                cert.ExpiryDate = newExpiryDate;
+                anyChange = true;
             }
 
             if (!anyChange)
