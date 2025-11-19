@@ -126,8 +126,8 @@ namespace Portfolio.Application.Documents
 
                             foreach (var exp in experience)
                             {
-                                var jobCompanyName = exp.Company ?? "Unknown";
-                                var jobTitle = exp.JobTitle ?? "Unknown";
+                                var jobCompanyName = exp.Company ?? "";
+                                var jobTitle = exp.JobTitle ?? "";
                                 var jobDates = string.Join(
                                     " - ",
                                     new[] { exp.StartDate, exp.EndDate }.Where(s =>
@@ -161,13 +161,16 @@ namespace Portfolio.Application.Documents
                                             .Text(jobDates)
                                             .Bold()
                                             .AlignRight();
-                                        table
-                                            .Cell()
-                                            .Row(2)
-                                            .Column(1)
-                                            .Text(jobCompanyName)
-                                            .Bold()
-                                            .AlignLeft();
+                                        if (!string.IsNullOrWhiteSpace(jobCompanyName))
+                                        {
+                                            table
+                                                .Cell()
+                                                .Row(2)
+                                                .Column(1)
+                                                .Text(jobCompanyName)
+                                                .Bold()
+                                                .AlignLeft();
+                                        }
                                     });
 
                                 foreach (string res in jobResponsibilities)
@@ -216,7 +219,12 @@ namespace Portfolio.Application.Documents
                                     {
                                         row.AutoItem().Text(bulletpoint);
                                         row.ConstantItem(5);
-                                        row.RelativeItem().Text($"{skillName} \u2014 {skillLevel}");
+                                        row.RelativeItem()
+                                            .Text(
+                                                !string.IsNullOrWhiteSpace(skillLevel)
+                                                    ? $"{skillName} \u2014 {skillLevel}"
+                                                    : skillName
+                                            );
                                     });
                             }
                         }
@@ -270,7 +278,7 @@ namespace Portfolio.Application.Documents
                                                 qualification
                                                     + (
                                                         !string.IsNullOrWhiteSpace(major)
-                                                            ? ", " + major
+                                                            ? $", {major}"
                                                             : ""
                                                     )
                                             )
