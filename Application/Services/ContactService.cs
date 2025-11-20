@@ -7,43 +7,43 @@ using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
 {
-    public class ContactService : IContactService
+    public class ContactService : IProfessionalLinkService
     {
-        private readonly IContactRepository _contactRepository;
+        private readonly IProfessionalLinkRepository _contactRepository;
 
-        public ContactService(IContactRepository contactRepository)
+        public ContactService(IProfessionalLinkRepository contactRepository)
         {
             _contactRepository = contactRepository;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddProfessionalLink> contacts)
+        public async Task<List<Guid>> AddProfessionalLinksAsync(Guid userId, List<AddProfessionalLink> contacts)
         {
-            return await _contactRepository.AddContactsAsync(userId, contacts);
+            return await _contactRepository.AddProfessionalLinksAsync(userId, contacts);
         }
 
-        public async Task<ProfessionalLinkModel?> GetContactByIdAsync(Guid id, Guid userId)
+        public async Task<ProfessionalLinkModel?> GetProfessionalLinkByIdAsync(Guid id, Guid userId)
         {
-            return await _contactRepository.GetContactByIdAsync(id, userId);
+            return await _contactRepository.GetProfessionalLinkAsync(id, userId);
         }
 
-        public async Task<List<ProfessionalLinkModel>> GetContactsByUserIdAsync(Guid userId)
+        public async Task<List<ProfessionalLinkModel>> GetProfessionalLinksByUserIdAsync(Guid userId)
         {
-            return await _contactRepository.GetContactsByUserIdAsync(userId);
+            return await _contactRepository.GetProfessionalLinksByUserIdAsync(userId);
         }
 
-        public Task<List<ProfessionalLinkItem>> GetContactsByIdsAsync(ItemListRequest request)
+        public Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(ItemListRequest request)
         {
-            return _contactRepository.GetContactsByIdsAsync(request);
+            return _contactRepository.GetProfessionalLinksByIdsAsync(request);
         }
 
-        public async Task<bool> PatchContactAsync(Guid userId, PatchProfessionalLink patch)
+        public async Task<bool> PatchProfessionalLinkAsync(Guid userId, PatchProfessionalLink patch)
         {
-            return await _contactRepository.PatchContactAsync(userId, patch);
+            return await _contactRepository.PatchProfessionalLinkAsync(userId, patch);
         }
 
-        public async Task<bool> DeleteContactsAsync(Guid userId, List<Guid> contactIds)
+        public async Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> contactIds)
         {
-            return await _contactRepository.DeleteContactsAsync(userId, contactIds);
+            return await _contactRepository.DeleteProfessionalLinksAsync(userId, contactIds);
         }
     }
 }

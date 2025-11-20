@@ -10,7 +10,7 @@ using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ContactRepository : IContactRepository
+    public class ContactRepository : IProfessionalLinkRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -19,7 +19,7 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddProfessionalLink> contacts)
+        public async Task<List<Guid>> AddProfessionalLinksAsync(Guid userId, List<AddProfessionalLink> contacts)
         {
             var entities = contacts
                 .Select(contact => new ProfessionalLink { LinkType = contact.LinkType, Link = contact.Link, UserId = userId })
@@ -31,7 +31,7 @@ namespace Portfolio.Infrastructure.Repositories
             return entities.Select(e => e.Id).ToList();
         }
 
-        public async Task<ProfessionalLinkModel?> GetContactByIdAsync(Guid id, Guid userId)
+        public async Task<ProfessionalLinkModel?> GetProfessionalLinkAsync(Guid id, Guid userId)
         {
             var contact = await _dbContext
                 .ProfessionalLink.Where(c => c.Id == id && c.UserId == userId)
@@ -41,7 +41,7 @@ namespace Portfolio.Infrastructure.Repositories
             return contact;
         }
 
-        public async Task<List<ProfessionalLinkModel>> GetContactsByUserIdAsync(Guid userId)
+        public async Task<List<ProfessionalLinkModel>> GetProfessionalLinksByUserIdAsync(Guid userId)
         {
             return await _dbContext
                 .ProfessionalLink.Where(c => c.UserId == userId)
@@ -49,7 +49,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<ProfessionalLinkItem>> GetContactsByIdsAsync(ItemListRequest request)
+        public async Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(ItemListRequest request)
         {
             List<Guid> ids = request.Ids;
             if (request == null || ids == null || ids.Count == 0)
@@ -73,7 +73,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<bool> PatchContactAsync(Guid userId, PatchProfessionalLink patch)
+        public async Task<bool> PatchProfessionalLinkAsync(Guid userId, PatchProfessionalLink patch)
         {
             if (patch == null)
                 return false;
@@ -100,7 +100,7 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<bool> DeleteContactsAsync(Guid userId, List<Guid> contactIds)
+        public async Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> contactIds)
         {
             if (contactIds.IsNullOrEmpty())
                 return false;

@@ -108,8 +108,8 @@ builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IEducationService, EducationService>();
 
 // Contact
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
-builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IProfessionalLinkRepository, ContactRepository>();
+builder.Services.AddScoped<IProfessionalLinkService, ContactService>();
 
 // Professional Summary
 builder.Services.AddScoped<IProfessionalSummaryRepository, ProfessionalSummaryRepository>();

@@ -13,9 +13,9 @@ namespace Portfolio.WebApi.Controllers
     [ApiController]
     public class ContactController : ControllerBase
     {
-        private readonly IContactService _contactService;
+        private readonly IProfessionalLinkService _contactService;
 
-        public ContactController(IContactService contactService)
+        public ContactController(IProfessionalLinkService contactService)
         {
             _contactService = contactService;
         }
@@ -31,7 +31,7 @@ namespace Portfolio.WebApi.Controllers
             if (contacts is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var addedIds = await _contactService.AddContactsAsync(userId, contacts);
+            var addedIds = await _contactService.AddProfessionalLinksAsync(userId, contacts);
             return Created(string.Empty, addedIds);
         }
 
@@ -42,7 +42,7 @@ namespace Portfolio.WebApi.Controllers
         public async Task<IActionResult> GetContactById([FromRoute] Guid id)
         {
             var userId = User.GetUserId()!.Value;
-            var contact = await _contactService.GetContactByIdAsync(id, userId);
+            var contact = await _contactService.GetProfessionalLinkByIdAsync(id, userId);
             if (contact == null)
                 return NotFound();
 
@@ -61,7 +61,7 @@ namespace Portfolio.WebApi.Controllers
             if (patch is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var updated = await _contactService.PatchContactAsync(userId, patch);
+            var updated = await _contactService.PatchProfessionalLinkAsync(userId, patch);
             if (!updated)
                 return NoContent();
 
@@ -79,7 +79,7 @@ namespace Portfolio.WebApi.Controllers
             if (contactIds == null || !contactIds.Any())
                 throw new ValidationException("Contact IDs cannot be null or empty.");
 
-            var deleted = await _contactService.DeleteContactsAsync(userId, contactIds);
+            var deleted = await _contactService.DeleteProfessionalLinksAsync(userId, contactIds);
             if (!deleted)
                 return BadRequest("Failed to delete the specified contacts.");
 
