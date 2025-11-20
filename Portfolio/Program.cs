@@ -125,7 +125,7 @@ builder.Services.AddScoped<ISavedResumeService, SavedResumeService>();
 
 // Resume
 builder.Services.AddScoped<IResumeDataService, ResumeDataService>();
-builder.Services.AddScoped<IResumeGenerationService, ResumeGenerationService>();
+builder.Services.AddSingleton<IResumeGenerationService, ResumeGenerationService>(); // Stateless service
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
