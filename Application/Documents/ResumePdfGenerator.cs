@@ -134,8 +134,8 @@ namespace Portfolio.Application.Documents
 
                             foreach (var exp in experience)
                             {
-                                var jobCompanyName = exp.Company ?? "";
-                                var jobTitle = exp.JobTitle ?? "";
+                                var jobCompanyName = exp.Company ?? string.Empty;
+                                var jobTitle = exp.JobTitle ?? string.Empty;
                                 var jobDates = string.Join(
                                     " - ",
                                     new[] { exp.StartDate, exp.EndDate }.Where(s =>
@@ -218,8 +218,8 @@ namespace Portfolio.Application.Documents
 
                             foreach (var skill in skills)
                             {
-                                var skillName = skill.Skill ?? "";
-                                var skillLevel = skill.SkillLevel ?? "";
+                                var skillName = skill.Skill ?? string.Empty;
+                                var skillLevel = skill.SkillLevel ?? string.Empty;
 
                                 column
                                     .Item()
@@ -258,15 +258,15 @@ namespace Portfolio.Application.Documents
 
                             foreach (var ed in education)
                             {
-                                var institutionName = ed.Institution ?? "";
-                                var qualification = ed.Qualification ?? "";
+                                var institutionName = ed.Institution ?? string.Empty;
+                                var qualification = ed.Qualification ?? string.Empty;
                                 var datesStudied = string.Join(
                                     " - ",
                                     new[] { ed.StartDate, ed.EndDate }.Where(s =>
                                         !string.IsNullOrWhiteSpace(s)
                                     )
                                 );
-                                var major = ed.Major ?? "";
+                                var major = ed.Major ?? string.Empty;
 
                                 column
                                     .Item()
@@ -287,7 +287,7 @@ namespace Portfolio.Application.Documents
                                                     + (
                                                         !string.IsNullOrWhiteSpace(major)
                                                             ? $", {major}"
-                                                            : ""
+                                                            : string.Empty
                                                     )
                                             )
                                             .Bold()
@@ -331,9 +331,9 @@ namespace Portfolio.Application.Documents
 
                             foreach (var ce in certification)
                             {
-                                var cert = ce.Name ?? "Unknown";
-                                var certLink = ce.CredentialUrl ?? "";
-                                var org = ce.Organisation ?? "";
+                                var cert = ce.Name ?? string.Empty;
+                                var certLink = ce.CredentialUrl ?? string.Empty;
+                                var org = ce.Organisation ?? string.Empty;
 
                                 column
                                     .Item()
