@@ -199,7 +199,7 @@ Use the included **Bruno (.bru)** files for API testing:
 ```mermaid
 erDiagram
     User {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) FirstName
         VARCHAR(100) LastName
         NVARCHAR(MAX) PhoneNumber
@@ -207,73 +207,73 @@ erDiagram
     }
 
     Contact {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) ContactUrl
-        UID UserId FK
+        GUID UserId FK
     }
 
     SavedResume {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) Name
         VARCHAR(MAX) Data
         VARCHAR(100) TemplateType
         DATETIME2(7) CreatedAt
-        UID UserId FK
+        GUID UserId FK
     }
 
     ProfessionalSummary {
-        UID Id PK
+        GUID Id PK
         VARCHAR(200) Summary
-        UID UserId FK
+        GUID UserId FK
     }
 
     Title {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) ResumeTitle
-        UID UserId FK
+        GUID UserId FK
     }
 
     Skills {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) SkillName
         VARCHAR(100) SkillLevel
-        UID UserId FK
+        GUID UserId FK
     }
 
     Certification {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) CertificationName
         VARCHAR(100) IssuingOrganisation
         VARCHAR(100) CredentialUrl
         DATE IssueDate
         DATE ExpiryDate
-        UID UserId FK
+        GUID UserId FK
     }
 
     Experience {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) JobTitle
         VARCHAR(100) CompanyName
         DATE StartDate
         DATE EndDate
-        UID UserId FK
+        GUID UserId FK
     }
 
     ExperienceResponsibility {
-        UID Id PK
+        GUID Id PK
         VARCHAR(255) Responsibility
-        UID ExperienceId FK
+        GUID ExperienceId FK
     }
 
     Education {
-        UID Id PK
+        GUID Id PK
         VARCHAR(100) InstitutionName
         VARCHAR(100) Qualification
         DATE StartDate
         DATE EndDate
         VARCHAR(100) Major
         VARCHAR(100) Achievement
-        UID UserId FK
+        GUID UserId FK
     }
 
     User ||--o{ Contact : "has"
