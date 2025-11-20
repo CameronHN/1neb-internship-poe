@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
@@ -228,7 +227,7 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds)
         {
-            if (experienceIds.IsNullOrEmpty())
+            if (experienceIds.Count == 0)
                 return false;
 
             var experiencesToDelete = await _dbContext
