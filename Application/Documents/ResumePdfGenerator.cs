@@ -64,15 +64,24 @@ namespace Portfolio.Application.Documents
                                         text.Span(_m.Email + " | " + _m.PhoneNumber);
 
                                         // Socials
-                                        if (_m.ProfessionalLinks?.Any() == true)
+                                        List<ProfessionalLinkItem>? socials = _m.ProfessionalLinks;
+                                        if (socials?.Count > 0)
                                         {
-                                            foreach (var s in _m.ProfessionalLinks)
+                                            text.Span(" | ");
+
+                                            for (int i = 0; i < socials.Count; i++)
                                             {
-                                                var url = s?.Link;
-                                                if (!string.IsNullOrWhiteSpace(url))
+                                                var s = socials[i];
+
+                                                text.Hyperlink(
+                                                        s?.LinkType ?? string.Empty,
+                                                        s?.Link ?? string.Empty
+                                                    )
+                                                    .FontColor(Colors.Blue.Medium);
+
+                                                if (i < socials.Count - 1)
                                                 {
                                                     text.Span(" | ");
-                                                    text.Hyperlink(url, url);
                                                 }
                                             }
                                         }

@@ -38,6 +38,7 @@
     public class SocialMediaItems
     {
         public Guid Id { get; set; }
+        public string? SocialMediaType { get; set; }
         public string? SocialMediaUrl { get; set; }
     }
 
