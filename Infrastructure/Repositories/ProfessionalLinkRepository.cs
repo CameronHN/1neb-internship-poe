@@ -115,6 +115,12 @@ namespace Portfolio.Infrastructure.Repositories
                 anyChange = true;
             }
 
+            if (patch.LinkType != null && patch.LinkType != link.LinkType)
+            {
+                link.LinkType = patch.LinkType;
+                anyChange = true;
+            }
+
             if (!anyChange)
                 return false;
 
