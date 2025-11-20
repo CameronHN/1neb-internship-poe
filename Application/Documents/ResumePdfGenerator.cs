@@ -64,11 +64,11 @@ namespace Portfolio.Application.Documents
                                         text.Span(_m.Email + " | " + _m.PhoneNumber);
 
                                         // Socials
-                                        if (_m.Socials?.Any() == true)
+                                        if (_m.ProfessionalLinks?.Any() == true)
                                         {
-                                            foreach (var s in _m.Socials)
+                                            foreach (var s in _m.ProfessionalLinks)
                                             {
-                                                var url = s?.SocialMediaUrl;
+                                                var url = s?.Link;
                                                 if (!string.IsNullOrWhiteSpace(url))
                                                 {
                                                     text.Span(" | ");

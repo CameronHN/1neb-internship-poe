@@ -14,7 +14,7 @@ namespace Portfolio.Infrastructure.Persistence
 
         public DbSet<Certification> Certification { get; set; }
 
-        public DbSet<Contact> Contact { get; set; }
+        public DbSet<ProfessionalLink> ProfessionalLink { get; set; }
 
         public DbSet<Education> Education { get; set; }
 

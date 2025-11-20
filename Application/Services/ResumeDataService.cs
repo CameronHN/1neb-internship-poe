@@ -66,7 +66,7 @@ namespace Portfolio.Application.Services
                 var socials = await _contactRepository.GetContactsByIdsAsync(
                     resumeRequest.SocialMediaIds
                 );
-                resumeDto.Socials = socials;
+                resumeDto.ProfessionalLinks = socials;
             }
 
             if (resumeRequest.SkillsIds != null)

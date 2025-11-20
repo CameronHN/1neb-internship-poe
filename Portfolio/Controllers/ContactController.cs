@@ -24,7 +24,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddContacts([FromBody] List<AddContact> contacts)
+        public async Task<IActionResult> AddContacts([FromBody] List<AddProfessionalLink> contacts)
         {
             var userId = User.GetUserId()!.Value;
 
@@ -36,7 +36,7 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(ContactModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProfessionalLinkModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetContactById([FromRoute] Guid id)
@@ -54,7 +54,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> PatchContact([FromBody] PatchContact patch)
+        public async Task<IActionResult> PatchContact([FromBody] PatchProfessionalLink patch)
         {
             var userId = User.GetUserId()!.Value;
 

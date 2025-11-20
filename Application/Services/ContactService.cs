@@ -16,27 +16,27 @@ namespace Portfolio.Application.Services
             _contactRepository = contactRepository;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts)
+        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddProfessionalLink> contacts)
         {
             return await _contactRepository.AddContactsAsync(userId, contacts);
         }
 
-        public async Task<ContactModel?> GetContactByIdAsync(Guid id, Guid userId)
+        public async Task<ProfessionalLinkModel?> GetContactByIdAsync(Guid id, Guid userId)
         {
             return await _contactRepository.GetContactByIdAsync(id, userId);
         }
 
-        public async Task<List<ContactModel>> GetContactsByUserIdAsync(Guid userId)
+        public async Task<List<ProfessionalLinkModel>> GetContactsByUserIdAsync(Guid userId)
         {
             return await _contactRepository.GetContactsByUserIdAsync(userId);
         }
 
-        public Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request)
+        public Task<List<ProfessionalLinkItem>> GetContactsByIdsAsync(ItemListRequest request)
         {
             return _contactRepository.GetContactsByIdsAsync(request);
         }
 
-        public async Task<bool> PatchContactAsync(Guid userId, PatchContact patch)
+        public async Task<bool> PatchContactAsync(Guid userId, PatchProfessionalLink patch)
         {
             return await _contactRepository.PatchContactAsync(userId, patch);
         }

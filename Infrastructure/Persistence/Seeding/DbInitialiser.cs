@@ -8,7 +8,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
     {
         private readonly ApplicationDbContext _context = context;
 
-        private static readonly string[] proficiencyLevels =
+        private static readonly string[] _proficiencyLevels =
         [
             "Beginner",
             "Intermediate",
@@ -16,11 +16,19 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             "Expert",
         ];
 
-        private static readonly string[] institutionTypes =
+        private static readonly string[] _institutionTypes =
         [
             "High School",
             "University",
             "University of Technology",
+        ];
+
+        private static readonly string[] _linkTypes =
+        [
+            "Github",
+            "LinkedIn",
+            "Twitter",
+            "Personal Website",
         ];
 
         public static string CapitalizeEfficiently(string input)
@@ -114,7 +122,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 var skillFaker = new Faker<Skill>()
                     .RuleFor(s => s.Id, _ => Guid.NewGuid())
                     .RuleFor(s => s.SkillName, f => f.Name.JobArea())
-                    .RuleFor(s => s.ProficiencyLevel, f => f.PickRandom(proficiencyLevels))
+                    .RuleFor(s => s.ProficiencyLevel, f => f.PickRandom(_proficiencyLevels))
                     .RuleFor(s => s.UserId, f => f.PickRandom(users).Id);
 
                 var skills = skillFaker.Generate(40);
@@ -131,7 +139,7 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                     .RuleFor(
                         e => e.InstitutionName,
                         f =>
-                            $"{CapitalizeEfficiently(f.Random.Word())} {f.PickRandom(institutionTypes)}"
+                            $"{CapitalizeEfficiently(f.Random.Word())} {f.PickRandom(_institutionTypes)}"
                     )
                     .RuleFor(e => e.Qualification, f => CapitalizeEfficiently(f.Random.Word()))
                     .RuleFor(e => e.Major, f => CapitalizeEfficiently(f.Random.Word()))
@@ -154,16 +162,17 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             }
 
             // ======== Contacts ========
-            if (!_context.Contact.Any())
+            if (!_context.ProfessionalLink.Any())
             {
-                var contactFaker = new Faker<Contact>()
+                var contactFaker = new Faker<ProfessionalLink>()
                     .RuleFor(c => c.Id, _ => Guid.NewGuid())
-                    .RuleFor(c => c.ContactUrl, f => f.Internet.Url())
+                    .RuleFor(c => c.Link, f => f.Internet.Url())
+                    .RuleFor(c => c.LinkType, f => f.PickRandom(_linkTypes))
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
                 var contacts = contactFaker.Generate(20);
 
-                await _context.Contact.AddRangeAsync(contacts);
+                await _context.ProfessionalLink.AddRangeAsync(contacts);
                 await _context.SaveChangesAsync();
             }
 

@@ -15,7 +15,7 @@ namespace Portfolio.Core.DTOs.Resume
         [MaxLength(200, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         public string? Summary { get; set; }
 
-        public List<AddContact>? Contacts { get; set; }
+        public List<AddProfessionalLink>? Contacts { get; set; }
 
         public List<AddSkill>? Skills { get; set; }
 

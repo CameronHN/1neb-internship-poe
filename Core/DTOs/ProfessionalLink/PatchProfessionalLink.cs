@@ -2,7 +2,7 @@
 
 namespace Portfolio.Core.DTOs.Contact
 {
-    public class PatchContact
+    public class PatchProfessionalLink
     {
         [Required]
         public Guid Id { get; set; }
@@ -10,6 +10,10 @@ namespace Portfolio.Core.DTOs.Contact
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
         [Url(ErrorMessage = "Invalid URL format.")]
         [RegularExpression(@"\S.*", ErrorMessage = "Social link cannot be whitespace.")]
-        public string? ContactUrl { get; set; }
+        public string? Link { get; set; }
+
+        [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]
+        [RegularExpression(@"\S.*", ErrorMessage = "Social link type cannot be whitespace.")]
+        public string? LinkType { get; set; }
     }
 }

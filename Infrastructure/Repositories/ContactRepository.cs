@@ -19,45 +19,45 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts)
+        public async Task<List<Guid>> AddContactsAsync(Guid userId, List<AddProfessionalLink> contacts)
         {
             var entities = contacts
-                .Select(contact => new Contact { ContactUrl = contact.Social, UserId = userId })
+                .Select(contact => new ProfessionalLink { LinkType = contact.LinkType, Link = contact.Link, UserId = userId })
                 .ToList();
 
-            await _dbContext.Contact.AddRangeAsync(entities);
+            await _dbContext.ProfessionalLink.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
 
             return entities.Select(e => e.Id).ToList();
         }
 
-        public async Task<ContactModel?> GetContactByIdAsync(Guid id, Guid userId)
+        public async Task<ProfessionalLinkModel?> GetContactByIdAsync(Guid id, Guid userId)
         {
             var contact = await _dbContext
-                .Contact.Where(c => c.Id == id && c.UserId == userId)
-                .Select(c => new ContactModel { Id = c.Id, ContactUrl = c.ContactUrl })
+                .ProfessionalLink.Where(c => c.Id == id && c.UserId == userId)
+                .Select(c => new ProfessionalLinkModel { Id = c.Id, Link = c.Link, LinkType = c.LinkType })
                 .FirstOrDefaultAsync();
 
             return contact;
         }
 
-        public async Task<List<ContactModel>> GetContactsByUserIdAsync(Guid userId)
+        public async Task<List<ProfessionalLinkModel>> GetContactsByUserIdAsync(Guid userId)
         {
             return await _dbContext
-                .Contact.Where(c => c.UserId == userId)
-                .Select(c => new ContactModel { ContactUrl = c.ContactUrl })
+                .ProfessionalLink.Where(c => c.UserId == userId)
+                .Select(c => new ProfessionalLinkModel { Link = c.Link, LinkType = c.LinkType })
                 .ToListAsync();
         }
 
-        public async Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request)
+        public async Task<List<ProfessionalLinkItem>> GetContactsByIdsAsync(ItemListRequest request)
         {
             List<Guid> ids = request.Ids;
             if (request == null || ids == null || ids.Count == 0)
                 return [];
 
             var contacts = await _dbContext
-                .Contact.Where(c => ids.Contains(c.Id))
-                .Select(c => new { c.Id, c.ContactUrl })
+                .ProfessionalLink.Where(c => ids.Contains(c.Id))
+                .Select(c => new { c.Id, c.Link, c.LinkType })
                 .ToListAsync();
 
             // Preserve input order
@@ -69,16 +69,16 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToList();
 
             return contacts
-                .Select(c => new SocialMediaItem { SocialMediaUrl = c.ContactUrl })
+                .Select(c => new ProfessionalLinkItem { Link = c.Link, LinkType = c.LinkType })
                 .ToList();
         }
 
-        public async Task<bool> PatchContactAsync(Guid userId, PatchContact patch)
+        public async Task<bool> PatchContactAsync(Guid userId, PatchProfessionalLink patch)
         {
             if (patch == null)
                 return false;
 
-            var contact = await _dbContext.Contact.FirstOrDefaultAsync(c =>
+            var contact = await _dbContext.ProfessionalLink.FirstOrDefaultAsync(c =>
                 c.UserId == userId && c.Id == patch.Id
             );
 
@@ -87,9 +87,9 @@ namespace Portfolio.Infrastructure.Repositories
 
             var anyChange = false;
 
-            if (patch.ContactUrl != null && patch.ContactUrl != contact.ContactUrl)
+            if (patch.Link != null && patch.Link != contact.Link)
             {
-                contact.ContactUrl = patch.ContactUrl;
+                contact.Link = patch.Link;
                 anyChange = true;
             }
 
@@ -106,13 +106,13 @@ namespace Portfolio.Infrastructure.Repositories
                 return false;
 
             var contactsToDelete = await _dbContext
-                .Contact.Where(c => c.UserId == userId && contactIds.Contains(c.Id))
+                .ProfessionalLink.Where(c => c.UserId == userId && contactIds.Contains(c.Id))
                 .ToListAsync();
 
             if (contactsToDelete.Count != contactIds.Count)
                 return false;
 
-            _dbContext.Contact.RemoveRange(contactsToDelete);
+            _dbContext.ProfessionalLink.RemoveRange(contactsToDelete);
 
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0;

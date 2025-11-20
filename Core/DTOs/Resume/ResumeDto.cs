@@ -14,7 +14,7 @@
 
         public List<SkillsItem>? Skills { get; set; }
 
-        public List<SocialMediaItem>? Socials { get; set; }
+        public List<ProfessionalLinkItem>? ProfessionalLinks { get; set; }
 
         public List<ExperienceItem>? Experience { get; set; }
 
@@ -23,9 +23,10 @@
         public List<CertificationItem>? Certification { get; set; }
     }
 
-    public class SocialMediaItem
+    public class ProfessionalLinkItem
     {
-        public string? SocialMediaUrl { get; set; }
+        public string? Link { get; set; }
+        public string? LinkType { get; set; }
     }
 
     public class SkillsItem

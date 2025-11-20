@@ -8,15 +8,15 @@ namespace Portfolio.Core.Contracts.Services
     public interface IContactService
     {
         // Create
-        Task<List<Guid>> AddContactsAsync(Guid userId, List<AddContact> contacts);
+        Task<List<Guid>> AddContactsAsync(Guid userId, List<AddProfessionalLink> contacts);
 
         // Read
-        Task<ContactModel?> GetContactByIdAsync(Guid id, Guid userId);
-        Task<List<ContactModel>> GetContactsByUserIdAsync(Guid userId);
-        Task<List<SocialMediaItem>> GetContactsByIdsAsync(ItemListRequest request);
+        Task<ProfessionalLinkModel?> GetContactByIdAsync(Guid id, Guid userId);
+        Task<List<ProfessionalLinkModel>> GetContactsByUserIdAsync(Guid userId);
+        Task<List<ProfessionalLinkItem>> GetContactsByIdsAsync(ItemListRequest request);
 
         // Update
-        Task<bool> PatchContactAsync(Guid userId, PatchContact patch);
+        Task<bool> PatchContactAsync(Guid userId, PatchProfessionalLink patch);
 
         // Delete
         Task<bool> DeleteContactsAsync(Guid userId, List<Guid> contactIds);

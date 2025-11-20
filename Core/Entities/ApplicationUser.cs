@@ -21,7 +21,7 @@ namespace Portfolio.Core.Entities
 
         public List<Skill> Skills { get; set; }
 
-        public List<Contact> Contacts { get; set; }
+        public List<ProfessionalLink> Contacts { get; set; }
 
         public List<SavedResume> SavedResumes { get; set; }
 

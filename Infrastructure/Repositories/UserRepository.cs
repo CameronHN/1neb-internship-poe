@@ -50,11 +50,11 @@ namespace Portfolio.Infrastructure.Repositories
                         })
                         .ToList() ?? new List<SummaryItems>(),
                 Socials =
-                    user.Contacts?.OrderBy(c => c.ContactUrl)
+                    user.Contacts?.OrderBy(c => c.Link)
                         .Select(c => new SocialMediaItems
                         {
                             Id = c.Id,
-                            SocialMediaUrl = c.ContactUrl,
+                            SocialMediaUrl = c.Link,
                         })
                         .ToList() ?? new List<SocialMediaItems>(),
                 Skills =
