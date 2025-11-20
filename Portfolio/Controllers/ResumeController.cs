@@ -28,7 +28,7 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("create-pdf")]
         public async Task<IActionResult> GenerateResumeWithoutSavingDetails(
-            [FromBody] ResumeDto dto
+            [FromBody] ResumeDTO dto
         )
         {
             var pdf = await _resumeGenerationService.GenerateResumePdfAsync(dto);

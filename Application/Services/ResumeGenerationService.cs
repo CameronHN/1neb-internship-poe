@@ -7,7 +7,7 @@ namespace Portfolio.Application.Services
 {
     public class ResumeGenerationService : IResumeGenerationService
     {
-        public async Task<byte[]> GenerateResumePdfAsync(ResumeDto dto)
+        public async Task<byte[]> GenerateResumePdfAsync(ResumeDTO dto)
         {
             var document = new ResumePdfGenerator(dto ?? new());
             return await Task.FromResult(document.GeneratePdf());

@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.DTOs.Resume;
+﻿using Microsoft.IdentityModel.Tokens;
+using Portfolio.Core.DTOs.Resume;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -7,9 +8,9 @@ namespace Portfolio.Application.Documents
 {
     public class ResumePdfGenerator : IDocument
     {
-        private readonly ResumeDto _m;
+        private readonly ResumeDTO _m;
 
-        public ResumePdfGenerator(ResumeDto model)
+        public ResumePdfGenerator(ResumeDTO model)
         {
             _m = model;
         }
@@ -37,9 +38,9 @@ namespace Portfolio.Application.Documents
                             .FontColor(Colors.Black)
                             .AlignCenter();
 
-                        // Summary
+                        // Title
                         string? title = _m.Title;
-                        if (title?.Any() == true)
+                        if (!title.IsNullOrEmpty())
                         {
                             column
                                 .Item()
@@ -85,7 +86,7 @@ namespace Portfolio.Application.Documents
                     {
                         // Summary
                         string? summary = _m.Summary;
-                        if (summary?.Any() == true)
+                        if (!summary.IsNullOrEmpty())
                         {
                             column
                                 .Item()
@@ -100,16 +101,14 @@ namespace Portfolio.Application.Documents
                                     row.AutoItem().Padding(3);
                                 });
 
-                            var summaryText = summary;
-
-                            column.Item().Row(row => row.RelativeItem().Text(summaryText));
+                            column.Item().Row(row => row.RelativeItem().Text(summary));
                         }
 
                         column.Item().Padding(5);
 
                         // Experience
                         List<ExperienceItem>? experience = _m.Experience;
-                        if (experience?.Any() == true)
+                        if (experience?.Count > 0)
                         {
                             column
                                 .Item()
@@ -193,7 +192,7 @@ namespace Portfolio.Application.Documents
 
                         // Skills
                         List<SkillsItem>? skills = _m.Skills;
-                        if (skills?.Any() == true)
+                        if (skills?.Count > 0)
                         {
                             column
                                 .Item()
@@ -233,7 +232,7 @@ namespace Portfolio.Application.Documents
 
                         // Education
                         List<EducationItem>? education = _m.Education;
-                        if (education?.Any() == true)
+                        if (education?.Count > 0)
                         {
                             column
                                 .Item()
@@ -306,7 +305,7 @@ namespace Portfolio.Application.Documents
 
                         // Certifications
                         List<CertificationItem>? certification = _m.Certification;
-                        if (certification?.Any() == true)
+                        if (certification?.Count > 0)
                         {
                             column
                                 .Item()

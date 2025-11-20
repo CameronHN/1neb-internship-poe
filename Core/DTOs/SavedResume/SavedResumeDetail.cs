@@ -6,7 +6,7 @@ namespace Portfolio.Core.DTOs.SavedResume
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public required ResumeDto ResumeData { get; set; }
+        public required ResumeDTO ResumeData { get; set; }
         public required string TemplateType { get; set; }
         public required string CreatedAt { get; set; }
     }

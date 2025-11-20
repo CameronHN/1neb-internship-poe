@@ -36,9 +36,9 @@ namespace Portfolio.Application.Services
             _titleRepository = titleRepository;
         }
 
-        public async Task<ResumeDto> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest)
+        public async Task<ResumeDTO> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest)
         {
-            var resumeDto = new ResumeDto();
+            var resumeDto = new ResumeDTO();
 
             var user = await _userRepository.GetUserDetailsByUserIdAsync(userId);
 

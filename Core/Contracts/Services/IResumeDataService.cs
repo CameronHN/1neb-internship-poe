@@ -6,6 +6,6 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<GetAllResumeDetails?> GetResumeByUserIdAsync(Guid userId);
 
-        Task<ResumeDto> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest);
+        Task<ResumeDTO> GetResumeDetailsAsync(Guid userId, ResumeRequest resumeRequest);
     }
 }

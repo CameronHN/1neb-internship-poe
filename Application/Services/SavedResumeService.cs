@@ -46,7 +46,7 @@ namespace Portfolio.Application.Services
             if (savedResume == null)
                 return null;
 
-            var resumeDto = JsonSerializer.Deserialize<ResumeDto>(savedResume.Data);
+            var resumeDto = JsonSerializer.Deserialize<ResumeDTO>(savedResume.Data);
 
             if (resumeDto == null)
                 throw new InvalidOperationException("Failed to deserialize resume data.");
@@ -78,7 +78,7 @@ namespace Portfolio.Application.Services
             if (savedResume == null)
                 throw new NotFoundException("Saved resume not found.");
 
-            var resumeDto = JsonSerializer.Deserialize<ResumeDto>(savedResume.Data);
+            var resumeDto = JsonSerializer.Deserialize<ResumeDTO>(savedResume.Data);
 
             if (resumeDto == null)
                 throw new InvalidOperationException("Failed to deserialize resume data.");
@@ -88,7 +88,7 @@ namespace Portfolio.Application.Services
             return document.GeneratePdf();
         }
 
-        private IDocument GetBuilderForTemplate(ResumeDto resumeDto, string templateType)
+        private IDocument GetBuilderForTemplate(ResumeDTO resumeDto, string templateType)
         {
             return templateType.ToLowerInvariant() switch
             {

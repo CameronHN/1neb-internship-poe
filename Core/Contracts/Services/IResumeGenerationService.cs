@@ -4,6 +4,6 @@ namespace Portfolio.Core.Contracts.Services
 {
     public interface IResumeGenerationService
     {
-        Task<byte[]> GenerateResumePdfAsync(ResumeDto dto);
+        Task<byte[]> GenerateResumePdfAsync(ResumeDTO dto);
     }
 }

@@ -1,5 +1,5 @@
-﻿using Portfolio.Core.DTOs.Resume;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Portfolio.Core.DTOs.Resume;
 
 namespace Portfolio.Core.DTOs.SavedResume
 {
@@ -10,7 +10,7 @@ namespace Portfolio.Core.DTOs.SavedResume
         public required string SavedResumeName { get; set; }
 
         [Required(ErrorMessage = "Resume data is required.")]
-        public required ResumeDto ResumeData { get; set; }
+        public required ResumeDTO ResumeData { get; set; }
 
         [Required(ErrorMessage = "Template type is required.")]
         [MaxLength(100, ErrorMessage = Constants.Constants.MaxCharacterLengthErrorMessage)]

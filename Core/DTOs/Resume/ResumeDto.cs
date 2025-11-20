@@ -1,6 +1,6 @@
 ﻿namespace Portfolio.Core.DTOs.Resume
 {
-    public class ResumeDto
+    public class ResumeDTO
     {
         public string? Name { get; set; }
 
