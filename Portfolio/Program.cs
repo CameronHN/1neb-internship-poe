@@ -107,9 +107,9 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IEducationService, EducationService>();
 
-// Contact
-builder.Services.AddScoped<IProfessionalLinkRepository, ContactRepository>();
-builder.Services.AddScoped<IProfessionalLinkService, ContactService>();
+// Professional Links
+builder.Services.AddScoped<IProfessionalLinkRepository, ProfessionalLinkRepository>();
+builder.Services.AddScoped<IProfessionalLinkService, ProfessionalLinkService>();
 
 // Professional Summary
 builder.Services.AddScoped<IProfessionalSummaryRepository, ProfessionalSummaryRepository>();

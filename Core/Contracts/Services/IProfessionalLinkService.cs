@@ -1,5 +1,5 @@
 ﻿using Portfolio.Core.DTOs;
-using Portfolio.Core.DTOs.Contact;
+using Portfolio.Core.DTOs.ProfessionalLink;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
 
@@ -8,7 +8,7 @@ namespace Portfolio.Core.Contracts.Services
     public interface IProfessionalLinkService
     {
         // Create
-        Task<List<Guid>> AddProfessionalLinksAsync(Guid userId, List<AddProfessionalLink> contacts);
+        Task<List<Guid>> AddProfessionalLinksAsync(Guid userId, List<AddProfessionalLink> links);
 
         // Read
         Task<ProfessionalLinkModel?> GetProfessionalLinkByIdAsync(Guid id, Guid userId);
@@ -19,6 +19,6 @@ namespace Portfolio.Core.Contracts.Services
         Task<bool> PatchProfessionalLinkAsync(Guid userId, PatchProfessionalLink patch);
 
         // Delete
-        Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> contactIds);
+        Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> linkIds);
     }
 }

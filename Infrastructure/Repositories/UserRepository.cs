@@ -23,7 +23,7 @@ namespace Portfolio.Infrastructure.Repositories
                 .AsSplitQuery()
                 .Include(u => u.Titles)
                 .Include(u => u.ProfessionalSummaries)
-                .Include(u => u.Contacts)
+                .Include(u => u.ProfessionalLinks)
                 .Include(u => u.Skills)
                 .Include(u => u.Experiences)
                 .ThenInclude(e => e.Responsibilities)
@@ -50,12 +50,8 @@ namespace Portfolio.Infrastructure.Repositories
                         })
                         .ToList() ?? new List<SummaryItems>(),
                 Socials =
-                    user.Contacts?.OrderBy(c => c.Link)
-                        .Select(c => new SocialMediaItems
-                        {
-                            Id = c.Id,
-                            SocialMediaUrl = c.Link,
-                        })
+                    user.ProfessionalLinks?.OrderBy(c => c.Link)
+                        .Select(c => new SocialMediaItems { Id = c.Id, SocialMediaUrl = c.Link })
                         .ToList() ?? new List<SocialMediaItems>(),
                 Skills =
                     user.Skills?.OrderBy(s => s.SkillName)

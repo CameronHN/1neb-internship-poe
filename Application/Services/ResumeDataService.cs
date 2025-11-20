@@ -12,7 +12,7 @@ namespace Portfolio.Application.Services
         private readonly IExperienceRepository _experienceRepository;
         private readonly ISkillRepository _skillRepository;
         private readonly IProfessionalSummaryRepository _professionalSummaryRepository;
-        private readonly IProfessionalLinkRepository _contactRepository;
+        private readonly IProfessionalLinkRepository _professionalLinkRepository;
         private readonly ITitleRepository _titleRepository;
 
         public ResumeDataService(
@@ -22,7 +22,7 @@ namespace Portfolio.Application.Services
             IExperienceRepository experienceRepository,
             ISkillRepository skillRepository,
             IProfessionalSummaryRepository professionalSummaryRepository,
-            IProfessionalLinkRepository contactRepository,
+            IProfessionalLinkRepository professionalLinkRepository,
             ITitleRepository titleRepository
         )
         {
@@ -32,7 +32,7 @@ namespace Portfolio.Application.Services
             _experienceRepository = experienceRepository;
             _skillRepository = skillRepository;
             _professionalSummaryRepository = professionalSummaryRepository;
-            _contactRepository = contactRepository;
+            _professionalLinkRepository = professionalLinkRepository;
             _titleRepository = titleRepository;
         }
 
@@ -63,7 +63,7 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.SocialMediaIds != null)
             {
-                var socials = await _contactRepository.GetProfessionalLinksByIdsAsync(
+                var socials = await _professionalLinkRepository.GetProfessionalLinksByIdsAsync(
                     resumeRequest.SocialMediaIds
                 );
                 resumeDto.ProfessionalLinks = socials;

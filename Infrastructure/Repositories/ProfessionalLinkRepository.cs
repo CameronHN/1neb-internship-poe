@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
-using Portfolio.Core.DTOs.Contact;
+using Portfolio.Core.DTOs.ProfessionalLink;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Models;
@@ -10,19 +10,27 @@ using Portfolio.Infrastructure.Persistence;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ContactRepository : IProfessionalLinkRepository
+    public class ProfessionalLinkRepository : IProfessionalLinkRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public ContactRepository(ApplicationDbContext dbContext)
+        public ProfessionalLinkRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<List<Guid>> AddProfessionalLinksAsync(Guid userId, List<AddProfessionalLink> contacts)
+        public async Task<List<Guid>> AddProfessionalLinksAsync(
+            Guid userId,
+            List<AddProfessionalLink> links
+        )
         {
-            var entities = contacts
-                .Select(contact => new ProfessionalLink { LinkType = contact.LinkType, Link = contact.Link, UserId = userId })
+            var entities = links
+                .Select(link => new ProfessionalLink
+                {
+                    LinkType = link.LinkType,
+                    Link = link.Link,
+                    UserId = userId,
+                })
                 .ToList();
 
             await _dbContext.ProfessionalLink.AddRangeAsync(entities);
@@ -33,15 +41,22 @@ namespace Portfolio.Infrastructure.Repositories
 
         public async Task<ProfessionalLinkModel?> GetProfessionalLinkAsync(Guid id, Guid userId)
         {
-            var contact = await _dbContext
+            var link = await _dbContext
                 .ProfessionalLink.Where(c => c.Id == id && c.UserId == userId)
-                .Select(c => new ProfessionalLinkModel { Id = c.Id, Link = c.Link, LinkType = c.LinkType })
+                .Select(c => new ProfessionalLinkModel
+                {
+                    Id = c.Id,
+                    Link = c.Link,
+                    LinkType = c.LinkType,
+                })
                 .FirstOrDefaultAsync();
 
-            return contact;
+            return link;
         }
 
-        public async Task<List<ProfessionalLinkModel>> GetProfessionalLinksByUserIdAsync(Guid userId)
+        public async Task<List<ProfessionalLinkModel>> GetProfessionalLinksByUserIdAsync(
+            Guid userId
+        )
         {
             return await _dbContext
                 .ProfessionalLink.Where(c => c.UserId == userId)
@@ -49,26 +64,33 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(ItemListRequest request)
+        public async Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(
+            ItemListRequest request
+        )
         {
             List<Guid> ids = request.Ids;
             if (request == null || ids == null || ids.Count == 0)
                 return [];
 
-            var contacts = await _dbContext
+            var links = await _dbContext
                 .ProfessionalLink.Where(c => ids.Contains(c.Id))
-                .Select(c => new { c.Id, c.Link, c.LinkType })
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Link,
+                    c.LinkType,
+                })
                 .ToListAsync();
 
             // Preserve input order
             var order = ids.Select((id, idx) => new { id, idx })
                 .ToDictionary(x => x.id, x => x.idx);
 
-            contacts = contacts
+            links = links
                 .OrderBy(c => order.TryGetValue(c.Id, out var idx) ? idx : int.MaxValue)
                 .ToList();
 
-            return contacts
+            return links
                 .Select(c => new ProfessionalLinkItem { Link = c.Link, LinkType = c.LinkType })
                 .ToList();
         }
@@ -78,18 +100,18 @@ namespace Portfolio.Infrastructure.Repositories
             if (patch == null)
                 return false;
 
-            var contact = await _dbContext.ProfessionalLink.FirstOrDefaultAsync(c =>
+            var link = await _dbContext.ProfessionalLink.FirstOrDefaultAsync(c =>
                 c.UserId == userId && c.Id == patch.Id
             );
 
-            if (contact == null)
+            if (link == null)
                 return false;
 
             var anyChange = false;
 
-            if (patch.Link != null && patch.Link != contact.Link)
+            if (patch.Link != null && patch.Link != link.Link)
             {
-                contact.Link = patch.Link;
+                link.Link = patch.Link;
                 anyChange = true;
             }
 
@@ -100,19 +122,19 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> contactIds)
+        public async Task<bool> DeleteProfessionalLinksAsync(Guid userId, List<Guid> linkIds)
         {
-            if (contactIds.IsNullOrEmpty())
+            if (linkIds.IsNullOrEmpty())
                 return false;
 
-            var contactsToDelete = await _dbContext
-                .ProfessionalLink.Where(c => c.UserId == userId && contactIds.Contains(c.Id))
+            var linksToDelete = await _dbContext
+                .ProfessionalLink.Where(c => c.UserId == userId && linkIds.Contains(c.Id))
                 .ToListAsync();
 
-            if (contactsToDelete.Count != contactIds.Count)
+            if (linksToDelete.Count != linkIds.Count)
                 return false;
 
-            _dbContext.ProfessionalLink.RemoveRange(contactsToDelete);
+            _dbContext.ProfessionalLink.RemoveRange(linksToDelete);
 
             var saved = await _dbContext.SaveChangesAsync();
             return saved > 0;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.DTOs.Contact;
+using Portfolio.Core.DTOs.ProfessionalLink;
 using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 
@@ -11,27 +11,32 @@ namespace Portfolio.WebApi.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ContactController : ControllerBase
+    public class ProfessionalLinkController : ControllerBase
     {
-        private readonly IProfessionalLinkService _contactService;
+        private readonly IProfessionalLinkService _professionalLinkService;
 
-        public ContactController(IProfessionalLinkService contactService)
+        public ProfessionalLinkController(IProfessionalLinkService professionalLinkService)
         {
-            _contactService = contactService;
+            _professionalLinkService = professionalLinkService;
         }
 
         [HttpPost("add")]
         [ProducesResponseType(typeof(List<Guid>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> AddContacts([FromBody] List<AddProfessionalLink> contacts)
+        public async Task<IActionResult> AddProfessionalLinks(
+            [FromBody] List<AddProfessionalLink> professionalLinks
+        )
         {
             var userId = User.GetUserId()!.Value;
 
-            if (contacts is null)
+            if (professionalLinks is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var addedIds = await _contactService.AddProfessionalLinksAsync(userId, contacts);
+            var addedIds = await _professionalLinkService.AddProfessionalLinksAsync(
+                userId,
+                professionalLinks
+            );
             return Created(string.Empty, addedIds);
         }
 
@@ -39,14 +44,17 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(ProfessionalLinkModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetContactById([FromRoute] Guid id)
+        public async Task<IActionResult> GetProfessionalLinkById([FromRoute] Guid id)
         {
             var userId = User.GetUserId()!.Value;
-            var contact = await _contactService.GetProfessionalLinkByIdAsync(id, userId);
-            if (contact == null)
+            var professionalLink = await _professionalLinkService.GetProfessionalLinkByIdAsync(
+                id,
+                userId
+            );
+            if (professionalLink == null)
                 return NotFound();
 
-            return Ok(contact);
+            return Ok(professionalLink);
         }
 
         [HttpPatch("patch")]
@@ -54,14 +62,16 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> PatchContact([FromBody] PatchProfessionalLink patch)
+        public async Task<IActionResult> PatchProfessionalLink(
+            [FromBody] PatchProfessionalLink patch
+        )
         {
             var userId = User.GetUserId()!.Value;
 
             if (patch is null)
                 throw new ValidationException("Request body cannot be null.");
 
-            var updated = await _contactService.PatchProfessionalLinkAsync(userId, patch);
+            var updated = await _professionalLinkService.PatchProfessionalLinkAsync(userId, patch);
             if (!updated)
                 return NoContent();
 
@@ -72,16 +82,21 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> DeleteContacts([FromBody] List<Guid> contactIds)
+        public async Task<IActionResult> DeleteProfessionalLinks(
+            [FromBody] List<Guid> professionalLinkIds
+        )
         {
             var userId = User.GetUserId()!.Value;
 
-            if (contactIds == null || !contactIds.Any())
-                throw new ValidationException("Contact IDs cannot be null or empty.");
+            if (professionalLinkIds == null || !professionalLinkIds.Any())
+                throw new ValidationException("ProfessionalLink IDs cannot be null or empty.");
 
-            var deleted = await _contactService.DeleteProfessionalLinksAsync(userId, contactIds);
+            var deleted = await _professionalLinkService.DeleteProfessionalLinksAsync(
+                userId,
+                professionalLinkIds
+            );
             if (!deleted)
-                return BadRequest("Failed to delete the specified contacts.");
+                return BadRequest("Failed to delete the specified professionalLinks.");
 
             return Ok(true);
         }

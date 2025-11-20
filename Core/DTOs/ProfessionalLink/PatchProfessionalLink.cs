@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio.Core.DTOs.Contact
+namespace Portfolio.Core.DTOs.ProfessionalLink
 {
     public class PatchProfessionalLink
     {

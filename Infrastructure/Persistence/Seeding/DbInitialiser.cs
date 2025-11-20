@@ -161,18 +161,18 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
                 await _context.SaveChangesAsync();
             }
 
-            // ======== Contacts ========
+            // ======== Professiona lLink ========
             if (!_context.ProfessionalLink.Any())
             {
-                var contactFaker = new Faker<ProfessionalLink>()
+                var professionalLinkFaker = new Faker<ProfessionalLink>()
                     .RuleFor(c => c.Id, _ => Guid.NewGuid())
                     .RuleFor(c => c.Link, f => f.Internet.Url())
                     .RuleFor(c => c.LinkType, f => f.PickRandom(_linkTypes))
                     .RuleFor(e => e.UserId, f => f.PickRandom(users).Id);
 
-                var contacts = contactFaker.Generate(20);
+                var links = professionalLinkFaker.Generate(20);
 
-                await _context.ProfessionalLink.AddRangeAsync(contacts);
+                await _context.ProfessionalLink.AddRangeAsync(links);
                 await _context.SaveChangesAsync();
             }
 
