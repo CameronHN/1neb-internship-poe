@@ -16,22 +16,12 @@ namespace Portfolio.Application.Services
             _experienceRepository = experienceRepository;
         }
 
-        public async Task<List<ExperienceModel>> GetAllExperiencesByIdsAsync(List<Guid> ids)
-        {
-            return await _experienceRepository.GetAllExperiencesByIdsAsync(ids);
-        }
-
         public async Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(
             Guid id,
             Guid userId
         )
         {
             return await _experienceRepository.GetExperienceByIdAsync(id, userId);
-        }
-
-        public async Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request)
-        {
-            return await _experienceRepository.GetAllExperiencesByIdsAsync(request);
         }
 
         public async Task<List<Guid>> AddExperiencesAsync(

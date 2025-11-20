@@ -11,10 +11,6 @@ namespace Portfolio.Core.Contracts.Services
 
         Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(Guid id, Guid userId);
 
-        Task<List<ExperienceModel>> GetAllExperiencesByIdsAsync(List<Guid> ids);
-
-        Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request);
-
         Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch);
 
         Task<bool> DeleteExperiencesAsync(Guid userId, List<Guid> experienceIds);

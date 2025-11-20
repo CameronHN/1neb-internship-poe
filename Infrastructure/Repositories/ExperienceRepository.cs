@@ -19,22 +19,6 @@ namespace Portfolio.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<ExperienceModel>> GetAllExperiencesByIdsAsync(List<Guid> ids)
-        {
-            return await _dbContext
-                .Experience.Where(e => ids.Contains(e.Id))
-                .Include(e => e.Responsibilities)
-                .OrderBy(e => e.EndDate)
-                .Select(e => new ExperienceModel
-                {
-                    CompanyName = e.CompanyName,
-                    JobTitle = e.JobTitle,
-                    StartDate = e.StartDate.ToString("MMMM yyyy"),
-                    EndDate = e.EndDate.ToString("MMMM yyyy"),
-                })
-                .ToListAsync();
-        }
-
         public async Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(
             Guid id,
             Guid userId
