@@ -1,8 +1,6 @@
 ﻿using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
-using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
-using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
 
 namespace Portfolio.Application.Services
