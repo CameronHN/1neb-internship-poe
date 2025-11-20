@@ -1,11 +1,11 @@
 meta {
-  name: patch -api-Title-patch
+  name: patch -api-Contact-patch
   type: http
   seq: 3
 }
 
 patch {
-  url: {{baseUrl}}/api/Title/patch
+  url: {{baseUrl}}/api/Contact/patch
   body: json
   auth: none
 }
@@ -13,6 +13,6 @@ patch {
 body:json {
   {
     "id": "",
-    "title": ""
+    "contactUrl": ""
   }
 }
