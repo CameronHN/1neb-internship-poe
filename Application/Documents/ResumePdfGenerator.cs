@@ -286,7 +286,7 @@ namespace Portfolio.Application.Documents
                                                 qualification
                                                     + (
                                                         !string.IsNullOrWhiteSpace(major)
-                                                            ? $", {major}"
+                                                            ? $", majored in {major}"
                                                             : string.Empty
                                                     )
                                             )
