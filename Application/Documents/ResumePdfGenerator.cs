@@ -74,8 +74,9 @@ namespace Portfolio.Application.Documents
                                                 var s = socials[i];
 
                                                 text.Hyperlink(
-                                                        s?.LinkType ?? string.Empty,
-                                                        s?.Link ?? string.Empty
+                                                        // TODO: Replace with appropriate link type and link
+                                                        s?.LinkType ?? "LinkType",
+                                                        s?.Link ?? "/"
                                                     )
                                                     .FontColor(Colors.Blue.Medium);
 
