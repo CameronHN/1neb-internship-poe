@@ -22,7 +22,10 @@ namespace Portfolio.Application.Services
         public async Task<Guid> SaveResumeAsync(Guid userId, SaveResumeDataRequest request)
         {
             // Validate template type before saving
-            if (!request.TemplateType.Equals(TemplateTypes.Classic))
+            if (
+                !request.TemplateType.Equals(TemplateTypes.Classic)
+                && !request.TemplateType.Equals(TemplateTypes.Simplified)
+            )
             {
                 throw new TemplateTypeNotImplementedException(
                     $"Template type '{request.TemplateType}' is not supported. "
@@ -92,8 +95,9 @@ namespace Portfolio.Application.Services
         {
             return templateType.ToLowerInvariant() switch
             {
-                "classic" => new ResumePdfGenerator(resumeDto),
                 // Add more templates here
+                "classic" => new ResumePdfGenerator(resumeDto),
+                "simplified" => new SimplifiedResumePdfGenerator(resumeDto),
                 _ => throw new TemplateTypeNotImplementedException(
                     $"Unknown template type: {templateType}"
                 ),
