@@ -12,7 +12,13 @@ Run from the repo root unless noted. Target framework is .NET 8 (SDK 10 is insta
 - Add a migration: `dotnet ef migrations add <Name> --project Infrastructure --startup-project Portfolio`
 - API smoke testing: the Bruno collection lives in `Portfolio.WebApi/` (`.bru` files, one folder per controller). `Portfolio/Portfolio.http` also exists.
 
-There are **no tests to run**. `Tests/Portfolio.Tests.csproj` contains only empty folder placeholders, has no test files, and is not part of `Portfolio.sln`. Don't expect `dotnet test` to do anything useful; if tests are added, they need adding to the solution first.
+Tests live in `Tests/Portfolio.Tests.csproj` (xUnit), which is part of `Portfolio.sln`. Run them with `dotnet test Portfolio.sln`. **Docker Desktop must be running**: the integration tests start a throwaway SQL Server 2022 container through Testcontainers (`Tests/Common/PortfolioApiFactory.cs`) and never touch `ProjectDb`. To run only the unit tests (no Docker needed), use `dotnet test Portfolio.sln --filter "FullyQualifiedName~UnitTests"`.
+
+- `Tests/UnitTests/`: no database. Services are tested with NSubstitute mocks, plus `ExceptionHandlingMiddleware`.
+- `Tests/IntegrationTests/`: every class is marked `[Collection(ApiCollection.Name)]` and shares one `PortfolioApiFactory` (the real `Program.cs` against the container, with `ValidateOnBuild`/`ValidateScopes` on). Covers repository ownership, DI, auth and the resume API.
+- `Tests/Common/`: the factory, HTTP client helpers (use `https://localhost`, because the auth cookie is Secure) and PDF text extraction.
+
+When you add a repository method that looks items up by id, add a matching test to `RepositoryOwnershipTests` that checks another user's id returns nothing.
 
 Database: the connection string is `DefaultConnection` in `Portfolio/appsettings.json` (LocalDB `MSSQLLocalDb`, database `ProjectDb`). `ApplicationDbContext.OnConfiguring` has a fallback connection string, but `Program.cs` always configures the context, so the fallback is only used by design-time tools that don't pass the startup project.
 
