@@ -60,7 +60,7 @@ This application serves as a **portfolio of evidence** for the **1Nebula Softwar
   - `Portfolio.Application` - Application services and use cases
   - `Portfolio.Infrastructure` - Data access
   - `Portfolio.WebApi` - API controllers
-  - `Portfolio.Tests` - Test suite
+  - `Portfolio.Tests` - Unit and integration tests (xUnit, see [Running the Tests](#running-the-tests))
 
 ## Database Schema
 
@@ -97,6 +97,8 @@ Before running the application, ensure you have:
    - [SQL Server Management Studio](https://learn.microsoft.com/en-us/ssms/install/install) (recommended)
 
 3. [**Visual Studio 2022**](https://visualstudio.microsoft.com/), or [**VS Code**](https://code.visualstudio.com/) with C# and C# Dev Kit extensions
+
+4. [**Docker Desktop**](https://www.docker.com/products/docker-desktop/) (only needed to run the integration tests). It must be running before you run `dotnet test`.
 
 ### Environment Configuration
 
@@ -177,6 +179,28 @@ Use the included **Bruno (.bru)** files for API testing:
 - Test authentication, CRUD operations, and resume generation
 - Import into Bruno API client for interactive testing
 
+### Running the Tests
+
+The test project is `Tests/Portfolio.Tests.csproj`, and it is part of `Portfolio.sln`.
+
+- **All tests** (requires Docker Desktop to be running):
+
+  ```
+  dotnet test Portfolio.sln
+  ```
+
+- **Unit tests only** (no Docker or database needed):
+
+  ```
+  dotnet test Portfolio.sln --filter "FullyQualifiedName~UnitTests"
+  ```
+
+The integration tests start a temporary SQL Server 2022 container with Testcontainers. They never use `ProjectDb`, and the container is removed after the run. The first run is slower while the SQL Server image downloads.
+
+- `Tests/UnitTests/`: service and middleware tests with mocks
+- `Tests/IntegrationTests/`: repository ownership, dependency injection, authorization and the resume API, run against the real application
+- `Tests/Common/`: shared test setup
+
 ## Project Structure
 
 ```
@@ -184,7 +208,7 @@ Use the included **Bruno (.bru)** files for API testing:
 ├── Core/                   # Domain layer (Entities, DTOs, Contracts)
 ├── Application/            # Application layer (Services, Business logic)
 ├── Infrastructure/         # Data layer (DbContext, Repositories)
-├── Tests/                  # Unit and integration tests
+├── Tests/                  # Unit and integration tests (xUnit, Testcontainers)
 └── Portfolio.WebApi/       # Bruno API test files
 ```
 
