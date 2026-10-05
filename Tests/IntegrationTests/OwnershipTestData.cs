@@ -1,3 +1,6 @@
+using System.Text.Json;
+using Portfolio.Application.Documents;
+using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Entities;
 using Portfolio.Infrastructure.Persistence;
 
@@ -16,14 +19,15 @@ namespace Portfolio.Tests.IntegrationTests
         Guid EducationId,
         Guid ExperienceId,
         Guid CertificationId,
-        Guid LinkId
+        Guid LinkId,
+        Guid SavedResumeId
     );
 
     public static class OwnershipTestData
     {
         /// <summary>
         /// Inserts a new user plus one title, summary, skill, education, experience,
-        /// certification and professional link owned by that user.
+        /// certification, professional link and saved resume owned by that user.
         /// Every call creates a brand-new user, so tests never share data.
         /// </summary>
         public static async Task<UserWithItems> CreateUserWithItemsAsync(
@@ -76,6 +80,13 @@ namespace Portfolio.Tests.IntegrationTests
                 Link = $"https://github.com/{label.ToLowerInvariant()}-{unique}",
                 UserId = user.Id,
             };
+            var savedResume = new SavedResume
+            {
+                Name = $"{label} saved resume",
+                Data = JsonSerializer.Serialize(new ResumeDTO { Name = label }),
+                TemplateType = TemplateTypes.Classic,
+                UserId = user.Id,
+            };
 
             db.User.Add(user);
             db.Title.Add(title);
@@ -85,6 +96,7 @@ namespace Portfolio.Tests.IntegrationTests
             db.Experience.Add(experience);
             db.Certification.Add(certification);
             db.ProfessionalLink.Add(link);
+            db.SavedResume.Add(savedResume);
             await db.SaveChangesAsync();
 
             return new UserWithItems(
@@ -97,7 +109,8 @@ namespace Portfolio.Tests.IntegrationTests
                 EducationId: education.Id,
                 ExperienceId: experience.Id,
                 CertificationId: certification.Id,
-                LinkId: link.Id
+                LinkId: link.Id,
+                SavedResumeId: savedResume.Id
             );
         }
     }
