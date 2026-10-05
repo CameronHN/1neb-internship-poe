@@ -1,0 +1,23 @@
+version: 2
+
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      nuget-minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Microsoft.* packages (EF Core, ASP.NET Core, Extensions) follow the .NET version.
+      # Major updates need a newer target framework, so they belong in a planned upgrade.
+      - dependency-name: "Microsoft.*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        update-types: [minor, patch]
