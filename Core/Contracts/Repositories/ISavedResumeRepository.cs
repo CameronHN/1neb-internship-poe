@@ -16,7 +16,7 @@ namespace Portfolio.Core.Contracts.Repositories
         /// <summary>
         /// Retrieves a single saved resume by its unique identifier.
         /// </summary>
-        Task<SavedResumeModel?> GetByIdAsync(Guid userId, Guid id);
+        Task<SavedResumeModel?> GetByIdAsync(Guid id, Guid userId);
 
         /// <summary>
         /// Gets all saved resumes associated with a specific user.
