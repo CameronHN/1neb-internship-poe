@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Tests.Common;
 using Xunit;
@@ -148,6 +149,26 @@ namespace Portfolio.Tests.IntegrationTests
 
             Assert.Single(own);
             Assert.Empty(foreign);
+        }
+
+        /// <summary>
+        /// Issue #8: named arguments bind to the interface's parameter names, so this call only
+        /// works if the interface and the implementation agree on (id, userId).
+        /// This repository throws instead of returning null when nothing matches.
+        /// </summary>
+        [Fact]
+        public async Task GetSavedResumeByIdAsync_OnlyReturnsOwnersSavedResume()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var (owner, other) = await CreateTwoUsersAsync(scope);
+            var repository = scope.ServiceProvider.GetRequiredService<ISavedResumeRepository>();
+
+            var own = await repository.GetByIdAsync(id: owner.SavedResumeId, userId: owner.UserId);
+
+            Assert.Equal(owner.SavedResumeId, own?.Id);
+            await Assert.ThrowsAsync<NotFoundException>(() =>
+                repository.GetByIdAsync(id: other.SavedResumeId, userId: owner.UserId)
+            );
         }
 
         private static async Task<(UserWithItems Owner, UserWithItems Other)> CreateTwoUsersAsync(

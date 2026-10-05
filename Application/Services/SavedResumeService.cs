@@ -44,7 +44,7 @@ namespace Portfolio.Application.Services
 
         public async Task<SavedResumeDetail?> GetSavedResumeByIdAsync(Guid id, Guid userId)
         {
-            var savedResume = await _savedResumeRepository.GetByIdAsync(id, userId);
+            var savedResume = await _savedResumeRepository.GetByIdAsync(id: id, userId: userId);
 
             if (savedResume == null)
                 return null;
@@ -76,7 +76,7 @@ namespace Portfolio.Application.Services
 
         public async Task<byte[]> GetSavedResumePdfFromIdAsync(Guid id, Guid userId)
         {
-            var savedResume = await _savedResumeRepository.GetByIdAsync(id, userId);
+            var savedResume = await _savedResumeRepository.GetByIdAsync(id: id, userId: userId);
 
             if (savedResume == null)
                 throw new NotFoundException("Saved resume not found.");
