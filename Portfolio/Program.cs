@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Portfolio.Application.Services;
-using Portfolio.Core.Contracts.Repositories;
-using Portfolio.Core.Contracts.Services;
+using Portfolio.Application;
 using Portfolio.Core.Entities;
+using Portfolio.Infrastructure;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
-using Portfolio.Infrastructure.Repositories;
 using Portfolio.WebApi.Middleware;
 using QuestPDF.Infrastructure;
 
@@ -35,13 +32,9 @@ builder.Services.AddCors(options =>
     );
 });
 
-// Add DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("Portfolio.Infrastructure")
-    )
-);
+// Add Infrastructure (DbContext, repositories, DbInitialiser) and Application (services)
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 // Add Identity services
 builder
@@ -86,53 +79,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthorization();
 
-// Registrations
-// User
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-
-// Experience
-builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
-builder.Services.AddScoped<IExperienceService, ExperienceService>();
-
-// Certification
-builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
-builder.Services.AddScoped<ICertificationService, CertificationService>();
-
-// Skill
-builder.Services.AddScoped<ISkillRepository, SkillRepository>();
-builder.Services.AddScoped<ISkillService, SkillService>();
-
-// Education
-builder.Services.AddScoped<IEducationRepository, EducationRepository>();
-builder.Services.AddScoped<IEducationService, EducationService>();
-
-// Professional Links
-builder.Services.AddScoped<IProfessionalLinkRepository, ProfessionalLinkRepository>();
-builder.Services.AddScoped<IProfessionalLinkService, ProfessionalLinkService>();
-
-// Professional Summary
-builder.Services.AddScoped<IProfessionalSummaryRepository, ProfessionalSummaryRepository>();
-builder.Services.AddScoped<IProfessionalSummaryService, ProfessionalSummaryService>();
-
-// Title
-builder.Services.AddScoped<ITitleRepository, TitleRepository>();
-builder.Services.AddScoped<ITitleService, TitleService>();
-
-// Saved Resume
-builder.Services.AddScoped<ISavedResumeRepository, SavedResumeRepository>();
-builder.Services.AddScoped<ISavedResumeService, SavedResumeService>();
-
-// Resume
-builder.Services.AddScoped<IResumeDataService, ResumeDataService>();
-builder.Services.AddSingleton<IResumeGenerationService, ResumeGenerationService>(); // Stateless service
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Register DbInitialiser
-builder.Services.AddScoped<DbInitialiser>();
 
 var app = builder.Build();
 

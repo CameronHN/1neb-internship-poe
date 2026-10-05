@@ -21,13 +21,13 @@ Database: the connection string is `DefaultConnection` in `Portfolio/appsettings
 Layered, "onion" style, with dependencies pointing inward toward `Core`:
 
 - `Core` (`Portfolio.Core`): entities, DTOs, exceptions, and the repository and service **interfaces** (`Contracts/`). No implementations.
-- `Application` (`Portfolio.Application`): service implementations (`Services/`) and the QuestPDF document generators (`Documents/`).
+- `Application` (`Portfolio.Application`): service implementations (`Services/`) and the QuestPDF document generators (`Documents/`). References `Core` only, never `Infrastructure`.
 - `Infrastructure` (`Portfolio.Infrastructure`): `ApplicationDbContext` (ASP.NET Identity + EF Core SQL Server), repository implementations, the `Migrations/` folder, and `DbInitialiser`.
 - `Portfolio` (`Portfolio.WebApi`): the startup project. Controllers, `Program.cs` (DI registration, Identity, CORS, middleware), and `ExceptionHandlingMiddleware`.
 
 Things that are not obvious from any single file:
 
-**Request flow.** Controller → service interface → service in `Application` → repository interface → repository in `Infrastructure`. Services are registered scoped in `Program.cs`, with one `Add*Repository`/`Add*Service` pair per feature. `IResumeGenerationService` is the exception: it is registered as a singleton because it is stateless.
+**Request flow.** Controller → service interface → service in `Application` → repository interface → repository in `Infrastructure`. Each layer registers its own types: repositories, `ApplicationDbContext` and `DbInitialiser` in `Infrastructure/DependencyInjection.cs` (`AddInfrastructure`), and services in `Application/DependencyInjection.cs` (`AddApplication`). `Program.cs` calls both. Everything is scoped. `IResumeGenerationService` is the exception: it is registered as a singleton because it is stateless.
 
 **Users and auth.** `ApplicationUser` is an Identity user with a `Guid` key, and `IdentityRole<Guid>` is used for roles. Auth is cookie-based (not JWT): `ConfigureApplicationCookie` sets `SameSite=None` and `Secure`, and turns login/access-denied redirects into 401/403 responses for the API. Controllers read the current user via the `ClaimsPrincipal.GetUserId()` extension and then scope every query by that id. Keep that pattern when adding endpoints; ownership checks are done in the repositories (e.g. `SavedResumeRepository.GetByIdAsync(id, userId)`), not in controllers.
 
