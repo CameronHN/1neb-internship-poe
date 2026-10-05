@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -8,6 +8,6 @@
     <Folder Include="Services\" />
     <PackageReference Include="QuestPDF" Version="2025.7.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.1" />
-    <ProjectReference Include="..\Infrastructure\Portfolio.Infrastructure.csproj" />
+    <ProjectReference Include="..\Core\Portfolio.Core.csproj" />
   </ItemGroup>
 </Project>
