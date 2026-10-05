@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.Skill;
 using Portfolio.Core.Models;
@@ -9,7 +9,7 @@ namespace Portfolio.Core.Contracts.Repositories
     {
         Task<List<Guid>> AddSkillsAsync(Guid userId, List<AddSkill> skills);
 
-        Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request);
+        Task<List<SkillsItem>> GetAllSkillsByIdsAsync(Guid userId, ItemListRequest request);
         Task<List<SkillModel>> GetSkillsByUserIdAsync(Guid userId);
         Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId);
 

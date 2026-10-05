@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
@@ -65,15 +65,17 @@ namespace Portfolio.Infrastructure.Repositories
         }
 
         public async Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(
+            Guid userId,
             ItemListRequest request
         )
         {
-            List<Guid> ids = request.Ids;
-            if (request == null || ids == null || ids.Count == 0)
+            if (request == null || request.Ids == null || request.Ids.Count == 0)
                 return [];
 
+            List<Guid> ids = request.Ids;
+
             var links = await _dbContext
-                .ProfessionalLink.Where(c => ids.Contains(c.Id))
+                .ProfessionalLink.Where(c => c.UserId == userId && ids.Contains(c.Id))
                 .Select(c => new
                 {
                     c.Id,

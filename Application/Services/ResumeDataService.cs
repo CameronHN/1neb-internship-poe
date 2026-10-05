@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Resume;
 
@@ -49,14 +49,18 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.TitleId.HasValue)
             {
-                var title = await _titleRepository.GetTitleByIdAsync(resumeRequest.TitleId.Value);
+                var title = await _titleRepository.GetTitleByIdAsync(
+                    id: resumeRequest.TitleId.Value,
+                    userId: userId
+                );
                 resumeDto.Title = title;
             }
 
             if (resumeRequest.ProfessionalSummaryId.HasValue)
             {
                 var summary = await _professionalSummaryRepository.GetSummaryByIdAsync(
-                    resumeRequest.ProfessionalSummaryId.Value
+                    id: resumeRequest.ProfessionalSummaryId.Value,
+                    userId: userId
                 );
                 resumeDto.Summary = summary;
             }
@@ -64,6 +68,7 @@ namespace Portfolio.Application.Services
             if (resumeRequest.SocialMediaIds != null)
             {
                 var socials = await _professionalLinkRepository.GetProfessionalLinksByIdsAsync(
+                    userId,
                     resumeRequest.SocialMediaIds
                 );
                 resumeDto.ProfessionalLinks = socials;
@@ -71,13 +76,17 @@ namespace Portfolio.Application.Services
 
             if (resumeRequest.SkillsIds != null)
             {
-                var skills = await _skillRepository.GetAllSkillsByIdsAsync(resumeRequest.SkillsIds);
+                var skills = await _skillRepository.GetAllSkillsByIdsAsync(
+                    userId,
+                    resumeRequest.SkillsIds
+                );
                 resumeDto.Skills = skills;
             }
 
             if (resumeRequest.EducationIds != null)
             {
                 var educationItems = await _educationRepository.GetAllEducationsByIdsAsync(
+                    userId,
                     resumeRequest.EducationIds
                 );
                 resumeDto.Education = educationItems;
@@ -86,6 +95,7 @@ namespace Portfolio.Application.Services
             if (resumeRequest.ExperienceIds != null)
             {
                 var experienceItems = await _experienceRepository.GetAllExperiencesByIdsAsync(
+                    userId,
                     resumeRequest.ExperienceIds
                 );
                 resumeDto.Experience = experienceItems;
@@ -95,6 +105,7 @@ namespace Portfolio.Application.Services
             {
                 var certificationItems =
                     await _certificationRepository.GetAllCertificationsByTheirIdsAsync(
+                        userId,
                         resumeRequest.CertificationIds
                     );
                 resumeDto.Certification = certificationItems;

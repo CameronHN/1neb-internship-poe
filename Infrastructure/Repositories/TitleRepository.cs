@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ResumeTitle;
@@ -55,10 +55,10 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<string?> GetTitleByIdAsync(Guid id)
+        public async Task<string?> GetTitleByIdAsync(Guid id, Guid userId)
         {
             return await _dbContext
-                .Title.Where(t => t.Id == id)
+                .Title.Where(t => t.Id == id && t.UserId == userId)
                 .Select(t => t.ResumeTitle)
                 .FirstOrDefaultAsync();
         }

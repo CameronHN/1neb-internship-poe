@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.ProfessionalSummary;
@@ -71,10 +71,10 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<string?> GetSummaryByIdAsync(Guid id)
+        public async Task<string?> GetSummaryByIdAsync(Guid id, Guid userId)
         {
             return await _dbContext
-                .ProfessionalSummary.Where(s => s.Id == id)
+                .ProfessionalSummary.Where(s => s.Id == id && s.UserId == userId)
                 .Select(s => s.Summary)
                 .FirstOrDefaultAsync();
         }

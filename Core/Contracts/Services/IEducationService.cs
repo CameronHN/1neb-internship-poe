@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
@@ -9,7 +9,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddEducationsAsync(Guid userId, List<AddEducation> educations);
 
-        Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request);
+        Task<List<EducationItem>> GetAllEducationsByIdsAsync(Guid userId, ItemListRequest request);
         Task<List<EducationModel>> GetEducationsByUserIdAsync(Guid userId);
         Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId);
 

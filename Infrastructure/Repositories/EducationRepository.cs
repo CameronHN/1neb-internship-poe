@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
@@ -59,14 +59,17 @@ namespace Portfolio.Infrastructure.Repositories
             return saved > 0;
         }
 
-        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request)
+        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
             var ids = request.Ids;
             if (ids.Count == 0)
                 return new List<EducationItem>();
 
             var educations = await _dbContext
-                .Education.Where(edu => ids.Contains(edu.Id))
+                .Education.Where(edu => edu.UserId == userId && ids.Contains(edu.Id))
                 .Select(ed => new
                 {
                     ed.Id,

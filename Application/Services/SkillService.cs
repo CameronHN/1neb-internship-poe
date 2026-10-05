@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Resume;
@@ -26,9 +26,12 @@ namespace Portfolio.Application.Services
             return await _skillRepository.DeleteSkillsAsync(userId, skillIds);
         }
 
-        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request)
+        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
-            return await _skillRepository.GetAllSkillsByIdsAsync(request);
+            return await _skillRepository.GetAllSkillsByIdsAsync(userId, request);
         }
 
         public async Task<SkillModel> GetSkillByIdAsync(Guid id, Guid userId)

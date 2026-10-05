@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
@@ -11,7 +11,7 @@ namespace Portfolio.Core.Contracts.Repositories
 
         Task<ExperienceWithResponsibilitiesModel> GetExperienceByIdAsync(Guid id, Guid userId);
 
-        Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request);
+        Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(Guid userId, ItemListRequest request);
 
         Task<bool> PatchExperienceAsync(Guid userId, PatchExperience patch);
 
