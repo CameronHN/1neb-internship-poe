@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs;
+using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.Models;
@@ -28,7 +28,10 @@ namespace Portfolio.Core.Contracts.Repositories
         /// <summary>
         /// Retrieves certifications matching a list of IDs, with optional sorting.
         /// </summary>
-        Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(ItemListRequest request);
+        Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        );
 
         // -------------------- Update --------------------
         /// <summary>

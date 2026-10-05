@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs.ResumeTitle;
+using Portfolio.Core.DTOs.ResumeTitle;
 
 namespace Portfolio.Core.Contracts.Services
 {
@@ -6,7 +6,7 @@ namespace Portfolio.Core.Contracts.Services
     {
         Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles);
 
-        Task<string?> GetTitleByIdAsync(Guid id);
+        Task<string?> GetTitleByIdAsync(Guid id, Guid userId);
 
         Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId);
 

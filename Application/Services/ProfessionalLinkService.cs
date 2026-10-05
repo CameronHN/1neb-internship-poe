@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.ProfessionalLink;
@@ -37,10 +37,11 @@ namespace Portfolio.Application.Services
         }
 
         public Task<List<ProfessionalLinkItem>> GetProfessionalLinksByIdsAsync(
+            Guid userId,
             ItemListRequest request
         )
         {
-            return _professionalLinkRepository.GetProfessionalLinksByIdsAsync(request);
+            return _professionalLinkRepository.GetProfessionalLinksByIdsAsync(userId, request);
         }
 
         public async Task<bool> PatchProfessionalLinkAsync(Guid userId, PatchProfessionalLink patch)

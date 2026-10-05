@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Experience;
@@ -48,14 +48,17 @@ namespace Portfolio.Infrastructure.Repositories
             return experience;
         }
 
-        public async Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(ItemListRequest request)
+        public async Task<List<ExperienceItem>> GetAllExperiencesByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
             var ids = request.Ids;
             if (ids.Count == 0)
                 return [];
 
             var experiences = await _dbContext
-                .Experience.Where(exp => ids.Contains(exp.Id))
+                .Experience.Where(exp => exp.UserId == userId && ids.Contains(exp.Id))
                 .Select(ex => new
                 {
                     ex.Id,

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
@@ -68,6 +68,7 @@ namespace Portfolio.Infrastructure.Repositories
         }
 
         public async Task<List<CertificationItem>> GetAllCertificationsByTheirIdsAsync(
+            Guid userId,
             ItemListRequest request
         )
         {
@@ -76,7 +77,7 @@ namespace Portfolio.Infrastructure.Repositories
                 return [];
 
             var certs = await _dbContext
-                .Certification.Where(cert => ids.Contains(cert.Id))
+                .Certification.Where(cert => cert.UserId == userId && ids.Contains(cert.Id))
                 .Select(ce => new
                 {
                     ce.Id,

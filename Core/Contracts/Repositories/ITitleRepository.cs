@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.DTOs.ResumeTitle;
+using Portfolio.Core.DTOs.ResumeTitle;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
@@ -8,7 +8,7 @@ namespace Portfolio.Core.Contracts.Repositories
         Task<List<Guid>> AddTitlesAsync(Guid userId, List<AddResumeTitle> titles);
 
         // Get
-        Task<string?> GetTitleByIdAsync(Guid id); // Used for resume service
+        Task<string?> GetTitleByIdAsync(Guid id, Guid userId); // Used for resume service
         Task<List<string>> GetTitlesByUserIdAsync(Guid userId);
         Task<string> GetResumeTitleByIdAsync(Guid id, Guid userId); // Throws NotFound exception
 

@@ -1,11 +1,11 @@
-﻿using Portfolio.Core.DTOs.ProfessionalSummary;
+using Portfolio.Core.DTOs.ProfessionalSummary;
 
 namespace Portfolio.Core.Contracts.Repositories
 {
     public interface IProfessionalSummaryRepository
     {
         Task<List<Guid>> AddSummariesAsync(Guid userId, List<AddSummary> summaries);
-        Task<string?> GetSummaryByIdAsync(Guid id);
+        Task<string?> GetSummaryByIdAsync(Guid id, Guid userId);
         Task<string> GetProfessionalSummaryByIdAsync(Guid id, Guid userId);
 
         Task<List<string>> GetSummariesByUserIdAsync(Guid userId);

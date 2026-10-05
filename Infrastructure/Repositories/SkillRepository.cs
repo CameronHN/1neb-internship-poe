@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
@@ -67,14 +67,17 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(ItemListRequest request)
+        public async Task<List<SkillsItem>> GetAllSkillsByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
             var ids = request.Ids;
             if (ids.Count == 0)
                 return [];
 
             var skills = await _dbContext
-                .Skill.Where(skill => ids.Contains(skill.Id))
+                .Skill.Where(skill => skill.UserId == userId && ids.Contains(skill.Id))
                 .Select(sk => new
                 {
                     sk.Id,

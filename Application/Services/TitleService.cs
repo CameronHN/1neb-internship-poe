@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.ResumeTitle;
 
@@ -28,9 +28,9 @@ namespace Portfolio.Application.Services
             return await _titleRepository.GetResumeTitleByIdAsync(id, userId);
         }
 
-        public async Task<string?> GetTitleByIdAsync(Guid id)
+        public async Task<string?> GetTitleByIdAsync(Guid id, Guid userId)
         {
-            return await _titleRepository.GetTitleByIdAsync(id);
+            return await _titleRepository.GetTitleByIdAsync(id: id, userId: userId);
         }
 
         public async Task<List<string>> GetTitlesByUserIdAsync(Guid userId)

@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Certification;
@@ -32,9 +32,15 @@ namespace Portfolio.Application.Services
             );
         }
 
-        public async Task<List<CertificationItem>> GetAllCertsByIdsAsync(ItemListRequest request)
+        public async Task<List<CertificationItem>> GetAllCertsByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
-            return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(request);
+            return await _certificationRepository.GetAllCertificationsByTheirIdsAsync(
+                userId,
+                request
+            );
         }
 
         public async Task<CertificationModel> GetCertificationByIdAsync(Guid id, Guid userId)

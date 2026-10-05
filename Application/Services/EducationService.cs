@@ -1,4 +1,4 @@
-﻿using Portfolio.Core.Contracts.Repositories;
+using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs;
 using Portfolio.Core.DTOs.Education;
@@ -26,9 +26,12 @@ namespace Portfolio.Application.Services
             return await _educationRepository.DeleteEducationsAsync(userId, educationIds);
         }
 
-        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(ItemListRequest request)
+        public async Task<List<EducationItem>> GetAllEducationsByIdsAsync(
+            Guid userId,
+            ItemListRequest request
+        )
         {
-            return await _educationRepository.GetAllEducationsByIdsAsync(request);
+            return await _educationRepository.GetAllEducationsByIdsAsync(userId, request);
         }
 
         public async Task<EducationModel> GetEducationByIdAsync(Guid id, Guid userId)
