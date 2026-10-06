@@ -1,0 +1,20 @@
+meta {
+  name: post -api-ProfessionalLink-add
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/ProfessionalLink/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "link": "",
+      "linkType": ""
+    }
+  ]
+}

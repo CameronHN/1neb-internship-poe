@@ -1,0 +1,19 @@
+meta {
+  name: patch -api-ProfessionalLink-patch
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/api/ProfessionalLink/patch
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "",
+    "link": "",
+    "linkType": ""
+  }
+}
