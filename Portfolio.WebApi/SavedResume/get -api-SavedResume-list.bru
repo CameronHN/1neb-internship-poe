@@ -9,3 +9,9 @@ get {
   body: none
   auth: none
 }
+
+docs {
+  Lists the logged-in user's saved resumes. Requires login.
+
+  Returns `200` with an array of `{ id, name, templateType, createdAt }`.
+}

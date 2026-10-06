@@ -25,3 +25,17 @@ body:json {
     }
   ]
 }
+
+docs {
+  Adds one or more experiences for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `jobTitle`: required, max 100 characters, not blank
+  - `companyName`: optional, max 100 characters
+  - `startDate`, `endDate`: required, free text (stored as sent)
+  - `responsibilities`: required, at least one `{ "responsibility": "..." }` (max 255 characters each)
+
+  Send at least one experience.
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
+}

@@ -13,3 +13,11 @@ get {
 params:path {
   id: 
 }
+
+docs {
+  Builds the PDF of one saved resume, using its saved template. Requires login.
+
+  Path: `id` is the GUID returned by Save or List.
+
+  Returns `200` with a PDF (`application/pdf`). `404` if it does not exist or is not yours.
+}

@@ -9,3 +9,9 @@ get {
   body: none
   auth: none
 }
+
+docs {
+  Gets the logged-in user. Requires login.
+
+  Returns `200` with `{ id, firstName, lastName, email, phoneNumber }`. `401` if not logged in.
+}

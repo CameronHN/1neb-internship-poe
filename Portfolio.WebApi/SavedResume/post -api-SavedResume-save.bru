@@ -65,8 +65,12 @@ body:json {
 }
 
 docs {
-  templateType must be one of the following values:
+  Saves a snapshot of a resume. Requires login.
 
-  - classic
-  - simplified
+  Body:
+  - `savedResumeName`: required, max 200 characters
+  - `resumeData`: required, same fields as `Resume/create-pdf`
+  - `templateType`: required, `classic` or `simplified`
+
+  Returns `201` with the new id (a GUID). `400` if validation fails. `501` for any other template type.
 }

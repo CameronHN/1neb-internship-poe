@@ -36,3 +36,15 @@ body:json {
     }
   }
 }
+
+docs {
+  Builds a resume PDF from items the user already stored, picked by id. Requires login.
+
+  Body:
+  - `titleId`, `professionalSummaryId`: one id each
+  - `socialMediaIds`, `experienceIds`, `educationIds`, `certificationIds`, `skillsIds`: `{ "ids": [GUIDs], "order": 0 }`. `order` is `0` (as sent), `1` (ascending) or `2` (descending).
+
+  Only your own items are used. Get the ids from `get-user-resume-details` or from the Add requests.
+
+  Returns `200` with a PDF (`application/pdf`). `400` if the PDF cannot be made.
+}

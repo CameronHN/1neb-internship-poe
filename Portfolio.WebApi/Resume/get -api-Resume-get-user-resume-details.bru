@@ -9,3 +9,9 @@ get {
   body: none
   auth: none
 }
+
+docs {
+  Lists everything the logged-in user has stored, with the ids you need for Get Resume. Requires login.
+
+  Returns `200` with `name`, `email`, `phoneNumber` and the lists `title`, `summaries`, `skills`, `socials`, `experience`, `education`, `certification`. `401` if not logged in.
+}

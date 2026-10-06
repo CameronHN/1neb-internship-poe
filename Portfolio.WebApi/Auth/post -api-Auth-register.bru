@@ -20,3 +20,12 @@ body:json {
     "confirmPassword": ""
   }
 }
+
+docs {
+  Creates a user and signs them in (sets the auth cookie). No login needed.
+
+  Body: `firstName`, `lastName`, `email`, `phone`, `password`, `confirmPassword`.
+  The email must be unique. The password needs 8+ characters with an upper-case letter, a lower-case letter, a digit and a symbol.
+
+  Returns `200` with `{ message, userId }`. `400` with the reasons if it fails.
+}
