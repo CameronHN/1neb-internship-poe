@@ -123,10 +123,16 @@ namespace Portfolio.WebApi.Controllers
         /// <summary>
         /// Ends every session for the user, not just this browser's cookie, by rotating the
         /// security stamp that each auth cookie is checked against.
+        /// The body must be JSON (send {}). A cross-site page can only send that after a CORS
+        /// preflight, which other origins fail, so it cannot log users out (CSRF).
+        /// [Consumes] alone is not enough: it lets a request with no body through.
         /// </summary>
         [HttpPost("logout")]
+        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Logout()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        public async Task<IActionResult> Logout([FromBody] LogoutDto request)
         {
             var userId = User.GetUserId();
             if (userId is not null)
@@ -258,6 +264,11 @@ namespace Portfolio.WebApi.Controllers
         public string Password { get; set; } = string.Empty;
         public bool RememberMe { get; set; }
     }
+
+    /// <summary>
+    /// Empty on purpose. Logout requires a JSON body only to block cross-site requests.
+    /// </summary>
+    public class LogoutDto { }
 
     public class ChangePasswordDto
     {

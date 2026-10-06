@@ -83,7 +83,12 @@ builder.Services.ConfigureApplicationCookie(options =>
         return Task.CompletedTask;
     };
 
-    options.Cookie.SameSite = SameSiteMode.None;
+    // Lax unless configured. appsettings.Development.json sets None, because the dev frontend
+    // (http://localhost:5173) and the API (https://localhost:7165) count as different sites.
+    options.Cookie.SameSite = builder.Configuration.GetValue(
+        "Auth:CookieSameSite",
+        SameSiteMode.Lax
+    );
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromHours(24);
