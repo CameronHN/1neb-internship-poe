@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.User;
+using Portfolio.WebApi.Extensions;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -16,9 +17,11 @@ namespace Portfolio.WebApi.Controllers
         [ProducesResponseType(typeof(GetUserDetailsDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> GetUserById([FromQuery] Guid id)
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var user = await _userService.GetUserDetailsAsync(id);
+            var userId = User.GetUserId()!.Value;
+
+            var user = await _userService.GetUserDetailsAsync(userId);
 
             return Ok(user);
         }

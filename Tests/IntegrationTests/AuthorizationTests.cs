@@ -22,6 +22,7 @@ namespace Portfolio.Tests.IntegrationTests
 
         [Theory]
         [InlineData("GET", "/api/Auth/me")]
+        [InlineData("GET", "/api/User")]
         [InlineData("GET", "/api/SavedResume/list")]
         [InlineData("GET", "/api/Resume/get-user-resume-details")]
         [InlineData("POST", "/api/Resume/get-resume")]
