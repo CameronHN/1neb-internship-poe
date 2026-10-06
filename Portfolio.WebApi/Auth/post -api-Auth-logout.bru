@@ -6,12 +6,18 @@ meta {
 
 post {
   url: {{baseUrl}}/api/Auth/logout
-  body: none
+  body: json
   auth: none
 }
 
-docs {
-  Signs out and clears the auth cookie. Requests after this need a new login.
+body:json {
+  {}
+}
 
-  Returns `200`.
+docs {
+  Signs out and clears the auth cookie. Also ends the user's sessions on every other device. Requests after this need a new login.
+
+  Body: `{}`. A JSON body is required so that another website cannot log users out.
+
+  Returns `200`. `415` without a JSON body.
 }

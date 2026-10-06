@@ -46,5 +46,5 @@ docs {
 
   Only your own items are used. Get the ids from `get-user-resume-details` or from the Add requests.
 
-  Returns `200` with a PDF (`application/pdf`). `400` if the PDF cannot be made.
+  Returns `200` with a PDF (`application/pdf`). `400` if the PDF cannot be made. `413` if the body is over 256 KB. `429` after 10 PDFs a minute for one user, or when the server is already making too many PDFs.
 }

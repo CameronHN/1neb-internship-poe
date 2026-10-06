@@ -23,5 +23,5 @@ docs {
 
   Body: `email`, `password`, `rememberMe` (`true` or `false`).
 
-  Returns `200` with `{ message, userId }`. `400` if the login is invalid, or the account is locked (5 failed attempts lock it for 5 minutes).
+  Returns `200` with `{ message, userId }`. `400` with `Invalid login attempt` if the email is unknown, the password is wrong, or the account is locked (5 failed attempts lock it for 5 minutes). All three give the same answer, so login does not reveal which emails have accounts. `429` after 10 auth requests a minute from one IP.
 }

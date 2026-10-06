@@ -69,8 +69,10 @@ docs {
 
   Body:
   - `savedResumeName`: required, max 200 characters
-  - `resumeData`: required, same fields as `Resume/create-pdf`
+  - `resumeData`: required, same fields and max lengths as `Resume/create-pdf`, but up to 20 items in each list and 20 responsibilities per experience
   - `templateType`: required, `classic` or `simplified`
 
-  Returns `201` with the new id (a GUID). `400` if validation fails. `501` for any other template type.
+  The body must be under 256 KB. A user can keep up to 50 saved resumes.
+
+  Returns `201` with the new id (a GUID). `400` if validation fails. `413` if the body is too large. `422` if the user already has 50 saved resumes (delete one first). `501` for any other template type.
 }
