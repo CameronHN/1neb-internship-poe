@@ -14,6 +14,9 @@ docs {
   (or `Auth/post -api-Auth-register`) first. Bruno keeps the cookie in
   its cookie jar and sends it on every later request.
 
+  The `Auth` folder runs register, login, change-password, me, logout. After `change-password`,
+  log in with the new password, because the `login` request still holds the old one.
+
   Keep `baseUrl` on `https://localhost:7165`. The auth cookie is marked
   `Secure`, so it is not sent over the plain `http://localhost:5077`
   profile and every authorised request would return 401.
