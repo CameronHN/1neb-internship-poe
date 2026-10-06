@@ -15,6 +15,21 @@ namespace Portfolio.WebApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        // One answer for a wrong password, an unknown email and a locked account, so login
+        // does not reveal which emails have accounts.
+        private const string InvalidLoginMessage = "Invalid login attempt";
+
+        // Replaces Identity's "Username/Email '<email>' is already taken." errors.
+        private const string RegistrationFailedMessage =
+            "Registration could not be completed with these details.";
+
+        private static readonly ApplicationUser TimingUser = new()
+        {
+            FirstName = string.Empty,
+            LastName = string.Empty,
+        };
+        private static string? _timingPasswordHash;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
@@ -57,9 +72,9 @@ namespace Portfolio.WebApi.Controllers
                 return Ok(new { Message = "User registered successfully", UserId = user.Id });
             }
 
-            foreach (var error in result.Errors)
+            foreach (var description in result.Errors.Select(DescribeRegistrationError).Distinct())
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, description);
             }
 
             return BadRequest(ModelState);
@@ -76,8 +91,16 @@ namespace Portfolio.WebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user is null)
+            {
+                // Hash anyway, so an unknown email takes as long as a wrong password.
+                HashPasswordForTiming(model.Password);
+                return BadRequest(InvalidLoginMessage);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
+                user,
                 model.Password,
                 model.RememberMe,
                 lockoutOnFailure: true
@@ -85,16 +108,16 @@ namespace Portfolio.WebApi.Controllers
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                return Ok(new { Message = "Login successful", UserId = user?.Id });
+                return Ok(new { Message = "Login successful", UserId = user.Id });
             }
 
-            if (result.IsLockedOut)
+            // Identity rejects a locked (or not allowed) account before checking its password.
+            if (result.IsLockedOut || result.IsNotAllowed)
             {
-                return BadRequest("Account locked out");
+                HashPasswordForTiming(model.Password);
             }
 
-            return BadRequest("Invalid login attempt");
+            return BadRequest(InvalidLoginMessage);
         }
 
         /// <summary>
@@ -184,6 +207,22 @@ namespace Portfolio.WebApi.Controllers
                     phoneNumber = user.PhoneNumber,
                 }
             );
+        }
+
+        private static string DescribeRegistrationError(IdentityError error)
+        {
+            return error.Code
+                is nameof(IdentityErrorDescriber.DuplicateUserName)
+                    or nameof(IdentityErrorDescriber.DuplicateEmail)
+                ? RegistrationFailedMessage
+                : error.Description;
+        }
+
+        private void HashPasswordForTiming(string password)
+        {
+            var hasher = _userManager.PasswordHasher;
+            _timingPasswordHash ??= hasher.HashPassword(TimingUser, Guid.NewGuid().ToString());
+            hasher.VerifyHashedPassword(TimingUser, _timingPasswordHash, password);
         }
     }
 
