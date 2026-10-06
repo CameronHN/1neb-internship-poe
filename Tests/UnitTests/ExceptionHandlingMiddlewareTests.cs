@@ -68,6 +68,21 @@ namespace Portfolio.Tests.UnitTests
             Assert.Contains("An error occurred while processing your request", body);
         }
 
+        /// <summary>
+        /// Controllers and repositories throw the Core ValidationException with a message meant
+        /// for the client (e.g. "Start date is not a valid date."), so it must reach them.
+        /// </summary>
+        [Fact]
+        public async Task ValidationException_ReturnsItsMessageAs400()
+        {
+            var (context, body) = await InvokeWithExceptionAsync(
+                new CoreValidationException("Start date is not a valid date.")
+            );
+
+            Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
+            Assert.Contains("Start date is not a valid date.", body);
+        }
+
         [Fact]
         public async Task NoException_PassesThroughUnchanged()
         {

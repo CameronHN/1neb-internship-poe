@@ -32,10 +32,10 @@ namespace Portfolio.Infrastructure.Repositories
                     IssuingOrganisation = cert.IssuingOrganisation,
                     CredentialUrl = cert.CredentialUrl,
                     IssuedDate = !string.IsNullOrWhiteSpace(cert.IssuedDate)
-                        ? DateOnly.Parse(cert.IssuedDate)
+                        ? DateInput.Parse(cert.IssuedDate, "Issued date")
                         : null,
                     ExpiryDate = !string.IsNullOrWhiteSpace(cert.ExpiryDate)
-                        ? DateOnly.Parse(cert.ExpiryDate)
+                        ? DateInput.Parse(cert.ExpiryDate, "Expiry date")
                         : null,
                     UserId = userId,
                 })
@@ -202,7 +202,7 @@ namespace Portfolio.Infrastructure.Repositories
 
             var issueDate = string.IsNullOrWhiteSpace(patch.IssuedDate) ? null : patch.IssuedDate;
             DateOnly? newIssuedDate = !string.IsNullOrWhiteSpace(issueDate)
-                ? DateOnly.Parse(issueDate)
+                ? DateInput.Parse(issueDate, "Issued date")
                 : null;
             if (newIssuedDate != cert.IssuedDate)
             {
@@ -212,7 +212,7 @@ namespace Portfolio.Infrastructure.Repositories
 
             var expiryDate = string.IsNullOrWhiteSpace(patch.ExpiryDate) ? null : patch.ExpiryDate;
             DateOnly? newExpiryDate = !string.IsNullOrWhiteSpace(expiryDate)
-                ? DateOnly.Parse(expiryDate)
+                ? DateInput.Parse(expiryDate, "Expiry date")
                 : null;
             if (newExpiryDate != cert.ExpiryDate)
             {
