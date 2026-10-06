@@ -11,6 +11,7 @@ Run from the repo root unless noted. Target framework is .NET 8 (SDK 10 is insta
 - Apply migrations manually: `dotnet ef database update --project Infrastructure --startup-project Portfolio`
 - Add a migration: `dotnet ef migrations add <Name> --project Infrastructure --startup-project Portfolio`
 - API smoke testing: the Bruno collection lives in `Portfolio.WebApi/` (`.bru` files, one folder per controller). `Portfolio/Portfolio.http` also exists.
+- Bruno upkeep: when a route or a request DTO changes, update the matching `.bru` file in `Portfolio.WebApi/` in the same change.
 
 Tests live in `Tests/Portfolio.Tests.csproj` (xUnit), which is part of `Portfolio.sln`. Run them with `dotnet test Portfolio.sln`. **Docker Desktop must be running**: the integration tests start a throwaway SQL Server 2022 container through Testcontainers (`Tests/Common/PortfolioApiFactory.cs`) and never touch `ProjectDb`. To run only the unit tests (no Docker needed), use `dotnet test Portfolio.sln --filter "FullyQualifiedName~UnitTests"`.
 
