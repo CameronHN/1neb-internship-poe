@@ -97,10 +97,24 @@ namespace Portfolio.WebApi.Controllers
             return BadRequest("Invalid login attempt");
         }
 
+        /// <summary>
+        /// Ends every session for the user, not just this browser's cookie, by rotating the
+        /// security stamp that each auth cookie is checked against.
+        /// </summary>
         [HttpPost("logout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
+            var userId = User.GetUserId();
+            if (userId is not null)
+            {
+                var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+                if (user is not null)
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                }
+            }
+
             await _signInManager.SignOutAsync();
             return Ok(new { Message = "Logged out successfully" });
         }
@@ -136,6 +150,9 @@ namespace Portfolio.WebApi.Controllers
 
             if (result.Succeeded)
             {
+                // The password change rotated the security stamp, which ends every session.
+                // Re-issue this session's cookie so the caller stays logged in.
+                await _signInManager.RefreshSignInAsync(user);
                 return Ok(new { Message = "Password updated successfully" });
             }
 

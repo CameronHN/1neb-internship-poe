@@ -63,6 +63,12 @@ builder
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// Check the security stamp on every request, so logout and password changes end other
+// sessions straight away instead of after the default 30 minutes.
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+    options.ValidationInterval = TimeSpan.Zero
+);
+
 // Add Authentication and Authorization
 builder.Services.ConfigureApplicationCookie(options =>
 {
