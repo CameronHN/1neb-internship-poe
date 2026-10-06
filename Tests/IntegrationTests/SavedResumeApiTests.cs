@@ -53,11 +53,38 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         /// <summary>
-        /// Saves a classic resume for the logged-in user and returns its id.
+        /// A user can keep at most 50 saved resumes. The 51st is refused with 422 until they
+        /// delete one.
         /// </summary>
-        private static async Task<Guid> SaveResumeAsync(HttpClient client)
+        [Fact]
+        public async Task SaveResume_51st_Returns422UntilOneIsDeleted()
         {
-            var response = await client.PostAsJsonAsync(
+            using var client = TestClients.CreateHttpsClient(_factory);
+            await TestClients.RegisterAsync(client, "Fifty");
+            var ids = new List<Guid>();
+            for (var i = 0; i < 50; i++)
+            {
+                ids.Add(await SaveResumeAsync(client));
+            }
+
+            using var fiftyFirst = await PostSaveAsync(client);
+
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, fiftyFirst.StatusCode);
+            Assert.Equal(
+                "You can save up to 50 resumes. Delete one to save another.",
+                await TestClients.ReadErrorMessageAsync(fiftyFirst)
+            );
+
+            using var delete = await client.DeleteAsync($"/api/SavedResume/{ids[0]}");
+            Assert.Equal(HttpStatusCode.OK, delete.StatusCode);
+
+            using var afterDelete = await PostSaveAsync(client);
+            Assert.Equal(HttpStatusCode.Created, afterDelete.StatusCode);
+        }
+
+        private static Task<HttpResponseMessage> PostSaveAsync(HttpClient client)
+        {
+            return client.PostAsJsonAsync(
                 "/api/SavedResume/save",
                 new
                 {
@@ -66,6 +93,14 @@ namespace Portfolio.Tests.IntegrationTests
                     templateType = "classic",
                 }
             );
+        }
+
+        /// <summary>
+        /// Saves a classic resume for the logged-in user and returns its id.
+        /// </summary>
+        private static async Task<Guid> SaveResumeAsync(HttpClient client)
+        {
+            using var response = await PostSaveAsync(client);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             return await response.Content.ReadFromJsonAsync<Guid>();

@@ -110,8 +110,8 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     JobTitle = exp.JobTitle,
                     CompanyName = exp.CompanyName,
-                    StartDate = DateOnly.Parse(exp.StartDate),
-                    EndDate = DateOnly.Parse(exp.EndDate),
+                    StartDate = DateInput.Parse(exp.StartDate, "Start date"),
+                    EndDate = DateInput.Parse(exp.EndDate, "End date"),
                     UserId = userId,
                     Responsibilities = exp
                         .Responsibilities.Select(r => new ExperienceResponsibility
@@ -163,7 +163,7 @@ namespace Portfolio.Infrastructure.Repositories
                 var newValue = string.IsNullOrWhiteSpace(patch.StartDate) ? null : patch.StartDate;
                 if (newValue != null)
                 {
-                    var newStart = DateOnly.Parse(newValue);
+                    var newStart = DateInput.Parse(newValue, "Start date");
                     if (newStart != exp.StartDate)
                     {
                         exp.StartDate = newStart;
@@ -177,7 +177,7 @@ namespace Portfolio.Infrastructure.Repositories
                 var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
                 if (newValue != null)
                 {
-                    var newEnd = DateOnly.Parse(newValue);
+                    var newEnd = DateInput.Parse(newValue, "End date");
                     if (newEnd != exp.EndDate)
                     {
                         exp.EndDate = newEnd;

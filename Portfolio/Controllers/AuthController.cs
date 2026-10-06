@@ -3,9 +3,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.Entities;
 using Portfolio.WebApi.Extensions;
+using Portfolio.WebApi.RateLimiting;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -13,6 +15,21 @@ namespace Portfolio.WebApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        // One answer for a wrong password, an unknown email and a locked account, so login
+        // does not reveal which emails have accounts.
+        private const string InvalidLoginMessage = "Invalid login attempt";
+
+        // Replaces Identity's "Username/Email '<email>' is already taken." errors.
+        private const string RegistrationFailedMessage =
+            "Registration could not be completed with these details.";
+
+        private static readonly ApplicationUser TimingUser = new()
+        {
+            FirstName = string.Empty,
+            LastName = string.Empty,
+        };
+        private static string? _timingPasswordHash;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
@@ -29,8 +46,10 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
@@ -53,25 +72,35 @@ namespace Portfolio.WebApi.Controllers
                 return Ok(new { Message = "User registered successfully", UserId = user.Id });
             }
 
-            foreach (var error in result.Errors)
+            foreach (var description in result.Errors.Select(DescribeRegistrationError).Distinct())
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, description);
             }
 
             return BadRequest(ModelState);
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user is null)
+            {
+                // Hash anyway, so an unknown email takes as long as a wrong password.
+                HashPasswordForTiming(model.Password);
+                return BadRequest(InvalidLoginMessage);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
+                user,
                 model.Password,
                 model.RememberMe,
                 lockoutOnFailure: true
@@ -79,31 +108,53 @@ namespace Portfolio.WebApi.Controllers
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                return Ok(new { Message = "Login successful", UserId = user?.Id });
+                return Ok(new { Message = "Login successful", UserId = user.Id });
             }
 
-            if (result.IsLockedOut)
+            // Identity rejects a locked (or not allowed) account before checking its password.
+            if (result.IsLockedOut || result.IsNotAllowed)
             {
-                return BadRequest("Account locked out");
+                HashPasswordForTiming(model.Password);
             }
 
-            return BadRequest("Invalid login attempt");
+            return BadRequest(InvalidLoginMessage);
         }
 
+        /// <summary>
+        /// Ends every session for the user, not just this browser's cookie, by rotating the
+        /// security stamp that each auth cookie is checked against.
+        /// The body must be JSON (send {}). A cross-site page can only send that after a CORS
+        /// preflight, which other origins fail, so it cannot log users out (CSRF).
+        /// [Consumes] alone is not enough: it lets a request with no body through.
+        /// </summary>
         [HttpPost("logout")]
+        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Logout()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        public async Task<IActionResult> Logout([FromBody] LogoutDto request)
         {
+            var userId = User.GetUserId();
+            if (userId is not null)
+            {
+                var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+                if (user is not null)
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                }
+            }
+
             await _signInManager.SignOutAsync();
             return Ok(new { Message = "Logged out successfully" });
         }
 
         [HttpPost("change-password")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
         {
             if (!ModelState.IsValid)
@@ -128,6 +179,9 @@ namespace Portfolio.WebApi.Controllers
 
             if (result.Succeeded)
             {
+                // The password change rotated the security stamp, which ends every session.
+                // Re-issue this session's cookie so the caller stays logged in.
+                await _signInManager.RefreshSignInAsync(user);
                 return Ok(new { Message = "Password updated successfully" });
             }
 
@@ -160,15 +214,46 @@ namespace Portfolio.WebApi.Controllers
                 }
             );
         }
+
+        private static string DescribeRegistrationError(IdentityError error)
+        {
+            return error.Code
+                is nameof(IdentityErrorDescriber.DuplicateUserName)
+                    or nameof(IdentityErrorDescriber.DuplicateEmail)
+                ? RegistrationFailedMessage
+                : error.Description;
+        }
+
+        private void HashPasswordForTiming(string password)
+        {
+            var hasher = _userManager.PasswordHasher;
+            _timingPasswordHash ??= hasher.HashPassword(TimingUser, Guid.NewGuid().ToString());
+            hasher.VerifyHashedPassword(TimingUser, _timingPasswordHash, password);
+        }
     }
 
     public class RegisterDto
     {
+        [Required]
+        [MaxLength(100)]
         public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        [MaxLength(256)]
         public string Email { get; set; } = string.Empty;
+
+        [MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
+
+        [Required]
         public string Password { get; set; } = string.Empty;
+
+        [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 
@@ -179,6 +264,11 @@ namespace Portfolio.WebApi.Controllers
         public string Password { get; set; } = string.Empty;
         public bool RememberMe { get; set; }
     }
+
+    /// <summary>
+    /// Empty on purpose. Logout requires a JSON body only to block cross-site requests.
+    /// </summary>
+    public class LogoutDto { }
 
     public class ChangePasswordDto
     {

@@ -23,6 +23,11 @@ namespace Portfolio.Core.Contracts.Repositories
         /// </summary>
         Task<List<SavedResumeItem>> GetAllByUserIdAsync(Guid userId);
 
+        /// <summary>
+        /// Counts the saved resumes that belong to a specific user.
+        /// </summary>
+        Task<int> CountByUserIdAsync(Guid userId);
+
         // -------------------- Delete --------------------
         /// <summary>
         /// Deletes a saved resume for a user by its ID.

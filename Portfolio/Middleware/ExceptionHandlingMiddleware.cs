@@ -69,6 +69,12 @@ namespace Portfolio.WebApi.Middleware
                     exception.Message
                 ),
                 JsonException => (HttpStatusCode.BadRequest, "Invalid JSON format in request body"),
+                // Thrown by the server itself, e.g. 413 when a body is over [RequestSizeLimit].
+                // Its messages are fixed server texts, so they are safe to return.
+                BadHttpRequestException badRequest => (
+                    (HttpStatusCode)badRequest.StatusCode,
+                    exception.Message
+                ),
                 UnauthorizedAccessAppException => (HttpStatusCode.Unauthorized, "Access denied"),
                 NotFoundException => (HttpStatusCode.NotFound, exception.Message),
                 ConflictException => (HttpStatusCode.Conflict, exception.Message),

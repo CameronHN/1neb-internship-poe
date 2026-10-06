@@ -24,8 +24,8 @@ body:json {
 docs {
   Creates a user and signs them in (sets the auth cookie). No login needed.
 
-  Body: `firstName`, `lastName`, `email`, `phone`, `password`, `confirmPassword`.
+  Body: `firstName` and `lastName` (required, not blank, max 100 characters), `email` (required, a valid email, max 256 characters), `phone` (max 20 characters), `password` (required), `confirmPassword` (must match `password`).
   The email must be unique. The password needs 8+ characters with an upper-case letter, a lower-case letter, a digit and a symbol.
 
-  Returns `200` with `{ message, userId }`. `400` with the reasons if it fails.
+  Returns `200` with `{ message, userId }`. `400` with the reasons if it fails. An email that is already registered gets the generic `Registration could not be completed with these details.` `429` after 10 auth requests a minute from one IP.
 }

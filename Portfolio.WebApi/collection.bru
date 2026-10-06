@@ -33,5 +33,6 @@ docs {
   - `add` returns the new ids. Use them in `get`, `patch`, `delete` and `Resume/get-resume`.
     `Resume/get-user-resume-details` lists all your items with their ids.
   - You only ever see your own data. Another user's id gives `404`, `204` or `400`.
-  - Common statuses: `400` invalid request, `401` not logged in, `404` not found, `501` unsupported template.
+  - Common statuses: `400` invalid request, `401` not logged in, `404` not found, `413` request body too large, `422` a rule was broken (for example 50 saved resumes), `429` rate limited (see `Retry-After`), `501` unsupported template.
+  - Rate limits (the `RateLimiting` section of `appsettings.json`): auth requests 10 a minute per IP, PDF downloads 10 a minute per user, `Resume/create-pdf` 2 a minute and 3 a day per IP.
 }

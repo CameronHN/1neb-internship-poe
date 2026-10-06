@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Education;
+using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
 using Portfolio.WebApi.Extensions;
 

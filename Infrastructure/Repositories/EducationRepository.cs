@@ -27,8 +27,8 @@ namespace Portfolio.Infrastructure.Repositories
                 {
                     InstitutionName = edu.InstitutionName,
                     Qualification = edu.Qualification,
-                    StartDate = DateOnly.Parse(edu.StartDate),
-                    EndDate = DateOnly.Parse(edu.EndDate),
+                    StartDate = DateInput.Parse(edu.StartDate, "Start date"),
+                    EndDate = DateInput.Parse(edu.EndDate, "End date"),
                     Major = edu.Major,
                     Achievement = edu.Achievement,
                     UserId = userId,
@@ -178,7 +178,7 @@ namespace Portfolio.Infrastructure.Repositories
             {
                 var newValue = string.IsNullOrWhiteSpace(patch.StartDate) ? null : patch.StartDate;
                 DateOnly? newStartDate = !string.IsNullOrWhiteSpace(newValue)
-                    ? DateOnly.Parse(newValue)
+                    ? DateInput.Parse(newValue, "Start date")
                     : null;
                 if (newStartDate != edu.StartDate)
                 {
@@ -191,7 +191,7 @@ namespace Portfolio.Infrastructure.Repositories
             {
                 var newValue = string.IsNullOrWhiteSpace(patch.EndDate) ? null : patch.EndDate;
                 DateOnly? newEndDate = !string.IsNullOrWhiteSpace(newValue)
-                    ? DateOnly.Parse(newValue)
+                    ? DateInput.Parse(newValue, "End date")
                     : null;
                 if (newEndDate != edu.EndDate)
                 {

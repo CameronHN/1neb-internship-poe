@@ -72,7 +72,8 @@ namespace Portfolio.Application.Documents
             column.Item().Padding(5);
         }
 
-        // Shared social rendering with filtering (prevents QuestPDF Url null/empty errors)
+        // Shared social rendering with filtering (prevents QuestPDF Url null/empty errors).
+        // Only http(s) links become clickable; anything else shows its label as plain text.
         protected void RenderSocialLinksInline(TextDescriptor text)
         {
             var socials = Model
@@ -90,7 +91,10 @@ namespace Portfolio.Application.Documents
             for (int i = 0; i < socials.Count; i++)
             {
                 var s = socials[i]!;
-                text.Hyperlink(s.LinkType!, s.Link!).FontColor(Colors.Blue.Medium);
+                if (SafeLink.TryGetSafeUri(s.Link, out var uri))
+                    text.Hyperlink(s.LinkType!, uri).FontColor(Colors.Blue.Medium);
+                else
+                    text.Span(s.LinkType!);
 
                 if (i < socials.Count - 1)
                     text.Span(" | ");

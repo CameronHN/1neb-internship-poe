@@ -23,6 +23,14 @@ namespace Portfolio.Tests.UnitTests
                 { new ArgumentNullException("param"), StatusCodes.Status400BadRequest },
                 { new CoreValidationException("invalid"), StatusCodes.Status400BadRequest },
                 { new JsonException("bad json"), StatusCodes.Status400BadRequest },
+                {
+                    new BadHttpRequestException("Request body too large.", 413),
+                    StatusCodes.Status413PayloadTooLarge
+                },
+                {
+                    new BadHttpRequestException("Unexpected end of request content.", 400),
+                    StatusCodes.Status400BadRequest
+                },
                 { new UnauthorizedAccessAppException("denied"), StatusCodes.Status401Unauthorized },
                 { new NotFoundException("missing"), StatusCodes.Status404NotFound },
                 { new ConflictException("conflict"), StatusCodes.Status409Conflict },
@@ -66,6 +74,21 @@ namespace Portfolio.Tests.UnitTests
 
             Assert.DoesNotContain("SECRET-INTERNAL-DETAIL", body);
             Assert.Contains("An error occurred while processing your request", body);
+        }
+
+        /// <summary>
+        /// Controllers and repositories throw the Core ValidationException with a message meant
+        /// for the client (e.g. "Start date is not a valid date."), so it must reach them.
+        /// </summary>
+        [Fact]
+        public async Task ValidationException_ReturnsItsMessageAs400()
+        {
+            var (context, body) = await InvokeWithExceptionAsync(
+                new CoreValidationException("Start date is not a valid date.")
+            );
+
+            Assert.Equal(StatusCodes.Status400BadRequest, context.Response.StatusCode);
+            Assert.Contains("Start date is not a valid date.", body);
         }
 
         [Fact]

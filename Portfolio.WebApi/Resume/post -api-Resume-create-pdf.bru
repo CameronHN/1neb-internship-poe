@@ -61,10 +61,11 @@ body:json {
 }
 
 docs {
-  Builds a resume PDF from the data in the body. No login needed, and nothing is saved.
+  Builds a resume PDF from the data in the body. No login needed, and nothing is saved. This is the frontend's Demo page.
 
   Body: a resume object. Fields (all optional): `name`, `title`, `email`, `phoneNumber`, `summary`, and the lists `skills` (`skill`, `skillLevel`), `professionalLinks` (`link`, `linkType`), `experience` (`company`, `jobTitle`, `startDate`, `endDate`, `responsibilities` as text), `education` (`institution`, `qualification`, `startDate`, `endDate`, `major`, `achievement`), `certification` (`name`, `organisation`, `credentialUrl`, `issuedDate`, `expirationDate`).
-  A professional link is only shown when both `link` and `linkType` are filled in.
+  Demo limits: at most 4 skills, 2 professional links, 2 experiences with 2 responsibilities each, 2 education entries and 2 certifications. Max lengths: `name` 201, `email` 256, `phoneNumber` 50, `summary` 200, responsibilities 255, dates 50, everything else 100. The body must be under 32 KB.
+  A professional link is only shown when both `link` and `linkType` are filled in. Only `http` and `https` links are clickable; anything else is shown as plain text.
 
-  Returns `200` with a PDF (`application/pdf`).
+  Returns `200` with a PDF (`application/pdf`). `400` if a limit is exceeded. `413` if the body is too large. `429` when the demo quota for your IP is used up (2 a minute, 3 a day by default, see `RateLimiting:Demo`), or when the server is already making too many PDFs; `Retry-After` says when to try again.
 }

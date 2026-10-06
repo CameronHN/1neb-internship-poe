@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.SavedResume;
 using Portfolio.WebApi.Extensions;
 using Portfolio.WebApi.Helper;
+using Portfolio.WebApi.RateLimiting;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -23,9 +25,12 @@ namespace Portfolio.WebApi.Controllers
         /// Save a resume snapshot with all its data as JSON
         /// </summary>
         [HttpPost("save")]
+        [RequestSizeLimit(256 * 1024)]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status501NotImplemented)]
         public async Task<IActionResult> SaveResume([FromBody] SaveResumeDataRequest request)
         {
@@ -64,9 +69,12 @@ namespace Portfolio.WebApi.Controllers
         /// Generate PDF from a saved resume snapshot
         /// </summary>
         [HttpGet("{id}/pdf")]
+        [EnableRateLimiting(RateLimitPolicies.Pdf)]
+        [PdfGeneration]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> GetSavedResumePdfById(Guid id)
         {
             var userId = User.GetUserId();

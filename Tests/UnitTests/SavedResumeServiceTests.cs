@@ -4,6 +4,7 @@ using System.Text.Json;
 using NSubstitute;
 using Portfolio.Application.Documents;
 using Portfolio.Application.Services;
+using Portfolio.Core.Constants;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.SavedResume;
@@ -91,6 +92,32 @@ namespace Portfolio.Tests.UnitTests
             );
 
             await _repository.DidNotReceive().CreateAsync(Arg.Any<Guid>(), Arg.Any<AddSavedResume>());
+        }
+
+        [Fact]
+        public async Task SaveResumeAsync_AtTheLimitOf50_ThrowsAndDoesNotSave()
+        {
+            var userId = Guid.NewGuid();
+            _repository.CountByUserIdAsync(userId).Returns(Constants.MaxSavedResumesPerUser);
+
+            var exception = await Assert.ThrowsAsync<BusinessRuleViolationException>(() =>
+                _service.SaveResumeAsync(userId, CreateSaveRequest(TemplateTypes.Classic))
+            );
+
+            Assert.Equal(50, Constants.MaxSavedResumesPerUser);
+            Assert.Contains("50", exception.Message);
+            await _repository.DidNotReceive().CreateAsync(Arg.Any<Guid>(), Arg.Any<AddSavedResume>());
+        }
+
+        [Fact]
+        public async Task SaveResumeAsync_With49Saved_SavesThe50th()
+        {
+            var userId = Guid.NewGuid();
+            _repository.CountByUserIdAsync(userId).Returns(Constants.MaxSavedResumesPerUser - 1);
+
+            await _service.SaveResumeAsync(userId, CreateSaveRequest(TemplateTypes.Classic));
+
+            await _repository.Received(1).CreateAsync(userId, Arg.Any<AddSavedResume>());
         }
 
         [Fact]
