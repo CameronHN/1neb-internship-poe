@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Portfolio.Infrastructure.Persistence;
@@ -36,9 +37,28 @@ namespace Portfolio.Tests.Common
             ConnectionString = builder.ConnectionString;
         }
 
+        /// <summary>
+        /// Every test client comes from the same in-memory "IP address", so the real limits
+        /// would trip across unrelated tests. Tests that check the limits start their own host
+        /// with low values (see TestHosts.WithSettings).
+        /// </summary>
+        public static readonly Dictionary<string, string?> HighRateLimits = new()
+        {
+            ["RateLimiting:Auth:PermitLimit"] = "100000",
+            ["RateLimiting:Pdf:PermitLimit"] = "100000",
+            ["RateLimiting:Demo:BurstLimit"] = "100000",
+            ["RateLimiting:Demo:DailyLimit"] = "100000",
+            ["RateLimiting:PdfConcurrency:PermitLimit"] = "100",
+            ["RateLimiting:PdfConcurrency:QueueLimit"] = "100",
+        };
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Development");
+
+            builder.ConfigureAppConfiguration(
+                (_, config) => config.AddInMemoryCollection(HighRateLimits)
+            );
 
             // Fail at startup if any registration is missing or has an invalid lifetime.
             builder.UseDefaultServiceProvider(options =>

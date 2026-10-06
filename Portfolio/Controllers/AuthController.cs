@@ -3,9 +3,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.Entities;
 using Portfolio.WebApi.Extensions;
+using Portfolio.WebApi.RateLimiting;
 
 namespace Portfolio.WebApi.Controllers
 {
@@ -29,8 +31,10 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
@@ -62,9 +66,11 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
@@ -100,10 +106,12 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [HttpPost("change-password")]
+        [EnableRateLimiting(RateLimitPolicies.Auth)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
         {
             if (!ModelState.IsValid)

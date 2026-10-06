@@ -5,6 +5,7 @@ using Portfolio.Infrastructure;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Persistence.Seeding;
 using Portfolio.WebApi.Middleware;
+using Portfolio.WebApi.RateLimiting;
 using QuestPDF.Infrastructure;
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -27,7 +28,9 @@ builder.Services.AddCors(options =>
                 .WithOrigins("http://localhost:5173", "http://localhost:3000")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials();
+                .AllowCredentials()
+                // Lets the frontend read when a rate-limited request can be retried.
+                .WithExposedHeaders("Retry-After");
         }
     );
 });
@@ -35,6 +38,9 @@ builder.Services.AddCors(options =>
 // Add Infrastructure (DbContext, repositories, DbInitialiser) and Application (services)
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+
+// Add rate limiting (policies and limits are in the "RateLimiting" section of appsettings.json)
+builder.Services.AddApiRateLimiting(builder.Configuration);
 
 // Add Identity services
 builder
@@ -110,6 +116,9 @@ app.UseCors("AllowAll");
 // Add authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
+// After authentication, so the per-user "pdf" policy knows who is calling
+app.UseRateLimiter();
 
 app.MapControllers();
 
