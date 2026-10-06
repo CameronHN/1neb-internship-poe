@@ -110,12 +110,35 @@ using (var scope = app.Services.CreateScope())
     await dbInitialiser.InitialiseAsync(); // Seeding logic
 }
 
+// Security headers on every response, including errors and 429s.
+app.Use(
+    async (context, next) =>
+    {
+        var headers = context.Response.Headers;
+        headers.XContentTypeOptions = "nosniff";
+        headers.XFrameOptions = "DENY";
+        headers["Referrer-Policy"] = "no-referrer";
+
+        // Swagger UI is an HTML page with scripts, so it cannot use the API's strict policy.
+        if (!context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            headers.ContentSecurityPolicy = "default-src 'none'; frame-ancestors 'none'";
+        }
+
+        await next();
+    }
+);
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseHsts();
 }
 
 // Configure the HTTP request pipeline.
