@@ -5,6 +5,8 @@
         public const string MaxCharacterLengthErrorMessage = "Max. character limit reached.";
 
         public const string MaxItemCountErrorMessage = "Too many items.";
+
+        public const int MaxSavedResumesPerUser = 50;
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.DTOs;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Exceptions;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Tests.Common;
@@ -169,6 +170,26 @@ namespace Portfolio.Tests.IntegrationTests
             await Assert.ThrowsAsync<NotFoundException>(() =>
                 repository.GetByIdAsync(id: other.SavedResumeId, userId: owner.UserId)
             );
+        }
+
+        /// <summary>
+        /// The 50-resume cap counts with this method, so it must only count the user's own.
+        /// </summary>
+        [Fact]
+        public async Task CountByUserIdAsync_OnlyCountsOwnersSavedResumes()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var (owner, other) = await CreateTwoUsersAsync(scope);
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            db.SavedResume.AddRange(
+                new SavedResume { Name = "Extra 1", Data = "{}", TemplateType = "classic", UserId = other.UserId },
+                new SavedResume { Name = "Extra 2", Data = "{}", TemplateType = "classic", UserId = other.UserId }
+            );
+            await db.SaveChangesAsync();
+            var repository = scope.ServiceProvider.GetRequiredService<ISavedResumeRepository>();
+
+            Assert.Equal(1, await repository.CountByUserIdAsync(owner.UserId));
+            Assert.Equal(3, await repository.CountByUserIdAsync(other.UserId));
         }
 
         private static async Task<(UserWithItems Owner, UserWithItems Other)> CreateTwoUsersAsync(

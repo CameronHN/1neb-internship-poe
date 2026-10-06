@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Portfolio.Application.Documents;
+using Portfolio.Core.Constants;
 using Portfolio.Core.Contracts.Repositories;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Resume;
@@ -29,6 +30,14 @@ namespace Portfolio.Application.Services
             {
                 throw new TemplateTypeNotImplementedException(
                     $"Template type '{request.TemplateType}' is not supported. "
+                );
+            }
+
+            var savedCount = await _savedResumeRepository.CountByUserIdAsync(userId);
+            if (savedCount >= Constants.MaxSavedResumesPerUser)
+            {
+                throw new BusinessRuleViolationException(
+                    $"You can save up to {Constants.MaxSavedResumesPerUser} resumes. Delete one to save another."
                 );
             }
 

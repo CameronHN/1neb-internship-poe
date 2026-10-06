@@ -64,6 +64,11 @@ namespace Portfolio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<int> CountByUserIdAsync(Guid userId)
+        {
+            return await _dbContext.SavedResume.CountAsync(sr => sr.UserId == userId);
+        }
+
         public async Task<bool> DeleteAsync(Guid id, Guid userId)
         {
             var savedResume = await _dbContext.SavedResume.FirstOrDefaultAsync(sr =>
