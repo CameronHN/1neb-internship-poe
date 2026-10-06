@@ -31,9 +31,4 @@ docs {
     `Resume/get-user-resume-details` lists all your items with their ids.
   - You only ever see your own data. Another user's id gives `404`, `204` or `400`.
   - Common statuses: `400` invalid request, `401` not logged in, `404` not found, `501` unsupported template.
-
-  ## Known issue
-
-  The `Auth` folder runs `logout` before `change-password` and `me`, so those two return `401`
-  if you run the folder from top to bottom. Send them before `logout`, or log in again first.
 }
