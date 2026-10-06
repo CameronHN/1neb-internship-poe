@@ -1,3 +1,19 @@
 vars:pre-request {
   baseUrl: https://localhost:7165
 }
+
+docs {
+  # Authentication
+
+  The API uses a cookie, not a token. Call `Auth/post -api-Auth-login`
+  (or `Auth/post -api-Auth-register`) first. Bruno keeps the cookie in
+  its cookie jar and sends it on every later request.
+
+  Keep `baseUrl` on `https://localhost:7165`. The auth cookie is marked
+  `Secure`, so it is not sent over the plain `http://localhost:5077`
+  profile and every authorised request would return 401.
+
+  Bruno must trust the .NET development certificate. Run
+  `dotnet dev-certs https --trust` once, or turn off SSL certificate
+  verification in the Bruno settings.
+}
