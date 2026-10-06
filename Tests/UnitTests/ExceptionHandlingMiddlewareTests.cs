@@ -23,6 +23,14 @@ namespace Portfolio.Tests.UnitTests
                 { new ArgumentNullException("param"), StatusCodes.Status400BadRequest },
                 { new CoreValidationException("invalid"), StatusCodes.Status400BadRequest },
                 { new JsonException("bad json"), StatusCodes.Status400BadRequest },
+                {
+                    new BadHttpRequestException("Request body too large.", 413),
+                    StatusCodes.Status413PayloadTooLarge
+                },
+                {
+                    new BadHttpRequestException("Unexpected end of request content.", 400),
+                    StatusCodes.Status400BadRequest
+                },
                 { new UnauthorizedAccessAppException("denied"), StatusCodes.Status401Unauthorized },
                 { new NotFoundException("missing"), StatusCodes.Status404NotFound },
                 { new ConflictException("conflict"), StatusCodes.Status409Conflict },

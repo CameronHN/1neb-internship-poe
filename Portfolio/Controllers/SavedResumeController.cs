@@ -23,9 +23,11 @@ namespace Portfolio.WebApi.Controllers
         /// Save a resume snapshot with all its data as JSON
         /// </summary>
         [HttpPost("save")]
+        [RequestSizeLimit(256 * 1024)]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
         [ProducesResponseType(StatusCodes.Status501NotImplemented)]
         public async Task<IActionResult> SaveResume([FromBody] SaveResumeDataRequest request)
         {

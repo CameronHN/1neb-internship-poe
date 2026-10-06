@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Portfolio.Application.Validation;
 using Portfolio.Core.Contracts.Services;
 using Portfolio.Core.DTOs.Resume;
 using Portfolio.WebApi.Extensions;
@@ -23,14 +24,22 @@ namespace Portfolio.WebApi.Controllers
             _resumeGenerationService = resumeGenerationService;
         }
 
+        /// <summary>
+        /// The anonymous demo. It only accepts what the frontend's Demo page can send.
+        /// </summary>
         [AllowAnonymous]
+        [RequestSizeLimit(32 * 1024)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("create-pdf")]
         public async Task<IActionResult> GenerateResumeWithoutSavingDetails(
             [FromBody] ResumeDTO dto
         )
         {
+            DemoResumeValidator.Validate(dto);
+
             var pdf = await _resumeGenerationService.GenerateResumePdfAsync(dto);
 
             string? name = FileNameHelper.FileNameFormatter(dto?.Name);
@@ -55,10 +64,12 @@ namespace Portfolio.WebApi.Controllers
         }
 
         [Authorize]
+        [RequestSizeLimit(256 * 1024)]
         [HttpPost("get-resume")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GenerateResumeByIds(ResumeRequest resumeRequest)
         {
