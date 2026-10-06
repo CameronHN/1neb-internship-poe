@@ -171,6 +171,8 @@ Before running the application, ensure you have:
 
 The application includes automatic database seeding with initial data. This runs automatically on startup through the `DbInitialiser` service. This is deterministic and will not automatically reseed every time the application is run.
 
+Seeding only happens in the `Development` environment, or when `Database:SeedOnStartup` is `true`, so other environments never get fake accounts. Pending migrations are applied on startup in every environment.
+
 ### API Testing
 
 Use the included **Bruno (.bru)** files for API testing:

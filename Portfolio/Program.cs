@@ -102,12 +102,15 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Seed the database (runs before app starts serving requests)
+// Apply migrations, and seed fake data in Development (runs before app starts serving requests)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var dbInitialiser = services.GetRequiredService<DbInitialiser>();
-    await dbInitialiser.InitialiseAsync(); // Seeding logic
+    var seed =
+        app.Environment.IsDevelopment()
+        || app.Configuration.GetValue<bool>("Database:SeedOnStartup");
+    await dbInitialiser.InitialiseAsync(seed);
 }
 
 // Security headers on every response, including errors and 429s.

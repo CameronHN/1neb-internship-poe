@@ -40,13 +40,21 @@ namespace Portfolio.Infrastructure.Persistence.Seeding
             return new string(chars);
         }
 
-        public async Task InitialiseAsync()
+        /// <summary>
+        /// Applies pending migrations, then fills empty tables with fake data when
+        /// <paramref name="seed"/> is true. Program.cs only seeds in Development or when
+        /// Database:SeedOnStartup is true, so real environments get no fake accounts.
+        /// </summary>
+        public async Task InitialiseAsync(bool seed)
         {
             Randomizer.Seed = new Random(1234); // Deterministic
 
             _context.Database.Migrate();
 
-            await SeedUserData();
+            if (seed)
+            {
+                await SeedUserData();
+            }
         }
 
         private async Task SeedUserData()
