@@ -1,3 +1,39 @@
 vars:pre-request {
   baseUrl: https://localhost:7165
 }
+
+docs {
+  # Portfolio API
+
+  One folder per controller. Start the API (`dotnet run --project Portfolio`) so it listens on
+  `https://localhost:7165`, the `baseUrl` set in this file.
+
+  ## Authentication
+
+  The API uses a cookie, not a token. Call `Auth/post -api-Auth-login`
+  (or `Auth/post -api-Auth-register`) first. Bruno keeps the cookie in
+  its cookie jar and sends it on every later request.
+
+  Keep `baseUrl` on `https://localhost:7165`. The auth cookie is marked
+  `Secure`, so it is not sent over the plain `http://localhost:5077`
+  profile and every authorised request would return 401.
+
+  Bruno must trust the .NET development certificate. Run
+  `dotnet dev-certs https --trust` once, or turn off SSL certificate
+  verification in the Bruno settings.
+
+  ## Using the requests
+
+  - Everything needs login except `Auth/register`, `Auth/login`, `Auth/logout` and `Resume/create-pdf`.
+  - The bodies are templates with blank values. Fill them in before sending.
+  - `add` and `delete` take arrays, so you can send several items at once. `patch` takes one object.
+  - `add` returns the new ids. Use them in `get`, `patch`, `delete` and `Resume/get-resume`.
+    `Resume/get-user-resume-details` lists all your items with their ids.
+  - You only ever see your own data. Another user's id gives `404`, `204` or `400`.
+  - Common statuses: `400` invalid request, `401` not logged in, `404` not found, `501` unsupported template.
+
+  ## Known issue
+
+  The `Auth` folder runs `logout` before `change-password` and `me`, so those two return `401`
+  if you run the folder from top to bottom. Send them before `logout`, or log in again first.
+}

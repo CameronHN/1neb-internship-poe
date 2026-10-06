@@ -10,6 +10,8 @@ get {
   auth: none
 }
 
-params:query {
-  ~id: 
+docs {
+  Gets the logged-in user's details. Requires login. Takes no parameters: the user comes from the login cookie, so you cannot read anyone else's details.
+
+  Returns `200` with `{ firstName, lastName, email, phoneNumber }`. `401` if not logged in.
 }

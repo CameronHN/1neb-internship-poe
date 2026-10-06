@@ -1,11 +1,11 @@
 meta {
-  name: patch -api-ProfessionalSummary-patch
+  name: patch -api-ProfessionalLink-patch
   type: http
   seq: 3
 }
 
 patch {
-  url: {{baseUrl}}/api/ProfessionalSummary/patch
+  url: {{baseUrl}}/api/ProfessionalLink/patch
   body: json
   auth: none
 }
@@ -13,12 +13,13 @@ patch {
 body:json {
   {
     "id": "",
-    "summary": ""
+    "link": "",
+    "linkType": ""
   }
 }
 
 docs {
-  Updates one summary. Requires login.
+  Updates one professional link. Requires login.
 
   Body: object. Send `id` and only the fields to change.
 

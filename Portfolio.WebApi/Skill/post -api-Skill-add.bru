@@ -18,3 +18,13 @@ body:json {
     }
   ]
 }
+
+docs {
+  Adds one or more skills for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `skill`: required, max 200 characters, not blank
+  - `proficiencyLevel`: optional, max 200 characters
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
+}

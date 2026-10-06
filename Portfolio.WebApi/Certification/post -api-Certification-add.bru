@@ -21,3 +21,15 @@ body:json {
     }
   ]
 }
+
+docs {
+  Adds one or more certifications for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `certificationName`: required, max 100 characters, not blank
+  - `issuingOrganisation`: optional, max 100 characters
+  - `credentialUrl`: optional, valid URL, max 100 characters
+  - `issuedDate`, `expiryDate`: optional, free text
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
+}

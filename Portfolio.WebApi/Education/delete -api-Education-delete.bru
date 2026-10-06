@@ -1,7 +1,7 @@
 meta {
   name: delete -api-Education-delete
   type: http
-  seq: 1
+  seq: 4
 }
 
 delete {
@@ -12,6 +12,14 @@ delete {
 
 body:json {
   [
-    {}
+    "00000000-0000-0000-0000-000000000000"
   ]
+}
+
+docs {
+  Deletes education entries by id. Requires login.
+
+  Body: array of GUIDs. All or nothing: if any id does not exist or is not yours, nothing is deleted.
+
+  Returns `200 true`. `400` if the list is empty or any id is invalid.
 }

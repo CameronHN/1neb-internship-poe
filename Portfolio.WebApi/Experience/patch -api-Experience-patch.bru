@@ -25,3 +25,13 @@ body:json {
     ]
   }
 }
+
+docs {
+  Updates one experience. Requires login.
+
+  Body: object. Send `id` and only the fields to change.
+
+  To edit responsibilities, send `responsibilities` as `[{ "id", "responsibility" }]` using the ids from Get. Ones you do not list stay as they are. Patch cannot add or remove responsibilities.
+
+  Returns `200 true` if something changed. `204` if nothing changed or the id is not yours. `400` if validation fails.
+}

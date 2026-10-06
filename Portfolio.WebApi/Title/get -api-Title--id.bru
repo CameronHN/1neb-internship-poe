@@ -13,3 +13,11 @@ get {
 params:path {
   id: 
 }
+
+docs {
+  Gets one title by id. Requires login.
+
+  Path: `id` is a GUID returned by Add.
+
+  Returns `200` with the title text. `404` if it does not exist or is not yours.
+}

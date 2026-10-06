@@ -23,9 +23,10 @@ body:json {
         "skillLevel": ""
       }
     ],
-    "socials": [
+    "professionalLinks": [
       {
-        "socialMediaUrl": ""
+        "link": "",
+        "linkType": ""
       }
     ],
     "experience": [
@@ -57,4 +58,13 @@ body:json {
       }
     ]
   }
+}
+
+docs {
+  Builds a resume PDF from the data in the body. No login needed, and nothing is saved.
+
+  Body: a resume object. Fields (all optional): `name`, `title`, `email`, `phoneNumber`, `summary`, and the lists `skills` (`skill`, `skillLevel`), `professionalLinks` (`link`, `linkType`), `experience` (`company`, `jobTitle`, `startDate`, `endDate`, `responsibilities` as text), `education` (`institution`, `qualification`, `startDate`, `endDate`, `major`, `achievement`), `certification` (`name`, `organisation`, `credentialUrl`, `issuedDate`, `expirationDate`).
+  A professional link is only shown when both `link` and `linkType` are filled in.
+
+  Returns `200` with a PDF (`application/pdf`).
 }

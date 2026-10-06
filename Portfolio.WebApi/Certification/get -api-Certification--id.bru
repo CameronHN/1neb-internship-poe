@@ -1,7 +1,7 @@
 meta {
   name: get -api-Certification--id
   type: http
-  seq: 4
+  seq: 2
 }
 
 get {
@@ -12,4 +12,12 @@ get {
 
 params:path {
   id: 
+}
+
+docs {
+  Gets one certification by id. Requires login.
+
+  Path: `id` is a GUID returned by Add.
+
+  Returns `200` with the certification. `404` if it does not exist or is not yours.
 }

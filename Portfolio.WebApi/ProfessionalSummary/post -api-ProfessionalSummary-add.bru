@@ -17,3 +17,12 @@ body:json {
     }
   ]
 }
+
+docs {
+  Adds one or more summaries for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `summary`: required, max 200 characters, not blank
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
+}

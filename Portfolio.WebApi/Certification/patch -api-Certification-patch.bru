@@ -1,7 +1,7 @@
 meta {
   name: patch -api-Certification-patch
   type: http
-  seq: 2
+  seq: 3
 }
 
 patch {
@@ -19,4 +19,12 @@ body:json {
     "issuedDate": "",
     "expiryDate": ""
   }
+}
+
+docs {
+  Updates one certification. Requires login.
+
+  Body: object. Send `id` and only the fields to change.
+
+  Returns `200 true` if something changed. `204` if nothing changed or the id is not yours. `400` if validation fails.
 }

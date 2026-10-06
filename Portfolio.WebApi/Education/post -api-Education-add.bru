@@ -1,7 +1,7 @@
 meta {
   name: post -api-Education-add
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
@@ -21,4 +21,15 @@ body:json {
       "achievement": ""
     }
   ]
+}
+
+docs {
+  Adds one or more education entries for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `institutionName`, `qualification`: required, max 100 characters, not blank
+  - `startDate`, `endDate`: required, free text (stored as sent)
+  - `major`, `achievement`: optional, max 100 characters
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
 }

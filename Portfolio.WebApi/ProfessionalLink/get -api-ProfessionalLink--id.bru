@@ -1,0 +1,23 @@
+meta {
+  name: get -api-ProfessionalLink--id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/ProfessionalLink/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+docs {
+  Gets one professional link by id. Requires login.
+
+  Path: `id` is a GUID returned by Add.
+
+  Returns `200` with the link. `404` if it does not exist or is not yours.
+}

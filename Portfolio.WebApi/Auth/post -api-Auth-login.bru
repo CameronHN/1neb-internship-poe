@@ -14,6 +14,14 @@ body:json {
   {
     "email": "",
     "password": "",
-    "rememberMe": ""
+    "rememberMe": false
   }
+}
+
+docs {
+  Signs in and sets the auth cookie. No login needed.
+
+  Body: `email`, `password`, `rememberMe` (`true` or `false`).
+
+  Returns `200` with `{ message, userId }`. `400` if the login is invalid, or the account is locked (5 failed attempts lock it for 5 minutes).
 }

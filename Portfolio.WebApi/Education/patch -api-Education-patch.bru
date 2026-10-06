@@ -1,7 +1,7 @@
 meta {
   name: patch -api-Education-patch
   type: http
-  seq: 4
+  seq: 3
 }
 
 patch {
@@ -20,4 +20,12 @@ body:json {
     "major": "",
     "achievement": ""
   }
+}
+
+docs {
+  Updates one education entry. Requires login.
+
+  Body: object. Send `id` and only the fields to change.
+
+  Returns `200 true` if something changed. `204` if nothing changed or the id is not yours. `400` if validation fails.
 }

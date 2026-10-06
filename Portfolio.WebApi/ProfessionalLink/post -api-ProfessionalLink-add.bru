@@ -1,0 +1,32 @@
+meta {
+  name: post -api-ProfessionalLink-add
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/ProfessionalLink/add
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "link": "",
+      "linkType": ""
+    }
+  ]
+}
+
+docs {
+  Adds one or more professional links for the logged-in user. Requires login.
+
+  Body: array of objects.
+  - `link`: required, valid URL, max 100 characters
+  - `linkType`: required, max 100 characters (for example `GitHub`)
+
+  A resume only shows a link when both `link` and `linkType` are filled in.
+
+  Returns `201` with the new ids (array of GUIDs). `400` if validation fails.
+}
