@@ -264,7 +264,7 @@ namespace Portfolio.Application.Documents
                 foreach (var ce in certification)
                 {
                     var cert = ce.Name ?? string.Empty;
-                    var certLink = ce.CredentialUrl ?? string.Empty;
+                    var hasSafeLink = SafeLink.TryGetSafeUri(ce.CredentialUrl, out var certLink);
                     var org = ce.Organisation ?? string.Empty;
 
                     column
@@ -278,7 +278,7 @@ namespace Portfolio.Application.Documents
                                 .Text(text =>
                                 {
                                     text.Span(cert).Bold();
-                                    if (!string.IsNullOrWhiteSpace(certLink))
+                                    if (hasSafeLink)
                                     {
                                         text.Span(" (").Bold();
                                         text.Hyperlink("Link", certLink)
