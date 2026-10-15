@@ -27,7 +27,7 @@ namespace Portfolio.Tests.IntegrationTests
         [InlineData("GET", "/api/SavedResume/list")]
         [InlineData("GET", "/api/Resume/get-user-resume-details")]
         [InlineData("POST", "/api/Resume/get-resume")]
-        public async Task AnonymousRequestToProtectedEndpoint_Returns401(string method, string url)
+        public async Task ProtectedEndpoint_AnonymousRequest_Returns401(string method, string url)
         {
             using var client = TestClients.CreateHttpsClient(_factory);
             using var request = new HttpRequestMessage(new HttpMethod(method), url);
@@ -43,7 +43,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task AnonymousCreatePdf_ReturnsPdf()
+        public async Task CreatePdf_AnonymousCaller_ReturnsPdf()
         {
             using var client = TestClients.CreateHttpsClient(_factory);
 
@@ -59,7 +59,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task AfterLogout_ProtectedEndpointReturns401()
+        public async Task GetMe_AfterLogout_Returns401()
         {
             using var client = TestClients.CreateHttpsClient(_factory);
             await TestClients.RegisterAsync(client, "Logout");

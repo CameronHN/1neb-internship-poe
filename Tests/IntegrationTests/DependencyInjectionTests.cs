@@ -50,14 +50,14 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public void FindsAllElevenControllers()
+        public void FindControllerTypes_AssemblyScanned_FindsAllElevenControllers()
         {
             Assert.Equal(11, FindControllerTypes().Count);
         }
 
         [Theory]
         [MemberData(nameof(AllControllerTypes))]
-        public void EveryControllerResolves(Type controllerType)
+        public void ServiceProvider_EachControllerType_ResolvesController(Type controllerType)
         {
             using var scope = _factory.Services.CreateScope();
 
@@ -67,7 +67,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public void MissingRegistration_FailsAtStartup()
+        public void CreateClient_MissingRepositoryRegistration_FailsAtStartup()
         {
             using var brokenFactory = _factory.WithWebHostBuilder(builder =>
                 builder.ConfigureTestServices(services => services.RemoveAll<ITitleRepository>())

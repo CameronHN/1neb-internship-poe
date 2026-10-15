@@ -40,7 +40,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Logout_EndsTheUsersSessionsOnOtherDevices()
+        public async Task Logout_UserSignedInOnAnotherDevice_EndsTheOtherDeviceSession()
         {
             using var laptop = TestClients.CreateHttpsClient(_factory);
             var user = await TestClients.RegisterAsync(laptop, "Devices");

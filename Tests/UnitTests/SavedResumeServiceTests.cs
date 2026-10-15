@@ -47,14 +47,14 @@ namespace Portfolio.Tests.UnitTests
         }
 
         [Fact]
-        public void TemplateTypes_HasAtLeastOneConstant()
+        public void TemplateTypes_ConstantsClass_HasAtLeastOneConstant()
         {
             Assert.NotEmpty(AllTemplateTypes());
         }
 
         [Theory]
         [MemberData(nameof(AllTemplateTypes))]
-        public async Task SaveResumeAsync_AcceptsEveryTemplateType(string templateType)
+        public async Task SaveResumeAsync_EachKnownTemplateType_Saves(string templateType)
         {
             var userId = Guid.NewGuid();
             var savedId = Guid.NewGuid();
@@ -70,7 +70,7 @@ namespace Portfolio.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(AllTemplateTypes))]
-        public async Task GetSavedResumePdfFromIdAsync_RendersEveryTemplateType(string templateType)
+        public async Task GetSavedResumePdfFromIdAsync_EachKnownTemplateType_RendersPdf(string templateType)
         {
             var userId = Guid.NewGuid();
             var resumeId = Guid.NewGuid();

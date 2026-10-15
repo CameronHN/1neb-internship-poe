@@ -12,7 +12,7 @@ namespace Portfolio.Tests.UnitTests
     public class DemoResumeValidatorTests
     {
         [Fact]
-        public void DemoPageShape_Passes()
+        public void Validate_ResumeMatchingDemoPageShape_Passes()
         {
             var exception = Record.Exception(() => DemoResumeValidator.Validate(DemoPageShape()));
 
@@ -20,7 +20,7 @@ namespace Portfolio.Tests.UnitTests
         }
 
         [Fact]
-        public void EmptyResume_Passes()
+        public void Validate_EmptyResume_Passes()
         {
             var exception = Record.Exception(() => DemoResumeValidator.Validate(new ResumeDTO()));
 
@@ -34,7 +34,7 @@ namespace Portfolio.Tests.UnitTests
         [InlineData("responsibilities")]
         [InlineData("education")]
         [InlineData("certifications")]
-        public void OneMoreThanTheDemoPage_Throws(string section)
+        public void Validate_OneMoreItemThanTheDemoPage_Throws(string section)
         {
             var resume = DemoPageShape();
             switch (section)

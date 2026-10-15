@@ -52,7 +52,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task AuthLimit_IsCountedPerClientIp()
+        public async Task LoginEndpoint_RequestsFromDifferentClientIps_CountsAuthLimitPerClientIp()
         {
             await using var host = _factory.WithSettings(
                 new() { ["RateLimiting:Auth:PermitLimit"] = "1" }
@@ -87,7 +87,7 @@ namespace Portfolio.Tests.IntegrationTests
         /// IP (for example an office) do not share a limit.
         /// </summary>
         [Fact]
-        public async Task PdfLimit_IsCountedPerUser()
+        public async Task GetResume_TwoUsersOnTheSameIp_CountsPdfLimitPerUser()
         {
             await using var host = _factory.WithSettings(
                 new() { ["RateLimiting:Pdf:PermitLimit"] = "1" }
