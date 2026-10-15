@@ -28,7 +28,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllResumeDetailsByUserIdAsync_ReturnsEveryFieldFormattedAndOrdered()
+        public async Task GetAllResumeDetailsByUserIdAsync_UserWithFullData_ReturnsEveryFieldFormattedAndOrdered()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -256,7 +256,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllResumeDetailsByUserIdAsync_OnlyReturnsOwnersData()
+        public async Task GetAllResumeDetailsByUserIdAsync_TwoUsersExist_OnlyReturnsOwnersData()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -298,7 +298,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetUserResumeDetails_ReturnsTheCallersPayloadAsJson()
+        public async Task GetUserResumeDetails_AuthenticatedUserWithData_ReturnsTheCallersPayloadAsJson()
         {
             using var client = TestClients.CreateHttpsClient(_factory);
             var registered = await TestClients.RegisterAsync(client, "Apiuser");
