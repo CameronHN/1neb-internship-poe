@@ -12,9 +12,10 @@ using Xunit;
 namespace Portfolio.Tests.IntegrationTests
 {
     /// <summary>
-    /// Issue #33: GetAllResumeDetailsByUserIdAsync is being moved from Include graph loading to
-    /// LINQ projections. These tests pin the payload (fields, ordering, date formats and empty
-    /// collections) so the rewrite is proven to return exactly what it returned before.
+    /// Issue #33: GetAllResumeDetailsByUserIdAsync loads each collection with its own projected
+    /// query (no Include graph). These tests pin the payload: fields, ordering, date formats and
+    /// empty collections. Skills and links are sorted by the database collation, so names that
+    /// differ only by case tie and fall back to the id.
     /// </summary>
     [Collection(ApiCollection.Name)]
     public class UserResumeDetailsTests
@@ -99,6 +100,69 @@ namespace Portfolio.Tests.IntegrationTests
             Assert.Equal("June 2022", cert2022.IssuedDate);
             Assert.Equal("June 2025", cert2022.ExpirationDate);
             Assert.Null(result.Certification[1].ExpirationDate);
+        }
+
+        [Fact]
+        public async Task GetAllResumeDetailsByUserIdAsync_NamesThatDifferOnlyByCase_TieAndStayInAStableOrder()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var user = await CreateBareUserAsync(db, "CaseTie");
+            db.Skill.AddRange(
+                new Skill { SkillName = "charlie", UserId = user.Id },
+                new Skill { SkillName = "Alpha", UserId = user.Id },
+                new Skill { SkillName = "Bravo", UserId = user.Id },
+                new Skill { SkillName = "alpha", UserId = user.Id }
+            );
+            db.ProfessionalLink.AddRange(
+                new ProfessionalLink
+                {
+                    LinkType = "Web",
+                    Link = "https://c.example",
+                    UserId = user.Id,
+                },
+                new ProfessionalLink
+                {
+                    LinkType = "Web",
+                    Link = "https://A.example",
+                    UserId = user.Id,
+                },
+                new ProfessionalLink
+                {
+                    LinkType = "Web",
+                    Link = "https://b.example",
+                    UserId = user.Id,
+                },
+                new ProfessionalLink
+                {
+                    LinkType = "Web",
+                    Link = "https://a.example",
+                    UserId = user.Id,
+                }
+            );
+            await db.SaveChangesAsync();
+            var repository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+            var first = await repository.GetAllResumeDetailsByUserIdAsync(user.Id);
+            var second = await repository.GetAllResumeDetailsByUserIdAsync(user.Id);
+
+            Assert.NotNull(first);
+            Assert.NotNull(second);
+
+            // The case-only pair is adjacent and sorts before the other names, whichever of the
+            // two comes first.
+            Assert.Equal(
+                ["alpha", "alpha", "bravo", "charlie"],
+                first.Skills.Select(s => s.Skill!.ToLowerInvariant())
+            );
+            Assert.Equal(
+                ["https://a.example", "https://a.example", "https://b.example", "https://c.example"],
+                first.Socials.Select(s => s.SocialMediaUrl!.ToLowerInvariant())
+            );
+
+            // The tie is broken by id, so repeated reads give the same order.
+            Assert.Equal(first.Skills.Select(s => s.Id), second.Skills.Select(s => s.Id));
+            Assert.Equal(first.Socials.Select(s => s.Id), second.Socials.Select(s => s.Id));
         }
 
         [Fact]
