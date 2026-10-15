@@ -52,7 +52,7 @@ namespace Portfolio.Tests.IntegrationTests
 
         [Theory]
         [MemberData(nameof(SkillOrders))]
-        public async Task GetAllSkillsByIdsAsync_ReturnsSkillsInRequestedOrder(
+        public async Task GetAllSkillsByIdsAsync_EachSortOrder_ReturnsSkillsInRequestedOrder(
             SortOrder order,
             string[] expected
         )
@@ -70,7 +70,7 @@ namespace Portfolio.Tests.IntegrationTests
 
         [Theory]
         [MemberData(nameof(DateOrders))]
-        public async Task GetAllEducationsByIdsAsync_ReturnsEducationsInRequestedOrder(
+        public async Task GetAllEducationsByIdsAsync_EachSortOrder_ReturnsEducationsInRequestedOrder(
             SortOrder order,
             string[] expected
         )
@@ -91,7 +91,7 @@ namespace Portfolio.Tests.IntegrationTests
 
         [Theory]
         [MemberData(nameof(DateOrders))]
-        public async Task GetAllExperiencesByIdsAsync_ReturnsExperiencesInRequestedOrder(
+        public async Task GetAllExperiencesByIdsAsync_EachSortOrder_ReturnsExperiencesInRequestedOrder(
             SortOrder order,
             string[] expected
         )
@@ -112,7 +112,7 @@ namespace Portfolio.Tests.IntegrationTests
 
         [Theory]
         [MemberData(nameof(DateOrders))]
-        public async Task GetAllCertificationsByTheirIdsAsync_ReturnsCertificationsInRequestedOrder(
+        public async Task GetAllCertificationsByTheirIdsAsync_EachSortOrder_ReturnsCertificationsInRequestedOrder(
             SortOrder order,
             string[] expected
         )
@@ -132,7 +132,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllSkillsByIdsAsync_SortedResultSkipsOtherUsersAndUnknownIds()
+        public async Task GetAllSkillsByIdsAsync_OtherUsersAndUnknownIds_AreSkippedWhenSorted()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -150,7 +150,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllEducationsByIdsAsync_SortedResultSkipsOtherUsersAndUnknownIds()
+        public async Task GetAllEducationsByIdsAsync_OtherUsersAndUnknownIds_AreSkippedWhenSorted()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -168,7 +168,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllExperiencesByIdsAsync_SortedResultSkipsOtherUsersAndUnknownIds()
+        public async Task GetAllExperiencesByIdsAsync_OtherUsersAndUnknownIds_AreSkippedWhenSorted()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -186,7 +186,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllCertificationsByTheirIdsAsync_SortedResultSkipsOtherUsersAndUnknownIds()
+        public async Task GetAllCertificationsByTheirIdsAsync_OtherUsersAndUnknownIds_AreSkippedWhenSorted()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

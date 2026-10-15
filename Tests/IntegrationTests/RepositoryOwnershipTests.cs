@@ -26,7 +26,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetTitleByIdAsync_OnlyReturnsOwnersTitle()
+        public async Task GetTitleByIdAsync_IdOwnedByAnotherUser_ReturnsNull()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -40,7 +40,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetSummaryByIdAsync_OnlyReturnsOwnersSummary()
+        public async Task GetSummaryByIdAsync_IdOwnedByAnotherUser_ReturnsNull()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -58,7 +58,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllSkillsByIdsAsync_OnlyReturnsOwnersSkills()
+        public async Task GetAllSkillsByIdsAsync_IdOwnedByAnotherUser_ReturnsEmpty()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -72,7 +72,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllEducationsByIdsAsync_OnlyReturnsOwnersEducation()
+        public async Task GetAllEducationsByIdsAsync_IdOwnedByAnotherUser_ReturnsEmpty()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -92,7 +92,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllExperiencesByIdsAsync_OnlyReturnsOwnersExperience()
+        public async Task GetAllExperiencesByIdsAsync_IdOwnedByAnotherUser_ReturnsEmpty()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -112,7 +112,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllCertificationsByTheirIdsAsync_OnlyReturnsOwnersCertifications()
+        public async Task GetAllCertificationsByTheirIdsAsync_IdOwnedByAnotherUser_ReturnsEmpty()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -132,7 +132,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetProfessionalLinksByIdsAsync_OnlyReturnsOwnersLinks()
+        public async Task GetProfessionalLinksByIdsAsync_IdOwnedByAnotherUser_ReturnsEmpty()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -158,7 +158,7 @@ namespace Portfolio.Tests.IntegrationTests
         /// This repository throws instead of returning null when nothing matches.
         /// </summary>
         [Fact]
-        public async Task GetSavedResumeByIdAsync_OnlyReturnsOwnersSavedResume()
+        public async Task GetByIdAsync_SavedResumeOwnedByAnotherUser_ThrowsNotFound()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);
@@ -176,7 +176,7 @@ namespace Portfolio.Tests.IntegrationTests
         /// The 50-resume cap counts with this method, so it must only count the user's own.
         /// </summary>
         [Fact]
-        public async Task CountByUserIdAsync_OnlyCountsOwnersSavedResumes()
+        public async Task CountByUserIdAsync_AnotherUserHasSavedResumes_CountsOnlyTheOwners()
         {
             using var scope = _factory.Services.CreateScope();
             var (owner, other) = await CreateTwoUsersAsync(scope);

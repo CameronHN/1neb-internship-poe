@@ -24,7 +24,7 @@ namespace Portfolio.Tests.IntegrationTests
         [InlineData("GET", "/api/Auth/me")] // 401
         [InlineData("GET", "/api/does-not-exist")] // 404
         [InlineData("POST", "/api/Resume/create-pdf")] // 200, a PDF
-        public async Task ApiResponses_HaveSecurityHeaders(string method, string url)
+        public async Task ApiResponse_AnyStatusCode_HasSecurityHeaders(string method, string url)
         {
             using var client = TestClients.CreateHttpsClient(_factory);
             using var request = new HttpRequestMessage(new HttpMethod(method), url);
@@ -63,7 +63,7 @@ namespace Portfolio.Tests.IntegrationTests
         /// UseHsts skips "localhost", so these requests use another host name.
         /// </summary>
         [Fact]
-        public async Task Hsts_IsSentInProduction()
+        public async Task Hsts_ProductionEnvironment_IsSent()
         {
             await using var production = _factory.WithWebHostBuilder(builder =>
                 builder.UseEnvironment("Production")
@@ -76,7 +76,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Hsts_IsNotSentInDevelopment()
+        public async Task Hsts_DevelopmentEnvironment_IsNotSent()
         {
             using var client = CreateClientForHost(_factory);
 

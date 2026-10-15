@@ -27,7 +27,7 @@ namespace Portfolio.Tests.IntegrationTests
         [InlineData("DELETE", "/api/Title/delete")]
         [InlineData("DELETE", "/api/ProfessionalSummary/delete")]
         [InlineData("DELETE", "/api/ProfessionalLink/delete")]
-        public async Task EmptyList_Returns400(string method, string url)
+        public async Task ListEndpoint_EmptyListBody_Returns400(string method, string url)
         {
             using var client = TestClients.CreateHttpsClient(_factory);
             await TestClients.RegisterAsync(client, "Empty");

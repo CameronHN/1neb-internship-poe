@@ -28,7 +28,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Development_SeedsFakeUsers()
+        public async Task Startup_DevelopmentEnvironment_SeedsFakeUsers()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -37,7 +37,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Production_MigratesButDoesNotSeed()
+        public async Task Startup_ProductionWithoutSeedSetting_MigratesButDoesNotSeed()
         {
             await using var production = ProductionHostWithFreshDatabase(seedOnStartup: null);
 

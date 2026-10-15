@@ -52,7 +52,7 @@ namespace Portfolio.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(ExceptionMappings))]
-        public async Task MapsExceptionToStatusCode(Exception exception, int expectedStatusCode)
+        public async Task InvokeAsync_EachMappedExceptionType_SetsExpectedStatusCode(Exception exception, int expectedStatusCode)
         {
             var (context, body) = await InvokeWithExceptionAsync(exception);
 
@@ -66,7 +66,7 @@ namespace Portfolio.Tests.UnitTests
         }
 
         [Fact]
-        public async Task UnexpectedException_DoesNotLeakItsMessage()
+        public async Task InvokeAsync_UnexpectedException_DoesNotLeakItsMessage()
         {
             var (_, body) = await InvokeWithExceptionAsync(
                 new InvalidOperationException("SECRET-INTERNAL-DETAIL")
@@ -81,7 +81,7 @@ namespace Portfolio.Tests.UnitTests
         /// for the client (e.g. "Start date is not a valid date."), so it must reach them.
         /// </summary>
         [Fact]
-        public async Task ValidationException_ReturnsItsMessageAs400()
+        public async Task InvokeAsync_ValidationException_ReturnsItsMessageAs400()
         {
             var (context, body) = await InvokeWithExceptionAsync(
                 new CoreValidationException("Start date is not a valid date.")
@@ -92,7 +92,7 @@ namespace Portfolio.Tests.UnitTests
         }
 
         [Fact]
-        public async Task NoException_PassesThroughUnchanged()
+        public async Task InvokeAsync_NoException_PassesThroughUnchanged()
         {
             var context = new DefaultHttpContext();
             context.Response.Body = new MemoryStream();

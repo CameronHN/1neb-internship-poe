@@ -110,7 +110,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task CreatePdf_QuotaIsCountedPerClientIp()
+        public async Task CreatePdf_RequestsFromDifferentClientIps_CountsQuotaPerClientIp()
         {
             await using var host = _factory.WithSettings(DemoLimits(burst: 100, daily: 1));
             using var client = TestClients.CreateHttpsClient(host);

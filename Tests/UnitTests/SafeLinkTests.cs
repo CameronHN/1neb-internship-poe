@@ -13,7 +13,7 @@ namespace Portfolio.Tests.UnitTests
         [InlineData("http://example.com", "http://example.com/")]
         [InlineData("  https://example.com/me  ", "https://example.com/me")]
         [InlineData("HTTPS://Example.com/Path", "https://example.com/Path")]
-        public void HttpAndHttps_AreAllowed(string raw, string expected)
+        public void TryGetSafeUri_HttpAndHttpsLinks_AreAllowed(string raw, string expected)
         {
             Assert.True(SafeLink.TryGetSafeUri(raw, out var uri));
             Assert.Equal(expected, uri);
@@ -32,7 +32,7 @@ namespace Portfolio.Tests.UnitTests
         [InlineData("")]
         [InlineData("   ")]
         [InlineData(null)]
-        public void EverythingElse_IsRejected(string? raw)
+        public void TryGetSafeUri_NonHttpOrMalformedLinks_AreRejected(string? raw)
         {
             Assert.False(SafeLink.TryGetSafeUri(raw, out var uri));
             Assert.Equal(string.Empty, uri);

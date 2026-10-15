@@ -21,7 +21,7 @@ namespace Portfolio.Tests.IntegrationTests
         }
 
         [Fact]
-        public void DbContext_UsesTheTestContainerDatabase()
+        public void DbContext_ResolvedFromTestFactory_UsesTheTestContainerDatabase()
         {
             using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
