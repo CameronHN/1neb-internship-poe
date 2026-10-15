@@ -27,7 +27,6 @@ namespace Portfolio.Infrastructure.Repositories
             var experience =
                 await _dbContext
                     .Experience.Where(e => e.Id == id && e.UserId == userId)
-                    .Include(e => e.Responsibilities)
                     .Select(edu => new ExperienceWithResponsibilitiesModel
                     {
                         Id = edu.Id,
@@ -57,8 +56,20 @@ namespace Portfolio.Infrastructure.Repositories
             if (ids.Count == 0)
                 return [];
 
-            var experiences = await _dbContext
-                .Experience.Where(exp => exp.UserId == userId && ids.Contains(exp.Id))
+            var query = _dbContext.Experience.Where(exp =>
+                exp.UserId == userId && ids.Contains(exp.Id)
+            );
+
+            // Date sorts run in the query. SortOrder.None follows the caller's id list, which
+            // SQL cannot do, so it is applied in memory below.
+            query = request.Order switch
+            {
+                SortOrder.Descending => query.OrderByDescending(exp => exp.EndDate),
+                SortOrder.Ascending => query.OrderBy(exp => exp.EndDate),
+                _ => query,
+            };
+
+            var experiences = await query
                 .Select(ex => new
                 {
                     ex.Id,
@@ -66,26 +77,17 @@ namespace Portfolio.Infrastructure.Repositories
                     ex.JobTitle,
                     ex.StartDate,
                     ex.EndDate,
-                    ex.Responsibilities,
+                    Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList(),
                 })
                 .ToListAsync();
 
-            switch (request.Order)
+            if (request.Order is not (SortOrder.Ascending or SortOrder.Descending))
             {
-                case SortOrder.Descending:
-                    experiences = experiences.OrderByDescending(e => e.EndDate).ToList();
-                    break;
-                case SortOrder.Ascending:
-                    experiences = experiences.OrderBy(e => e.EndDate).ToList();
-                    break;
-                case SortOrder.None:
-                default:
-                    var order = ids.Select((id, idx) => new { id, idx })
-                        .ToDictionary(x => x.id, x => x.idx);
-                    experiences = experiences
-                        .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
-                        .ToList();
-                    break;
+                var order = ids.Select((id, idx) => new { id, idx })
+                    .ToDictionary(x => x.id, x => x.idx);
+                experiences = experiences
+                    .OrderBy(e => order.TryGetValue(e.Id, out var idx) ? idx : int.MaxValue)
+                    .ToList();
             }
 
             return experiences
@@ -95,7 +97,7 @@ namespace Portfolio.Infrastructure.Repositories
                     JobTitle = ex.JobTitle,
                     StartDate = ex.StartDate.ToString("MMMM yyyy"),
                     EndDate = ex.EndDate.ToString("MMMM yyyy"),
-                    Responsibilities = ex.Responsibilities.Select(r => r.Responsibility).ToList(),
+                    Responsibilities = ex.Responsibilities,
                 })
                 .ToList();
         }
