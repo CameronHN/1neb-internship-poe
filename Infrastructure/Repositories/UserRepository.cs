@@ -20,96 +20,145 @@ namespace Portfolio.Infrastructure.Repositories
         {
             var user = await _dbContext
                 .User.Where(u => u.Id == userId)
-                .AsSplitQuery()
-                .Include(u => u.Titles)
-                .Include(u => u.ProfessionalSummaries)
-                .Include(u => u.ProfessionalLinks)
-                .Include(u => u.Skills)
-                .Include(u => u.Experiences)
-                .ThenInclude(e => e.Responsibilities)
-                .Include(u => u.Educations)
-                .Include(u => u.Certifications)
+                .Select(u => new
+                {
+                    u.FirstName,
+                    u.LastName,
+                    u.Email,
+                    u.PhoneNumber,
+                })
                 .FirstOrDefaultAsync();
 
             if (user == null)
                 return null;
+
+            // One projected query per collection instead of a single query that joins them all.
+            // Joining sibling collections multiplies the rows (titles x links x skills x ...),
+            // so each list is fetched on its own, scoped to the user, and sorted in SQL.
+            // Dates are read raw and formatted afterwards, so no formatting is sent to SQL.
+            var titles = await _dbContext
+                .Title.Where(t => t.UserId == userId)
+                .Select(t => new TitleItems { Id = t.Id, Title = t.ResumeTitle })
+                .ToListAsync();
+
+            var summaries = await _dbContext
+                .ProfessionalSummary.Where(s => s.UserId == userId)
+                .Select(s => new SummaryItems { Id = s.Id, Summary = s.Summary })
+                .ToListAsync();
+
+            var socials = await _dbContext
+                .ProfessionalLink.Where(c => c.UserId == userId)
+                .OrderBy(c => c.Link)
+                .ThenBy(c => c.Id)
+                .Select(c => new SocialMediaItems
+                {
+                    Id = c.Id,
+                    SocialMediaType = c.LinkType,
+                    SocialMediaUrl = c.Link,
+                })
+                .ToListAsync();
+
+            var skills = await _dbContext
+                .Skill.Where(s => s.UserId == userId)
+                .OrderBy(s => s.SkillName)
+                .ThenBy(s => s.Id)
+                .Select(s => new SkillsItems
+                {
+                    Id = s.Id,
+                    Skill = s.SkillName,
+                    SkillLevel = s.ProficiencyLevel,
+                })
+                .ToListAsync();
+
+            var experiences = await _dbContext
+                .Experience.Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.EndDate)
+                .ThenBy(e => e.Id)
+                .Select(e => new
+                {
+                    e.Id,
+                    e.CompanyName,
+                    e.JobTitle,
+                    e.StartDate,
+                    e.EndDate,
+                    Responsibilities = e.Responsibilities.Select(r => r.Responsibility).ToList(),
+                })
+                .ToListAsync();
+
+            var educations = await _dbContext
+                .Education.Where(ed => ed.UserId == userId)
+                .OrderByDescending(ed => ed.EndDate)
+                .ThenBy(ed => ed.Id)
+                .Select(ed => new
+                {
+                    ed.Id,
+                    ed.InstitutionName,
+                    ed.Qualification,
+                    ed.StartDate,
+                    ed.EndDate,
+                    ed.Major,
+                    ed.Achievement,
+                })
+                .ToListAsync();
+
+            var certifications = await _dbContext
+                .Certification.Where(ce => ce.UserId == userId)
+                .OrderByDescending(ce => ce.IssuedDate)
+                .ThenBy(ce => ce.Id)
+                .Select(ce => new
+                {
+                    ce.Id,
+                    ce.CertificationName,
+                    ce.IssuingOrganisation,
+                    ce.CredentialUrl,
+                    ce.IssuedDate,
+                    ce.ExpiryDate,
+                })
+                .ToListAsync();
 
             return new GetAllResumeDetails
             {
                 Name = user.FirstName + " " + user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                Title =
-                    user.Titles?.Select(t => new TitleItems { Id = t.Id, Title = t.ResumeTitle })
-                        .ToList() ?? new List<TitleItems>(),
-                Summaries =
-                    user.ProfessionalSummaries?.Select(s => new SummaryItems
-                        {
-                            Id = s.Id,
-                            Summary = s.Summary,
-                        })
-                        .ToList() ?? new List<SummaryItems>(),
-                Socials =
-                    user.ProfessionalLinks?.OrderBy(c => c.Link)
-                        .Select(c => new SocialMediaItems
-                        {
-                            Id = c.Id,
-                            SocialMediaType = c.LinkType,
-                            SocialMediaUrl = c.Link,
-                        })
-                        .ToList() ?? new List<SocialMediaItems>(),
-                Skills =
-                    user.Skills?.OrderBy(s => s.SkillName)
-                        .Select(s => new SkillsItems
-                        {
-                            Id = s.Id,
-                            Skill = s.SkillName,
-                            SkillLevel = s.ProficiencyLevel,
-                        })
-                        .ToList() ?? new List<SkillsItems>(),
-                Experience =
-                    user.Experiences?.OrderByDescending(e => e.EndDate)
-                        .Select(e => new ExperienceItems
-                        {
-                            Id = e.Id,
-                            Company = e.CompanyName,
-                            JobTitle = e.JobTitle,
-                            StartDate = e.StartDate.ToString("MMMM yyyy"),
-                            EndDate = e.EndDate.ToString("MMMM yyyy"),
-                            Responsibilities =
-                                e.Responsibilities?.Select(r => r.Responsibility).ToList()
-                                ?? new List<string>(),
-                        })
-                        .ToList() ?? new List<ExperienceItems>(),
-                Education =
-                    user.Educations?.OrderByDescending(ed => ed.EndDate)
-                        .Select(ed => new EducationItems
-                        {
-                            Id = ed.Id,
-                            Institution = ed.InstitutionName,
-                            Qualification = ed.Qualification,
-                            StartDate = ed.StartDate.ToString("MMMM yyyy"),
-                            EndDate = ed.EndDate.ToString("MMMM yyyy"),
-                            Major = ed.Major,
-                            Achievement = ed.Achievement,
-                        })
-                        .ToList() ?? new List<EducationItems>(),
-                Certification =
-                    user.Certifications?.OrderByDescending(ce => ce.IssuedDate)
-                        .Select(ce => new CertificationItems
-                        {
-                            Id = ce.Id,
-                            Name = ce.CertificationName,
-                            Organisation = ce.IssuingOrganisation,
-                            CredentialUrl = ce.CredentialUrl,
-                            IssuedDate = ce.IssuedDate.HasValue
-                                ? ce.IssuedDate.Value.ToString("MMMM yyyy")
-                                : null,
-                            ExpirationDate = ce.ExpiryDate.HasValue
-                                ? ce.ExpiryDate.Value.ToString("MMMM yyyy")
-                                : null,
-                        })
-                        .ToList() ?? new List<CertificationItems>(),
+                Title = titles,
+                Summaries = summaries,
+                Socials = socials,
+                Skills = skills,
+                Experience = experiences
+                    .Select(e => new ExperienceItems
+                    {
+                        Id = e.Id,
+                        Company = e.CompanyName,
+                        JobTitle = e.JobTitle,
+                        StartDate = e.StartDate.ToString("MMMM yyyy"),
+                        EndDate = e.EndDate.ToString("MMMM yyyy"),
+                        Responsibilities = e.Responsibilities,
+                    })
+                    .ToList(),
+                Education = educations
+                    .Select(ed => new EducationItems
+                    {
+                        Id = ed.Id,
+                        Institution = ed.InstitutionName,
+                        Qualification = ed.Qualification,
+                        StartDate = ed.StartDate.ToString("MMMM yyyy"),
+                        EndDate = ed.EndDate.ToString("MMMM yyyy"),
+                        Major = ed.Major,
+                        Achievement = ed.Achievement,
+                    })
+                    .ToList(),
+                Certification = certifications
+                    .Select(ce => new CertificationItems
+                    {
+                        Id = ce.Id,
+                        Name = ce.CertificationName,
+                        Organisation = ce.IssuingOrganisation,
+                        CredentialUrl = ce.CredentialUrl,
+                        IssuedDate = ce.IssuedDate?.ToString("MMMM yyyy"),
+                        ExpirationDate = ce.ExpiryDate?.ToString("MMMM yyyy"),
+                    })
+                    .ToList(),
             };
         }
 
