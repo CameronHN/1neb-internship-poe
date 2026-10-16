@@ -66,6 +66,38 @@ namespace Portfolio.Tests.UnitTests
         }
 
         /// <summary>
+        /// The Demo page never sends sectionOrder, so any entry, even a template's default
+        /// order, is a registered-user feature and gets a 403 (via ForbiddenException).
+        /// </summary>
+        [Theory]
+        [InlineData("experience,skills,education,certifications")]
+        [InlineData("skills,experience,education,certifications")]
+        [InlineData("certifications")]
+        [InlineData("skills")]
+        public void Validate_AnySectionOrderEntries_ThrowsForbidden(string order)
+        {
+            var resume = DemoPageShape();
+            resume.SectionOrder = [.. order.Split(',')];
+
+            var exception = Assert.Throws<ForbiddenException>(() =>
+                DemoResumeValidator.Validate(resume)
+            );
+            Assert.Equal("Section ordering is available to registered users.", exception.Message);
+        }
+
+        [Fact]
+        public void Validate_NullOrEmptySectionOrder_Passes()
+        {
+            var nullOrder = DemoPageShape();
+            nullOrder.SectionOrder = null;
+            var emptyOrder = DemoPageShape();
+            emptyOrder.SectionOrder = [];
+
+            Assert.Null(Record.Exception(() => DemoResumeValidator.Validate(nullOrder)));
+            Assert.Null(Record.Exception(() => DemoResumeValidator.Validate(emptyOrder)));
+        }
+
+        /// <summary>
         /// The largest resume the Demo page can produce.
         /// </summary>
         private static ResumeDTO DemoPageShape()

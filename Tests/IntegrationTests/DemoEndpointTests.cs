@@ -74,6 +74,73 @@ namespace Portfolio.Tests.IntegrationTests
             );
         }
 
+        /// <summary>
+        /// Issue #32: section ordering is a registered-user feature. The request is well-formed
+        /// but uses a feature the demo does not have, so it is 403 (not 400), even for a
+        /// template's own default order, because the Demo page never sends the field.
+        /// </summary>
+        [Theory]
+        [InlineData("certifications,skills")]
+        [InlineData("experience,skills,education,certifications")]
+        [InlineData("SKILLS")]
+        public async Task CreatePdf_NonEmptySectionOrder_Returns403(string order)
+        {
+            using var client = TestClients.CreateHttpsClient(_factory);
+
+            using var response = await client.PostAsJsonAsync(
+                CreatePdf,
+                new { name = "Demo User", sectionOrder = order.Split(',') }
+            );
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            Assert.Equal(
+                "Section ordering is available to registered users.",
+                await TestClients.ReadErrorMessageAsync(response)
+            );
+            using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            Assert.Equal(403, json.RootElement.GetProperty("error").GetProperty("statusCode").GetInt32());
+        }
+
+        /// <summary>
+        /// Model binding runs before the demo's 403 check, so a malformed sectionOrder is still a 400.
+        /// </summary>
+        [Theory]
+        [InlineData("bogus")]
+        [InlineData("summary")]
+        [InlineData("skills,skills")]
+        [InlineData("skills,experience,education,certifications,skills")]
+        public async Task CreatePdf_MalformedSectionOrder_Returns400NotForbidden(string order)
+        {
+            using var client = TestClients.CreateHttpsClient(_factory);
+
+            using var response = await client.PostAsJsonAsync(
+                CreatePdf,
+                new { name = "Demo User", sectionOrder = order.Split(',') }
+            );
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreatePdf_NoNullOrEmptySectionOrder_StillReturnsThePdf()
+        {
+            using var client = TestClients.CreateHttpsClient(_factory);
+
+            using var missing = await client.PostAsJsonAsync(CreatePdf, new { name = "Demo User" });
+            using var nullOrder = await client.PostAsJsonAsync(
+                CreatePdf,
+                new { name = "Demo User", sectionOrder = (string[]?)null }
+            );
+            using var emptyOrder = await client.PostAsJsonAsync(
+                CreatePdf,
+                new { name = "Demo User", sectionOrder = Array.Empty<string>() }
+            );
+
+            Assert.Equal(HttpStatusCode.OK, missing.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, nullOrder.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, emptyOrder.StatusCode);
+        }
+
         [Fact]
         public async Task CreatePdf_OverTheDailyQuota_Returns429WithRetryAfter()
         {

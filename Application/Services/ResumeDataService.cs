@@ -46,6 +46,7 @@ namespace Portfolio.Application.Services
 
             resumeDto.Email = user.Email;
             resumeDto.PhoneNumber = user.PhoneNumber;
+            resumeDto.SectionOrder = resumeRequest.SectionOrder;
 
             if (resumeRequest.TitleId.HasValue)
             {

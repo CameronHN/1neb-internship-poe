@@ -33,7 +33,8 @@ body:json {
     "skillsIds": {
       "ids": [],
       "order": 0
-    }
+    },
+    "sectionOrder": ["experience", "skills", "education", "certifications"]
   }
 }
 
@@ -44,7 +45,9 @@ docs {
   - `titleId`, `professionalSummaryId`: one id each
   - `socialMediaIds`, `experienceIds`, `educationIds`, `certificationIds`, `skillsIds`: `{ "ids": [GUIDs], "order": 0 }`. `order` is `0` (as sent), `1` (ascending) or `2` (descending).
 
+  - `sectionOrder` (optional): the top-to-bottom order of the movable sections, using `skills`, `experience`, `education` and `certifications`. The header (name, title, contact line, links) and the Summary always come first and cannot be moved, so `summary`, `title` and `links` are rejected. Keys are not case-sensitive. Sections you leave out follow in the default order, and a section with no items is skipped. Leave it out (or send `null` or `[]`) for the default order. This request draws the `classic` template, whose default is `experience`, `skills`, `education`, `certifications`.
+
   Only your own items are used. Get the ids from `get-user-resume-details` or from the Add requests.
 
-  Returns `200` with a PDF (`application/pdf`). `400` if the PDF cannot be made. `413` if the body is over 256 KB. `429` after 10 PDFs a minute for one user, or when the server is already making too many PDFs.
+  Returns `200` with a PDF (`application/pdf`). `400` if the PDF cannot be made, or if `sectionOrder` has an unknown key, a duplicate or more than 4 entries. `413` if the body is over 256 KB. `429` after 10 PDFs a minute for one user, or when the server is already making too many PDFs.
 }

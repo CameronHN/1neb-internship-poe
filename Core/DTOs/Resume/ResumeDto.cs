@@ -37,6 +37,12 @@ namespace Portfolio.Core.DTOs.Resume
 
         [MaxLength(ResumeLimits.MaxCertifications, ErrorMessage = MaxItemCountErrorMessage)]
         public List<CertificationItem>? Certification { get; set; }
+
+        // Top-to-bottom order of the movable sections (see ResumeSections). Null or empty means
+        // the template's default order. The stored JSON name is "SectionOrder", so keep it stable.
+        [MaxLength(ResumeSections.MaxCount, ErrorMessage = MaxItemCountErrorMessage)]
+        [ValidSectionOrder]
+        public List<string>? SectionOrder { get; set; }
     }
 
     public class ProfessionalLinkItem
