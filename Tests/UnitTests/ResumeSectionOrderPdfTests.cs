@@ -17,24 +17,27 @@ namespace Portfolio.Tests.UnitTests
     {
         // Upper-case titles as drawn (whitespace is stripped from extracted text), and the first
         // word of each title so its position can be looked up.
-        private static readonly Dictionary<string, (string Text, string FirstWord)> ClassicTitles = new()
+        private static readonly Dictionary<ResumeSection, (string Text, string FirstWord)> ClassicTitles = new()
         {
-            [ResumeSections.Skills] = ("SKILLS", "SKILLS"),
-            [ResumeSections.Experience] = ("EXPERIENCE", "EXPERIENCE"),
-            [ResumeSections.Education] = ("EDUCATION", "EDUCATION"),
-            [ResumeSections.Certifications] = ("CERTIFICATIONS", "CERTIFICATIONS"),
+            [ResumeSection.Skills] = ("SKILLS", "SKILLS"),
+            [ResumeSection.Experience] = ("EXPERIENCE", "EXPERIENCE"),
+            [ResumeSection.Education] = ("EDUCATION", "EDUCATION"),
+            [ResumeSection.Certifications] = ("CERTIFICATIONS", "CERTIFICATIONS"),
         };
 
-        private static readonly Dictionary<string, (string Text, string FirstWord)> SimplifiedTitles = new()
+        private static readonly Dictionary<ResumeSection, (string Text, string FirstWord)> SimplifiedTitles = new()
         {
-            [ResumeSections.Skills] = ("SKILLS", "SKILLS"),
-            [ResumeSections.Experience] = ("PROFESSIONALEXPERIENCE", "PROFESSIONAL"),
-            [ResumeSections.Education] = ("EDUCATION", "EDUCATION"),
-            [ResumeSections.Certifications] = ("CERTIFICATIONS", "CERTIFICATIONS"),
+            [ResumeSection.Skills] = ("SKILLS", "SKILLS"),
+            [ResumeSection.Experience] = ("PROFESSIONALEXPERIENCE", "PROFESSIONAL"),
+            [ResumeSection.Education] = ("EDUCATION", "EDUCATION"),
+            [ResumeSection.Certifications] = ("CERTIFICATIONS", "CERTIFICATIONS"),
         };
 
-        private static readonly string[] ClassicDefault = ["experience", "skills", "education", "certifications"];
-        private static readonly string[] SimplifiedDefault = ["skills", "experience", "education", "certifications"];
+        private static readonly ResumeSection[] ClassicDefault =
+            [ResumeSection.Experience, ResumeSection.Skills, ResumeSection.Education, ResumeSection.Certifications];
+
+        private static readonly ResumeSection[] SimplifiedDefault =
+            [ResumeSection.Skills, ResumeSection.Experience, ResumeSection.Education, ResumeSection.Certifications];
 
         public ResumeSectionOrderPdfTests()
         {
@@ -52,11 +55,22 @@ namespace Portfolio.Tests.UnitTests
             {
                 foreach (var order in Permutations(ResumeSections.All.ToList()))
                 {
-                    data.Add(template, string.Join(",", order));
+                    data.Add(template, string.Join(",", ResumeSections.ToKeys(order)));
                 }
             }
 
             return data;
+        }
+
+        /// <summary>
+        /// A new ResumeSection member must get a title here (and a case in the generators), or
+        /// the permutation tests above fail because the generator throws for it.
+        /// </summary>
+        [Fact]
+        public void Titles_CoverEveryResumeSection()
+        {
+            Assert.Equal(ResumeSections.All.Order(), ClassicTitles.Keys.Order());
+            Assert.Equal(ResumeSections.All.Order(), SimplifiedTitles.Keys.Order());
         }
 
         [Theory]
@@ -71,11 +85,11 @@ namespace Portfolio.Tests.UnitTests
             var pdf = Render(template, FullResume(requested));
 
             var titles = Titles(template);
-            Assert.Equal(requested.Select(key => titles[key].Text), HeadingsInOrder(pdf, template));
+            Assert.Equal(requested.Select(key => titles[Section(key)].Text), HeadingsInOrder(pdf, template));
 
             // Header (name) first, then the Summary, then the first movable section.
             var text = PdfText.ExtractWithoutWhitespace(pdf);
-            var firstSection = text.IndexOf(titles[requested[0]].Text, StringComparison.Ordinal);
+            var firstSection = text.IndexOf(titles[Section(requested[0])].Text, StringComparison.Ordinal);
             Assert.True(text.IndexOf("JaneTester", StringComparison.Ordinal) < text.IndexOf("SUMMARY", StringComparison.Ordinal));
             Assert.True(text.IndexOf("SUMMARY", StringComparison.Ordinal) < firstSection);
         }
@@ -112,7 +126,7 @@ namespace Portfolio.Tests.UnitTests
             var pdf = Render(template, FullResume([.. requested.Split(',')]));
 
             Assert.Equal(
-                expected.Split(',').Select(key => Titles(template)[key].Text),
+                expected.Split(',').Select(key => Titles(template)[Section(key)].Text),
                 HeadingsInOrder(pdf, template)
             );
         }
@@ -133,7 +147,8 @@ namespace Portfolio.Tests.UnitTests
 
             // Education and Skills are the valid entries. Experience and Certifications follow in
             // default order, which is the same for both templates once those two are placed.
-            string[] expected = ["education", "skills", "experience", "certifications"];
+            ResumeSection[] expected =
+                [ResumeSection.Education, ResumeSection.Skills, ResumeSection.Experience, ResumeSection.Certifications];
             Assert.Equal(
                 expected.Select(key => Titles(template)[key].Text),
                 HeadingsInOrder(pdf, template)
@@ -158,11 +173,11 @@ namespace Portfolio.Tests.UnitTests
             for (var mask = 0; mask < 16; mask++)
             {
                 var populated = order.Where((_, i) => (mask & (1 << i)) != 0).ToList();
-                var resume = FullResume(order);
-                if (!populated.Contains(ResumeSections.Skills)) resume.Skills = null;
-                if (!populated.Contains(ResumeSections.Experience)) resume.Experience = [];
-                if (!populated.Contains(ResumeSections.Education)) resume.Education = null;
-                if (!populated.Contains(ResumeSections.Certifications)) resume.Certification = [];
+                var resume = FullResume(ResumeSections.ToKeys(order));
+                if (!populated.Contains(ResumeSection.Skills)) resume.Skills = null;
+                if (!populated.Contains(ResumeSection.Experience)) resume.Experience = [];
+                if (!populated.Contains(ResumeSection.Education)) resume.Education = null;
+                if (!populated.Contains(ResumeSection.Certifications)) resume.Certification = [];
 
                 var pdf = Render(template, resume);
 
@@ -181,7 +196,7 @@ namespace Portfolio.Tests.UnitTests
             var data = new TheoryData<string>();
             foreach (var order in Permutations(ResumeSections.All.ToList()))
             {
-                data.Add(string.Join(",", order));
+                data.Add(string.Join(",", ResumeSections.ToKeys(order)));
             }
 
             return data;
@@ -196,7 +211,7 @@ namespace Portfolio.Tests.UnitTests
 
             AssertOneDividerAboveEachSection(
                 pdf,
-                requested.Select(key => SimplifiedTitles[key].FirstWord).ToList()
+                requested.Select(key => SimplifiedTitles[Section(key)].FirstWord).ToList()
             );
         }
 
@@ -224,7 +239,14 @@ namespace Portfolio.Tests.UnitTests
             return document.GeneratePdf();
         }
 
-        private static Dictionary<string, (string Text, string FirstWord)> Titles(string template)
+        // The tests write orders as the lower-case keys the API uses.
+        private static ResumeSection Section(string key)
+        {
+            Assert.True(ResumeSections.TryParse(key, out var section), key);
+            return section;
+        }
+
+        private static Dictionary<ResumeSection, (string Text, string FirstWord)> Titles(string template)
         {
             return template == TemplateTypes.Classic ? ClassicTitles : SimplifiedTitles;
         }
@@ -264,7 +286,7 @@ namespace Portfolio.Tests.UnitTests
             };
         }
 
-        private static IEnumerable<List<string>> Permutations(List<string> items)
+        private static IEnumerable<List<T>> Permutations<T>(List<T> items)
         {
             if (items.Count <= 1)
             {

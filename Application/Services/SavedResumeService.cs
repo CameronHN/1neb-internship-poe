@@ -43,7 +43,9 @@ namespace Portfolio.Application.Services
 
             // Store the lower-case, de-duplicated keys. Sections left out stay out: the default
             // order for the template is applied when the PDF is drawn, not when it is saved.
-            var cleanedOrder = ResumeSections.Clean(request.ResumeData?.SectionOrder);
+            var cleanedOrder = ResumeSections.ToKeys(
+                ResumeSections.Clean(request.ResumeData?.SectionOrder)
+            );
             if (request.ResumeData != null)
             {
                 request.ResumeData.SectionOrder = cleanedOrder.Count > 0 ? cleanedOrder : null;

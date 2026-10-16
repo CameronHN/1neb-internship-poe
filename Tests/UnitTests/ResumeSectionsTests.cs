@@ -7,25 +7,32 @@ namespace Portfolio.Tests.UnitTests
 {
     /// <summary>
     /// The one place that decides the final section order (ResumeSections), and the request
-    /// validation that rejects what Resolve would quietly ignore.
+    /// validation that rejects what Resolve would quietly ignore. The API and stored JSON use
+    /// lower-case string keys; ResumeSections turns them into the ResumeSection enum.
     /// </summary>
     public class ResumeSectionsTests
     {
-        private static readonly string[] ClassicDefault =
+        private static readonly ResumeSection[] ClassicDefault =
         [
-            ResumeSections.Experience,
-            ResumeSections.Skills,
-            ResumeSections.Education,
-            ResumeSections.Certifications,
+            ResumeSection.Experience,
+            ResumeSection.Skills,
+            ResumeSection.Education,
+            ResumeSection.Certifications,
         ];
 
-        private static readonly string[] SimplifiedDefault =
+        private static readonly ResumeSection[] SimplifiedDefault =
         [
-            ResumeSections.Skills,
-            ResumeSections.Experience,
-            ResumeSections.Education,
-            ResumeSections.Certifications,
+            ResumeSection.Skills,
+            ResumeSection.Experience,
+            ResumeSection.Education,
+            ResumeSection.Certifications,
         ];
+
+        // Resolve returns enum values; the tests compare them as the keys the API uses.
+        private static List<string> Keys(IEnumerable<ResumeSection> sections)
+        {
+            return ResumeSections.ToKeys(sections);
+        }
 
         [Fact]
         public void Resolve_Null_ReturnsTheTemplateDefault()
@@ -47,8 +54,8 @@ namespace Portfolio.Tests.UnitTests
             var classic = ResumeSections.Resolve(["certifications", "skills"], ClassicDefault);
             var simplified = ResumeSections.Resolve(["education"], SimplifiedDefault);
 
-            Assert.Equal(["certifications", "skills", "experience", "education"], classic);
-            Assert.Equal(["education", "skills", "experience", "certifications"], simplified);
+            Assert.Equal(["certifications", "skills", "experience", "education"], Keys(classic));
+            Assert.Equal(["education", "skills", "experience", "certifications"], Keys(simplified));
         }
 
         [Fact]
@@ -56,8 +63,8 @@ namespace Portfolio.Tests.UnitTests
         {
             var order = new[] { "certifications", "education", "skills", "experience" };
 
-            Assert.Equal(order, ResumeSections.Resolve(order, ClassicDefault));
-            Assert.Equal(order, ResumeSections.Resolve(order, SimplifiedDefault));
+            Assert.Equal(order, Keys(ResumeSections.Resolve(order, ClassicDefault)));
+            Assert.Equal(order, Keys(ResumeSections.Resolve(order, SimplifiedDefault)));
         }
 
         [Fact]
@@ -68,7 +75,7 @@ namespace Portfolio.Tests.UnitTests
                 ClassicDefault
             );
 
-            Assert.Equal(["skills", "education", "experience", "certifications"], result);
+            Assert.Equal(["skills", "education", "experience", "certifications"], Keys(result));
         }
 
         [Theory]
@@ -82,7 +89,27 @@ namespace Portfolio.Tests.UnitTests
         {
             var result = ResumeSections.Resolve([key, "education"], ClassicDefault);
 
-            Assert.Equal(["education", "experience", "skills", "certifications"], result);
+            Assert.Equal(["education", "experience", "skills", "certifications"], Keys(result));
+        }
+
+        /// <summary>
+        /// Enum.TryParse would accept all of these ("1" is Experience, "Skills, Education" is a
+        /// flags-style combination, "7" is not even a member), so keys are matched by name only.
+        /// </summary>
+        [Theory]
+        [InlineData("0")]
+        [InlineData("1")]
+        [InlineData("7")]
+        [InlineData("-1")]
+        [InlineData("skills,education")]
+        [InlineData("Skills, Education")]
+        [InlineData("skills|education")]
+        public void Resolve_NumbersAndCombinedValues_AreDropped(string key)
+        {
+            var result = ResumeSections.Resolve([key], ClassicDefault);
+
+            Assert.Equal(ClassicDefault, result);
+            Assert.False(ResumeSections.IsKnown(key));
         }
 
         [Fact]
@@ -90,7 +117,7 @@ namespace Portfolio.Tests.UnitTests
         {
             var result = ResumeSections.Resolve([null, "education"], ClassicDefault);
 
-            Assert.Equal(["education", "experience", "skills", "certifications"], result);
+            Assert.Equal(["education", "experience", "skills", "certifications"], Keys(result));
         }
 
         [Fact]
@@ -101,13 +128,13 @@ namespace Portfolio.Tests.UnitTests
                 ClassicDefault
             );
 
-            Assert.Equal(["certifications", "skills", "experience", "education"], result);
+            Assert.Equal(["certifications", "skills", "experience", "education"], Keys(result));
         }
 
         [Fact]
         public void Clean_DoesNotAddTheSectionsThatWereLeftOut()
         {
-            Assert.Equal(["skills"], ResumeSections.Clean([" SKILLS", "bogus", "skills"]));
+            Assert.Equal([ResumeSection.Skills], ResumeSections.Clean([" SKILLS", "bogus", "skills"]));
             Assert.Empty(ResumeSections.Clean(null));
             Assert.Empty(ResumeSections.Clean(["summary"]));
         }
@@ -118,7 +145,31 @@ namespace Portfolio.Tests.UnitTests
             Assert.Equal(ResumeSections.MaxCount, ResumeSections.All.Count);
             Assert.Equal(
                 ["certifications", "education", "experience", "skills"],
-                ResumeSections.All.Order()
+                Keys(ResumeSections.All).Order()
+            );
+        }
+
+        /// <summary>
+        /// The key is the enum member name in lower case. It is what the API accepts and what
+        /// saved snapshots store, so renaming a member would break old snapshots.
+        /// </summary>
+        [Fact]
+        public void ToKey_AndTryParse_RoundTripEverySectionAsLowerCaseNames()
+        {
+            foreach (var section in ResumeSections.All)
+            {
+                var key = ResumeSections.ToKey(section);
+
+                Assert.Equal(section.ToString().ToLowerInvariant(), key);
+                Assert.True(ResumeSections.TryParse(key, out var parsed));
+                Assert.Equal(section, parsed);
+                Assert.True(ResumeSections.TryParse(key.ToUpperInvariant(), out var upper));
+                Assert.Equal(section, upper);
+            }
+
+            Assert.Equal(
+                ["skills", "experience", "education", "certifications"],
+                Keys(ResumeSections.All)
             );
         }
 
@@ -149,6 +200,7 @@ namespace Portfolio.Tests.UnitTests
         [InlineData("title")]
         [InlineData("links")]
         [InlineData("nonsense")]
+        [InlineData("1")]
         [InlineData("")]
         public void ResumeDto_UnknownKey_FailsValidation(string key)
         {

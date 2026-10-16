@@ -24,7 +24,7 @@ namespace Portfolio.Core.DTOs.Resume
                 if (normalised == null || !ResumeSections.IsKnown(normalised))
                 {
                     return new ValidationResult(
-                        $"'{key}' is not a section that can be ordered. Use: {string.Join(", ", ResumeSections.All)}.",
+                        $"'{key}' is not a section that can be ordered. Use: {string.Join(", ", ResumeSections.ToKeys(ResumeSections.All))}.",
                         [validationContext.MemberName!]
                     );
                 }

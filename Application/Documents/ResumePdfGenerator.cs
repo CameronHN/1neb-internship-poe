@@ -47,12 +47,12 @@ namespace Portfolio.Application.Documents
             column.Item().Padding(5);
         }
 
-        protected override IReadOnlyList<string> DefaultSectionOrder { get; } =
+        protected override IReadOnlyList<ResumeSection> DefaultSectionOrder { get; } =
             [
-                ResumeSections.Experience,
-                ResumeSections.Skills,
-                ResumeSections.Education,
-                ResumeSections.Certifications,
+                ResumeSection.Experience,
+                ResumeSection.Skills,
+                ResumeSection.Education,
+                ResumeSection.Certifications,
             ];
 
         // Classic puts a gap after the Summary and after every section slot except the last, drawn

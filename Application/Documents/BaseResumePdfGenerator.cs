@@ -102,8 +102,8 @@ namespace Portfolio.Application.Documents
             }
         }
 
-        // The header and the Summary are fixed at the top. Only the four sections in
-        // ResumeSections.All move, in the order from ResumeDTO.SectionOrder (or the template's default).
+        // The header and the Summary are fixed at the top. Only the ResumeSection values move, in
+        // the order from ResumeDTO.SectionOrder (or the template's default).
         private void ComposeContent(ColumnDescriptor column)
         {
             RenderHeader(column);
@@ -124,7 +124,7 @@ namespace Portfolio.Application.Documents
         }
 
         // The movable sections in the order this template draws them when no order is requested.
-        protected abstract IReadOnlyList<string> DefaultSectionOrder { get; }
+        protected abstract IReadOnlyList<ResumeSection> DefaultSectionOrder { get; }
 
         // Draws the Summary and any spacing or divider around it. Skipped content stays skipped.
         protected abstract void RenderSummary(ColumnDescriptor column);
@@ -151,35 +151,49 @@ namespace Portfolio.Application.Documents
 
         protected abstract void RenderCertifications(ColumnDescriptor column);
 
-        private bool HasData(string section)
+        // A new ResumeSection member must be added to both switches below. The default arm throws
+        // (instead of skipping the section) so a missed case fails loudly in every test that
+        // renders a resume, not silently in production.
+        private bool HasData(ResumeSection section)
         {
             return section switch
             {
-                ResumeSections.Skills => Model.Skills?.Count > 0,
-                ResumeSections.Experience => Model.Experience?.Count > 0,
-                ResumeSections.Education => Model.Education?.Count > 0,
-                ResumeSections.Certifications => Model.Certification?.Count > 0,
-                _ => false,
+                ResumeSection.Skills => Model.Skills?.Count > 0,
+                ResumeSection.Experience => Model.Experience?.Count > 0,
+                ResumeSection.Education => Model.Education?.Count > 0,
+                ResumeSection.Certifications => Model.Certification?.Count > 0,
+                _ => throw UnhandledSection(section),
             };
         }
 
-        private void RenderSection(ColumnDescriptor column, string section)
+        private void RenderSection(ColumnDescriptor column, ResumeSection section)
         {
             switch (section)
             {
-                case ResumeSections.Skills:
+                case ResumeSection.Skills:
                     RenderSkills(column);
                     break;
-                case ResumeSections.Experience:
+                case ResumeSection.Experience:
                     RenderExperience(column);
                     break;
-                case ResumeSections.Education:
+                case ResumeSection.Education:
                     RenderEducation(column);
                     break;
-                case ResumeSections.Certifications:
+                case ResumeSection.Certifications:
                     RenderCertifications(column);
                     break;
+                default:
+                    throw UnhandledSection(section);
             }
+        }
+
+        private static ArgumentOutOfRangeException UnhandledSection(ResumeSection section)
+        {
+            return new ArgumentOutOfRangeException(
+                nameof(section),
+                section,
+                "This resume section is not handled by the PDF generator."
+            );
         }
     }
 }

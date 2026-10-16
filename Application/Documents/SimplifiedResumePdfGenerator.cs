@@ -12,12 +12,12 @@ namespace Portfolio.Application.Documents
         public SimplifiedResumePdfGenerator(ResumeDTO model)
             : base(model) { }
 
-        protected override IReadOnlyList<string> DefaultSectionOrder { get; } =
+        protected override IReadOnlyList<ResumeSection> DefaultSectionOrder { get; } =
             [
-                ResumeSections.Skills,
-                ResumeSections.Experience,
-                ResumeSections.Education,
-                ResumeSections.Certifications,
+                ResumeSection.Skills,
+                ResumeSection.Experience,
+                ResumeSection.Education,
+                ResumeSection.Certifications,
             ];
 
         // Single column, left aligned, single list of skills.
