@@ -10,6 +10,7 @@ using Portfolio.Core.DTOs.Resume;
 using Portfolio.Core.DTOs.SavedResume;
 using Portfolio.Core.Exceptions;
 using Portfolio.Core.Models;
+using Portfolio.Tests.Common;
 using QuestPDF.Infrastructure;
 using Xunit;
 
@@ -146,6 +147,159 @@ namespace Portfolio.Tests.UnitTests
             );
         }
 
+        [Fact]
+        public async Task SaveResumeAsync_WithSectionOrder_StoresItCleanedInTheJson()
+        {
+            var userId = Guid.NewGuid();
+            AddSavedResume? stored = null;
+            _repository
+                .CreateAsync(userId, Arg.Do<AddSavedResume>(r => stored = r))
+                .Returns(Guid.NewGuid());
+            var request = CreateSaveRequest(TemplateTypes.Classic);
+            request.ResumeData.SectionOrder = [" Certifications", "SKILLS", "skills", "bogus"];
+
+            await _service.SaveResumeAsync(userId, request);
+
+            Assert.NotNull(stored);
+            // The stored property name is "SectionOrder": snapshots rely on it staying stable.
+            using var json = JsonDocument.Parse(stored.Data);
+            var order = json.RootElement.GetProperty("SectionOrder").EnumerateArray();
+            Assert.Equal(["certifications", "skills"], order.Select(e => e.GetString()));
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task SaveResumeAsync_NullOrEmptySectionOrder_StoresNull(bool empty)
+        {
+            var userId = Guid.NewGuid();
+            AddSavedResume? stored = null;
+            _repository
+                .CreateAsync(userId, Arg.Do<AddSavedResume>(r => stored = r))
+                .Returns(Guid.NewGuid());
+            var request = CreateSaveRequest(TemplateTypes.Classic);
+            request.ResumeData.SectionOrder = empty ? [] : null;
+
+            await _service.SaveResumeAsync(userId, request);
+
+            Assert.Null(JsonSerializer.Deserialize<ResumeDTO>(stored!.Data)!.SectionOrder);
+        }
+
+        [Fact]
+        public async Task GetSavedResumeByIdAsync_StoredSectionOrder_IsReturned()
+        {
+            var userId = Guid.NewGuid();
+            var resumeId = Guid.NewGuid();
+            var data = JsonSerializer.Serialize(
+                new ResumeDTO { Name = "Test User", SectionOrder = ["education", "skills"] }
+            );
+            _repository
+                .GetByIdAsync(resumeId, userId)
+                .Returns(CreateSavedModel(resumeId, TemplateTypes.Classic, data));
+
+            var detail = await _service.GetSavedResumeByIdAsync(resumeId, userId);
+
+            Assert.Equal(["education", "skills"], detail!.ResumeData.SectionOrder);
+        }
+
+        /// <summary>
+        /// A snapshot saved before section ordering existed has no SectionOrder property at all.
+        /// </summary>
+        [Fact]
+        public async Task GetSavedResumeByIdAsync_LegacySnapshotWithoutSectionOrder_LoadsAsNull()
+        {
+            var userId = Guid.NewGuid();
+            var resumeId = Guid.NewGuid();
+            var legacy = "{\"Name\":\"Old User\",\"Skills\":[{\"Skill\":\"C#\",\"SkillLevel\":null}]}";
+            _repository
+                .GetByIdAsync(resumeId, userId)
+                .Returns(CreateSavedModel(resumeId, TemplateTypes.Classic, legacy));
+
+            var detail = await _service.GetSavedResumeByIdAsync(resumeId, userId);
+
+            Assert.Null(detail!.ResumeData.SectionOrder);
+            Assert.Equal("Old User", detail.ResumeData.Name);
+        }
+
+        [Theory]
+        [MemberData(nameof(AllTemplateTypes))]
+        public async Task GetSavedResumePdfFromIdAsync_StoredSectionOrder_RendersInThatOrder(string templateType)
+        {
+            var userId = Guid.NewGuid();
+            var resumeId = Guid.NewGuid();
+            var data = JsonSerializer.Serialize(SectionedResume(["certifications", "education"]));
+            _repository
+                .GetByIdAsync(resumeId, userId)
+                .Returns(CreateSavedModel(resumeId, templateType, data));
+
+            var pdf = await _service.GetSavedResumePdfFromIdAsync(resumeId, userId);
+
+            // Listed sections first, then the rest in the template's default order.
+            var expected = templateType == TemplateTypes.Classic
+                ? new[] { "CERTIFICATIONS", "EDUCATION", "EXPERIENCE", "SKILLS" }
+                : new[] { "CERTIFICATIONS", "EDUCATION", "SKILLS", "EXPERIENCE" };
+            Assert.Equal(expected, PdfText.HeadingsInOrder(pdf, SectionHeadings));
+        }
+
+        [Theory]
+        [MemberData(nameof(AllTemplateTypes))]
+        public async Task GetSavedResumePdfFromIdAsync_LegacySnapshotWithoutSectionOrder_UsesTheDefaultOrder(string templateType)
+        {
+            var userId = Guid.NewGuid();
+            var resumeId = Guid.NewGuid();
+            // Serialised without the SectionOrder key, as every snapshot saved before this feature.
+            var legacy = JsonSerializer.Serialize(SectionedResume(null));
+            var legacyWithoutKey = legacy.Replace(",\"SectionOrder\":null", string.Empty);
+            Assert.DoesNotContain("SectionOrder", legacyWithoutKey);
+            _repository
+                .GetByIdAsync(resumeId, userId)
+                .Returns(CreateSavedModel(resumeId, templateType, legacyWithoutKey));
+
+            var pdf = await _service.GetSavedResumePdfFromIdAsync(resumeId, userId);
+
+            var expected = templateType == TemplateTypes.Classic
+                ? new[] { "EXPERIENCE", "SKILLS", "EDUCATION", "CERTIFICATIONS" }
+                : new[] { "SKILLS", "EXPERIENCE", "EDUCATION", "CERTIFICATIONS" };
+            Assert.Equal(expected, PdfText.HeadingsInOrder(pdf, SectionHeadings));
+        }
+
+        [Theory]
+        [MemberData(nameof(AllTemplateTypes))]
+        public async Task GetSavedResumePdfFromIdAsync_StoredOrderWithUnknownKeysAndDuplicates_RendersIgnoringThem(string templateType)
+        {
+            var userId = Guid.NewGuid();
+            var resumeId = Guid.NewGuid();
+            var data = JsonSerializer.Serialize(
+                SectionedResume(["summary", "Certifications", "bogus", "certifications", "title"])
+            );
+            _repository
+                .GetByIdAsync(resumeId, userId)
+                .Returns(CreateSavedModel(resumeId, templateType, data));
+
+            var pdf = await _service.GetSavedResumePdfFromIdAsync(resumeId, userId);
+
+            var headings = PdfText.HeadingsInOrder(pdf, SectionHeadings);
+            Assert.Equal(4, headings.Count);
+            Assert.Equal("CERTIFICATIONS", headings[0]);
+        }
+
+        // Upper-case section titles as drawn; Simplified calls Experience "PROFESSIONAL EXPERIENCE",
+        // which still contains "EXPERIENCE" once whitespace is stripped.
+        private static readonly string[] SectionHeadings = ["SKILLS", "EXPERIENCE", "EDUCATION", "CERTIFICATIONS"];
+
+        private static ResumeDTO SectionedResume(List<string>? order)
+        {
+            return new ResumeDTO
+            {
+                Name = "Test User",
+                SectionOrder = order,
+                Skills = [new SkillsItem { Skill = "CSharp" }],
+                Experience = [new ExperienceItem { JobTitle = "Developer", Company = "Acme" }],
+                Education = [new EducationItem { Institution = "Uni", Qualification = "BSc" }],
+                Certification = [new CertificationItem { Name = "AZ-900" }],
+            };
+        }
+
         private static SaveResumeDataRequest CreateSaveRequest(string templateType)
         {
             return new SaveResumeDataRequest
@@ -156,13 +310,13 @@ namespace Portfolio.Tests.UnitTests
             };
         }
 
-        private static SavedResumeModel CreateSavedModel(Guid id, string templateType)
+        private static SavedResumeModel CreateSavedModel(Guid id, string templateType, string? data = null)
         {
             return new SavedResumeModel
             {
                 Id = id,
                 Name = "Unit test resume",
-                Data = JsonSerializer.Serialize(new ResumeDTO { Name = "Test User" }),
+                Data = data ?? JsonSerializer.Serialize(new ResumeDTO { Name = "Test User" }),
                 TemplateType = templateType,
                 CreatedAt = DateTime.UtcNow.ToString("O"),
             };
