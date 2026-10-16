@@ -58,7 +58,8 @@ body:json {
           "issuedDate": "",
           "expirationDate": ""
         }
-      ]
+      ],
+      "sectionOrder": ["experience", "skills", "education", "certifications"]
     },
     "templateType": "classic"
   }
@@ -70,6 +71,7 @@ docs {
   Body:
   - `savedResumeName`: required, max 200 characters
   - `resumeData`: required, same fields and max lengths as `Resume/create-pdf`, but up to 20 items in each list and 20 responsibilities per experience
+  - `resumeData.sectionOrder` (optional): the top-to-bottom order of the movable sections, using `skills`, `experience`, `education` and `certifications`. It is saved with the resume and used when the PDF is made. The header and the Summary always come first and cannot be moved, so `summary`, `title` and `links` are rejected, as are unknown keys, duplicates and more than 4 entries (`400`). Keys are not case-sensitive and are stored in lower case. Sections you leave out follow in the template's default order (`classic`: `experience`, `skills`, `education`, `certifications`; `simplified`: `skills`, `experience`, `education`, `certifications`). Leave it out (or send `null` or `[]`) for the default order.
   - `templateType`: required, `classic` or `simplified`
 
   The body must be under 256 KB. A user can keep up to 50 saved resumes.
