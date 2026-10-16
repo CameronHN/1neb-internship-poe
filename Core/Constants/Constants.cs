@@ -38,6 +38,65 @@
     }
 
     /// <summary>
+    /// The four resume sections a user can reorder with <c>SectionOrder</c>. The header and the
+    /// Summary are fixed at the top, so "summary", "title" and "links" are not valid keys.
+    /// </summary>
+    public static class ResumeSections
+    {
+        public const string Skills = "skills";
+        public const string Experience = "experience";
+        public const string Education = "education";
+        public const string Certifications = "certifications";
+
+        public const int MaxCount = 4;
+
+        public static readonly IReadOnlyList<string> All = [Skills, Experience, Education, Certifications];
+
+        public static bool IsKnown(string? key)
+        {
+            return Normalise(key) is { } normalised && All.Contains(normalised);
+        }
+
+        /// <summary>
+        /// Trims, lower-cases, removes duplicates and drops unknown keys. Sections that were not
+        /// listed are not added; see <see cref="Resolve"/>.
+        /// </summary>
+        public static List<string> Clean(IEnumerable<string?>? requested)
+        {
+            var cleaned = new List<string>();
+            foreach (var key in requested ?? [])
+            {
+                var normalised = Normalise(key);
+                if (normalised != null && All.Contains(normalised) && !cleaned.Contains(normalised))
+                {
+                    cleaned.Add(normalised);
+                }
+            }
+
+            return cleaned;
+        }
+
+        /// <summary>
+        /// The final order to draw: the cleaned requested keys, then every section that was left
+        /// out, in the template's default order. Never throws, so bad stored data still renders.
+        /// </summary>
+        public static List<string> Resolve(
+            IEnumerable<string?>? requested,
+            IEnumerable<string> defaultOrder
+        )
+        {
+            var order = Clean(requested);
+            order.AddRange(defaultOrder.Where(key => !order.Contains(key)));
+            return order;
+        }
+
+        private static string? Normalise(string? key)
+        {
+            return key?.Trim().ToLowerInvariant();
+        }
+    }
+
+    /// <summary>
     /// Caps on the anonymous demo (POST /api/Resume/create-pdf). They match the fixed shape of
     /// the frontend's Demo page, which has no controls for adding more items.
     /// </summary>
