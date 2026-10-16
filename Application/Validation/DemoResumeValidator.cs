@@ -11,8 +11,19 @@ namespace Portfolio.Application.Validation
     /// </summary>
     public static class DemoResumeValidator
     {
+        public const string SectionOrderForbiddenMessage =
+            "Section ordering is available to registered users.";
+
         public static void Validate(ResumeDTO resume)
         {
+            // The Demo page never sends sectionOrder, so any entry (even the template's default
+            // order) means the caller is using a registered-user feature. Bad keys and duplicates
+            // never get here: model binding rejects them with a 400 first.
+            if (resume.SectionOrder?.Count > 0)
+            {
+                throw new ForbiddenException(SectionOrderForbiddenMessage);
+            }
+
             CheckCount(resume.Skills?.Count, DemoResumeLimits.MaxSkills, "skills");
             CheckCount(
                 resume.ProfessionalLinks?.Count,

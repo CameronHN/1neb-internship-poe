@@ -77,6 +77,7 @@ namespace Portfolio.WebApi.Middleware
                 ),
                 UnauthorizedAccessAppException => (HttpStatusCode.Unauthorized, "Access denied"),
                 NotFoundException => (HttpStatusCode.NotFound, exception.Message),
+                ForbiddenException => (HttpStatusCode.Forbidden, exception.Message),
                 ConflictException => (HttpStatusCode.Conflict, exception.Message),
                 BusinessRuleViolationException => (
                     HttpStatusCode.UnprocessableEntity,

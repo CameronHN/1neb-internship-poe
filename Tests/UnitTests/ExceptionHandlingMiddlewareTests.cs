@@ -33,6 +33,7 @@ namespace Portfolio.Tests.UnitTests
                 },
                 { new UnauthorizedAccessAppException("denied"), StatusCodes.Status401Unauthorized },
                 { new NotFoundException("missing"), StatusCodes.Status404NotFound },
+                { new ForbiddenException("forbidden"), StatusCodes.Status403Forbidden },
                 { new ConflictException("conflict"), StatusCodes.Status409Conflict },
                 {
                     new BusinessRuleViolationException("rule"),
